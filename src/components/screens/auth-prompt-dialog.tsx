@@ -1,0 +1,86 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { Button } from "../ui/button";
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "../ui/dialog";
+import Image from "next/image";
+import logo from "@/assets/images/company/logo/logo-light.png";
+
+export default function AuthPromptDialog() {
+    const [open, setOpen] = useState(false);
+
+    useEffect(() => {
+        // only show if user is not logged in
+        const isLoggedIn = false; // replace with your auth check
+        if (!isLoggedIn) {
+            const timer = setTimeout(() => {
+                setOpen(true);
+            }, 3000); // 3s delay
+
+            return () => clearTimeout(timer);
+        }
+    }, []);
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogContent
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="auth-prompt-title"
+                aria-describedby="auth-prompt-desc"
+                className="overflow-clip rounded-3xl p-5 pt-50 [&_>_*:not(.img-overlay)]:z-[1]"
+            >
+                <Image
+                    src={logo}
+                    alt="logo"
+                    className="absolute top-2 left-2 z-100! size-10"
+                />
+                <div className="rounded-inherit absolute inset-0 z-0 bg-[url('https://images.pexels.com/photos/14856268/pexels-photo-14856268.jpeg?auto=compress&cs=tinysrgb&w=1600')] mask-b-from-20% mask-b-to-60% bg-cover bg-center [mask-size:cover]" />
+                <DialogHeader className="!gap-0">
+                    <DialogTitle
+                        id="auth-prompt-title"
+                        className="!border-none font-black tracking-normal"
+                    >
+                        Edit profile
+                    </DialogTitle>
+                    <DialogDescription className="m-0!" id="auth-prompt-desc">
+                        Sign up or log in to get the best experience.
+                    </DialogDescription>
+                </DialogHeader>
+
+                <Button type="button" className="w-full" asChild>
+                    <Link href="/auth/signup">Sign up</Link>
+                </Button>
+                <Button
+                    type="button"
+                    variant="secondary"
+                    className="w-full"
+                    asChild
+                >
+                    <Link href="/auth/signin">Sign in</Link>
+                </Button>
+
+                <DialogFooter className="items-center sm:justify-center">
+                    <DialogClose asChild>
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            className="max-w-[max-content]"
+                        >
+                            Maybe later
+                        </Button>
+                    </DialogClose>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    );
+}

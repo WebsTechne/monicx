@@ -1,0 +1,219 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id          Int               @id @default(autoincrement())
+  name        String            @db.VarChar(100)
+  slug        String            @unique @db.VarChar(100)
+  description String?
+  products    ProductCategory[]
+}
+
+model Collection {
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(100)
+  description String?
+  createdAt   DateTime  @default(now())
+  products    Product[]
+}
+
+model Size {
+  id               Int                @id @default(autoincrement())
+  gender           Gender
+  alpha            String             @db.VarChar(10)
+  chestCm          Decimal?           @db.Decimal(5, 2)
+  waistCm          Decimal?           @db.Decimal(5, 2)
+  productSizeStock ProductSizeStock[]
+}
+
+model Color {
+  id            Int            @id @default(autoincrement())
+  hexCode       String         @unique @db.Char(7)
+  name          String         @db.VarChar(50)
+  groupName     String?        @db.VarChar(50)
+  productColors ProductColor[]
+}
+
+model Tag {
+  id          Int          @id @default(autoincrement())
+  name        String       @db.VarChar(50)
+  productTags ProductTag[]
+}
+
+model Offer {
+  id          Int          @id @default(autoincrement())
+  code        String       @unique @db.VarChar(50)
+  name        String       @db.VarChar(100)
+  type        OfferType    @default(percentage)
+  value       Decimal      @db.Decimal(10, 2)
+  minOrderAmt Decimal?     @db.Decimal(10, 2)
+  startAt     DateTime
+  endAt       DateTime
+  active      Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  orderOffers OrderOffer[]
+}
+
+model Product {
+  id               String             @id @default(uuid()) @db.Uuid
+  sku              String             @unique @db.VarChar(50)
+  name             String             @db.VarChar(255)
+  description      String?
+  price            Decimal            @db.Decimal(10, 2)
+  gender           Gender             @default(unisex)
+  imagePath        String?            @db.VarChar(255)
+  stock            Int                @default(0)
+  weightKg         Decimal?           @db.Decimal(6, 3)
+  dimensionsCm     String?            @db.VarChar(50)
+  status           ProductStatus      @default(active)
+  ratingAvg        Decimal            @default(0) @db.Decimal(3, 2)
+  collectionId     Int?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  slug             String?            @db.VarChar(150)
+  shortDescription String?            @db.VarChar(255)
+  orderItems       OrderItem[]
+  collection       Collection?        @relation(fields: [collectionId], references: [id])
+  categories       ProductCategory[]
+  colors           ProductColor[]
+  sizes            ProductSizeStock[]
+  tags             ProductTag[]
+}
+
+model ProductSizeStock {
+  productId String  @db.Uuid
+  sizeId    Int
+  qty       Int     @default(0)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  size      Size    @relation(fields: [sizeId], references: [id])
+
+  @@id([productId, sizeId])
+  @@index([sizeId])
+}
+
+model ProductCategory {
+  productId  String   @db.Uuid
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([productId, categoryId])
+  @@index([categoryId])
+}
+
+model ProductColor {
+  productId String  @db.Uuid
+  colorId   Int
+  color     Color   @relation(fields: [colorId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([productId, colorId])
+  @@index([colorId])
+}
+
+model ProductTag {
+  productId String  @db.Uuid
+  tagId     Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([productId, tagId])
+  @@index([tagId])
+}
+
+model User {
+  id        String    @id @default(uuid()) @db.Uuid
+  email     String    @unique @db.VarChar(255)
+  password  String    @db.VarChar(255)
+  firstName String?   @db.VarChar(50)
+  lastName  String?   @db.VarChar(50)
+  role      Role      @default(customer)
+  createdAt DateTime  @default(now())
+  addresses Address[]
+  orders    Order[]
+}
+
+model Address {
+  id      Int     @id @default(autoincrement())
+  userId  String  @db.Uuid
+  label   String? @db.VarChar(50)
+  street  String? @db.VarChar(255)
+  city    String? @db.VarChar(100)
+  state   String? @db.VarChar(100)
+  country String? @db.VarChar(100)
+  zip     String? @db.VarChar(20)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Order {
+  id        Int          @id @default(autoincrement())
+  userId    String       @db.Uuid
+  totalAmt  Decimal      @db.Decimal(10, 2)
+  status    OrderStatus  @default(pending)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  user      User         @relation(fields: [userId], references: [id])
+  items     OrderItem[]
+  offers    OrderOffer[]
+}
+
+model OrderOffer {
+  orderId Int
+  offerId Int
+  amount  Decimal @db.Decimal(10, 2)
+  offer   Offer   @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@id([orderId, offerId])
+}
+
+model OrderItem {
+  orderId   Int
+  productId String  @db.Uuid
+  qty       Int
+  unitPrice Decimal @db.Decimal(10, 2)
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id])
+
+  @@id([orderId, productId])
+}
+
+enum Gender {
+  male
+  female
+  unisex
+}
+
+enum ProductStatus {
+  draft
+  active
+  archived
+}
+
+enum OfferType {
+  percentage
+  fixed
+  bogo
+}
+
+enum Role {
+  customer
+  admin
+  vendor
+}
+
+/// Chosen canonical OrderStatus set that covers admin UI and real flows.
+/// Includes: pending -> processing -> paid/shipped -> completed, plus failed/canceled.
+enum OrderStatus {
+  pending
+  paid
+  shipped
+  completed
+  canceled
+}

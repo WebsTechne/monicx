@@ -1,6 +1,7 @@
 import ProductList from "@/components/elements/products/product-list";
 import AuthPromptDialog from "@/components/screens/auth-prompt-dialog";
 import Image from "next/image";
+import { Suspense } from "react";
 
 export default async function Home() {
     return (
@@ -15,7 +16,9 @@ export default async function Home() {
                     fill
                 />
             </div>
-            <ProductList page="homepage" />
+            <Suspense fallback={<div>Loading products…</div>}>
+                <ProductList page="homepage" />
+            </Suspense>
         </>
     );
 }

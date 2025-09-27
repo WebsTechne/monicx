@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { products } from "@/lib/products";
 import ProductList from "@/components/elements/products/product-list";
 import { Metadata } from "next";
@@ -34,17 +35,24 @@ export default function CategorySlugPage({
     return (
         <>
             <div>
-                <MonicxBreadcrumbs items={breadcrumbItems} />
+                {/* wrap client components in Suspense for SSR/prerender */}
+                <Suspense
+                    fallback={<div className="mb-2">Loading breadcrumbs…</div>}
+                >
+                    <MonicxBreadcrumbs items={breadcrumbItems} />
+                </Suspense>
             </div>
             <h1 className="mb-3 text-2xl! md:text-4xl">
                 Scan by Category: {slug}
             </h1>
-            <ProductList
-                allTab={false}
-                serverItems={items}
-                category={slug}
-                page="shop"
-            />
+            <Suspense fallback={<div>Loading products…</div>}>
+                <ProductList
+                    allTab={false}
+                    serverItems={items}
+                    category={slug}
+                    page="shop"
+                />
+            </Suspense>
         </>
     );
 }

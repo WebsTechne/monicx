@@ -1,9 +1,8 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form"; // <- added
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
@@ -17,7 +16,6 @@ import {
     Form,
     FormField,
     FormItem,
-    FormLabel,
     FormControl,
     FormDescription,
     FormMessage,
@@ -75,7 +73,7 @@ export default function Page() {
         },
     });
 
-    const onSubmit = (values: FormValues) => {
+    const onSubmit = () => {
         if (
             !(
                 info.firstName &&

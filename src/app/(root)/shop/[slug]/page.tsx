@@ -1,4 +1,4 @@
-import { CSSProperties } from "react";
+import { CSSProperties, Suspense } from "react";
 import MonicxBreadcrumbs from "@/components/elements/products/monicx-breadcrumbs";
 import ProductInteraction from "@/components/elements/products/product-interaction";
 import { findProduct } from "@/lib/products";
@@ -114,11 +114,15 @@ export default async function ProductPage({
                         <h2 className="m-0! text-3xl leading-normal font-extrabold">
                             ${product.price}
                         </h2>
-                        <ProductInteraction
-                            product={product}
-                            selectedSize={selectedSize}
-                            selectedColor={selectedColor}
-                        />
+                        <Suspense
+                            fallback={<div>Loading product controls…</div>}
+                        >
+                            <ProductInteraction
+                                product={product}
+                                selectedSize={selectedSize}
+                                selectedColor={selectedColor}
+                            />
+                        </Suspense>
                         {/* CARD INFO */}
                         <div className="mt-4 flex items-center gap-2">
                             <Image

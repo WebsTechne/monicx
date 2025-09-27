@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { ProductsType } from "@/types";
 import Categories from "./categories";
 import ProductCard from "./product-card";
@@ -100,9 +100,15 @@ export default function ProductList({
 
     return (
         <>
-            <Categories allTab={allTab || undefined} />
+            <Suspense fallback={<div>Loading categories…</div>}>
+                <Categories allTab={allTab || undefined} />
+            </Suspense>
 
-            {page === "shop" && <Filter />}
+            {page === "shop" && (
+                <Suspense fallback={<div>Loading sort…</div>}>
+                    <Filter />
+                </Suspense>
+            )}
 
             <div className="xs:grid-cols-2 grid grid-cols-1 gap-3.5 sm:gap-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5">
                 {items.map((product) => (

@@ -2,6 +2,7 @@
 import { products } from "@/lib/products";
 import ProductList from "@/components/elements/products/product-list";
 import Image from "next/image";
+import { Suspense } from "react";
 
 export const metadata = {
     title: "Shop — All Products",
@@ -35,7 +36,13 @@ export default function ShopPage({
             {/* categories: force query-mode here so clicking applies ?category=slug and triggers router navigation */}
 
             {/* product list: render serverItems so initial HTML is filtered when ?category is present */}
-            <ProductList serverItems={serverItems} category={q} page="shop" />
+            <Suspense fallback={<div>Loading products…</div>}>
+                <ProductList
+                    serverItems={serverItems}
+                    category={q}
+                    page="shop"
+                />
+            </Suspense>
         </div>
     );
 }

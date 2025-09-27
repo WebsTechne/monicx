@@ -1,6 +1,7 @@
 import { ShippingFormInputs, shippingFormSchema } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SubmitHandler, useForm } from "react-hook-form";
+import type { Resolver, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
@@ -18,7 +19,9 @@ export default function ShippingForm({
         handleSubmit,
         formState: { errors },
     } = useForm<ShippingFormInputs>({
-        resolver: zodResolver(shippingFormSchema),
+        resolver: zodResolver(
+            shippingFormSchema,
+        ) as Resolver<ShippingFormInputs>,
         defaultValues: {
             country: "Nigeria",
         },

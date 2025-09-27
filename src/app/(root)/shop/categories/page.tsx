@@ -1,4 +1,4 @@
-// app/(root)/shop/categories/page.tsx  (server component)
+// app/(root)/shop/categories/page.tsx
 import { redirect } from "next/navigation";
 import { categories } from "@/lib/categories";
 

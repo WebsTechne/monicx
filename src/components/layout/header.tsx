@@ -40,11 +40,6 @@ export default function Header({ query }: { query: string }) {
         },
     };
 
-    const initials =
-        user?.firstName &&
-        user.firstName.charAt(0).toUpperCase() +
-            (user?.lastName && user.lastName.charAt(0).toUpperCase());
-
     const { toggleSidebar, openMobile } = useSidebar();
 
     const { push } = useRouter();

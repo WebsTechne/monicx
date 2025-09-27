@@ -3,13 +3,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { useRouter } from "next/navigation";
-import { ArrowRight, ShoppingCart } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
 
 export default function PaymentForm() {
-    const router = useRouter();
-
     const {
         register,
         handleSubmit,
@@ -18,11 +15,11 @@ export default function PaymentForm() {
         resolver: zodResolver(paymentFormSchema),
     });
 
-    const handlePaymentForm: SubmitHandler<PaymentFormInputs> = (data) => {};
+    const handlePaymentForm: SubmitHandler<PaymentFormInputs> = () => {};
 
     return (
         <form
-            className="flex flex-col gap-4"
+            className="flex flex-col gap-4 border-0!"
             onSubmit={handleSubmit(handlePaymentForm)}
         >
             {/* Name */}
@@ -33,7 +30,7 @@ export default function PaymentForm() {
                 <Input
                     type="text"
                     {...register("cardHolder")}
-                    className="input"
+                    className="input required"
                     id="cardHolder"
                     placeholder="John Doe"
                 />
@@ -50,7 +47,7 @@ export default function PaymentForm() {
                 <Input
                     type="text"
                     {...register("cardNumber")}
-                    className="input"
+                    className="input required"
                     id="cardNumber"
                     placeholder="1234 5678 9012 3456"
                 />
@@ -67,7 +64,7 @@ export default function PaymentForm() {
                     </label>
                     <Input
                         {...register("expirationDate")}
-                        className="input"
+                        className="input required"
                         type="text"
                         id="expirationDate"
                         placeholder="01/27"
@@ -86,7 +83,7 @@ export default function PaymentForm() {
                     </label>
                     <Input
                         {...register("cvv")}
-                        className="input"
+                        className="input required"
                         id="cvv"
                         placeholder="123"
                         inputMode="tel"

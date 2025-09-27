@@ -1,14 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { Button } from "../ui/button";
+import { ReactNode } from "react";
 import {
     Dialog,
-    DialogClose,
     DialogContent,
     DialogDescription,
-    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -19,7 +15,7 @@ export default function MagicLinkDialog({
     children,
 }: {
     email: string;
-    children: any;
+    children: ReactNode;
 }) {
     return (
         <Dialog>
@@ -41,8 +37,9 @@ export default function MagicLinkDialog({
                         aria-live="polite"
                     >
                         A verification link has been sent to: <b>{email}</b>.
-                        After you have verified your email, you'll automatically
-                        be redirected to a page to change your password.
+                        After you have verified your email, you&apos;ll
+                        automatically be redirected to a page to change your
+                        password.
                     </DialogDescription>
                 </DialogHeader>
             </DialogContent>

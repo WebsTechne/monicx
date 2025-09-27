@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Eye, EyeClosed } from "lucide-react";
-import ChangePasswordDialog from "@/components/screens/change-password-dialog";
+import ChangePasswordDialog from "@/components/screens/reset-password-dialog";
 import FormHeading from "@/components/elements/form-heading";
 
 export default function Page() {
@@ -19,8 +19,8 @@ export default function Page() {
         e.preventDefault();
         setError("");
 
-        // now submit (fetch / next-auth signIn / form action, whatever you use)
-        // example: fetch('/api/auth/signin', { method: 'POST', body: JSON.stringify({ identifier: id.trim(), password }) })
+        // now submit (fetch / next-auth sign-in / form action, whatever you use)
+        // example: fetch('/api/auth/sign-in', { method: 'POST', body: JSON.stringify({ identifier: id.trim(), password }) })
     };
 
     return (
@@ -29,11 +29,11 @@ export default function Page() {
                 onSubmit={handleSubmit}
                 className="mx-auto flex w-full max-w-[800px] flex-col items-center gap-5"
                 role="form"
-                aria-labelledby="change-password-heading"
+                aria-labelledby="reset-password-heading"
             >
                 <FormHeading
                     title="Change password"
-                    titleId="change-password-heading"
+                    titleId="reset-password-heading"
                     description="Your new password must be different from the last
                         password you used."
                 />
@@ -228,7 +228,7 @@ export default function Page() {
 
                 <div className="item-center text-foreground flex flex-wrap items-center justify-center gap-1">
                     <Button variant="link" asChild>
-                        <Link href="/auth/signin">Back to Sign in</Link>
+                        <Link href="/auth/sign-in">Back to Sign in</Link>
                     </Button>
                 </div>
             </form>

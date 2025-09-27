@@ -4,7 +4,7 @@ import { parsePhoneNumberFromString } from "libphonenumber-js";
 export type ProductType = {
     id: string | number;
     slug?: string;
-    category?: string;
+    category: string;
     name: string;
     shortDescription: string;
     description: string;
@@ -12,6 +12,8 @@ export type ProductType = {
     sizes: string[];
     colors: string[];
     images: Record<string, string>;
+    rating: { value: number; votes: number };
+    wishlist?: boolean;
 };
 export type ProductsType = ProductType[];
 
@@ -96,3 +98,11 @@ export type CartStoreActionsType = {
     removeFromCart: (product: CartItemType) => void;
     clearCart: () => void;
 };
+
+export type User = {
+    isUser?: boolean;
+    firstName?: string;
+    lastName?: string;
+    image?: string | null;
+    initials: string;
+} | null;

@@ -1,4 +1,5 @@
 // src/app/admin/layout.tsx
+import { ReactNode } from "react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import AppSidebar from "@/components/layout/admin/AppSidebar";
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
 export default async function AdminLayout({
     children,
 }: {
-    children: React.ReactNode;
+    children: ReactNode;
 }) {
     const cookieStore = await cookies();
     const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";

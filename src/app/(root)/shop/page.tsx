@@ -1,7 +1,6 @@
 // app/(root)/shop/page.tsx  (server component)
 import { products } from "@/lib/products";
 import ProductList from "@/components/elements/products/product-list";
-import Categories from "@/components/elements/products/categories";
 import Image from "next/image";
 
 export const metadata = {

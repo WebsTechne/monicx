@@ -27,7 +27,7 @@ export default function ProductList({
             const sp = new URLSearchParams(location.search);
             const q = sp.get("category");
             if (q) return q;
-            const m = location.pathname.match(/\/shop\/category\/([^\/?#]+)/);
+            const m = location.pathname.match(/\/shop\/categories\/([^\/?#]+)/);
             return m ? decodeURIComponent(m[1]) : undefined;
         } catch {
             return undefined;
@@ -71,7 +71,7 @@ export default function ProductList({
         const onPop = () => {
             const sp = new URLSearchParams(location.search);
             const qcat = sp.get("category");
-            const m = location.pathname.match(/\/shop\/category\/([^\/?#]+)/);
+            const m = location.pathname.match(/\/shop\/categories\/([^\/?#]+)/);
             const slug = qcat ?? (m ? decodeURIComponent(m[1]) : undefined);
             setActiveCategory(slug);
             setClientItems(undefined);
@@ -99,12 +99,12 @@ export default function ProductList({
     }, [clientItems, activeCategory]);
 
     return (
-        <div className="w-full">
+        <>
             <Categories allTab={allTab || undefined} />
 
             {page === "shop" && <Filter />}
 
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-10 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+            <div className="xs:grid-cols-2 grid grid-cols-1 gap-3.5 sm:gap-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5">
                 {items.map((product) => (
                     <ProductCard
                         key={product.slug ?? product.id}
@@ -112,6 +112,7 @@ export default function ProductList({
                     />
                 ))}
             </div>
+
             <div className="mt-3 flex w-full items-center justify-end">
                 <Button
                     variant="link"
@@ -121,7 +122,7 @@ export default function ProductList({
                     <Link
                         href={
                             activeCategory
-                                ? `/shop/category/${encodeURIComponent(activeCategory)}`
+                                ? `/shop/categories/${encodeURIComponent(activeCategory)}`
                                 : "/shop"
                         }
                     >
@@ -129,6 +130,6 @@ export default function ProductList({
                     </Link>
                 </Button>
             </div>
-        </div>
+        </>
     );
 }

@@ -3,7 +3,7 @@
 import { ReactNode } from "react";
 import { ThemeProvider } from "./providers/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
-import SidebarProvider from "./sidebar-provider";
+import SidebarProvider from "./providers/sidebar-provider";
 
 export default function LayoutContent({ children }: { children: ReactNode }) {
     return (

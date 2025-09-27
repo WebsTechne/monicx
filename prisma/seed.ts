@@ -1,5 +1,5 @@
 // prisma/seed.ts
-import { PrismaClient, Prisma } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const sizes = [
@@ -41,7 +41,7 @@ const colors = [
 ];
 
 async function main() {
-    // keep old category upsert behaviour
+    // keep old category upsert behavior
     await prisma.category.upsert({
         where: { slug: "tops" },
         update: { name: "Tops", description: "Shirts, blouses and tees" },
@@ -88,25 +88,6 @@ async function main() {
             });
         }
     }
-
-    // Optional sample product creation — comment out if you don't want a sample product.
-    /*
-  const existing = await prisma.product.findUnique({
-    where: { sku: "PRD-0001" },
-  });
-
-  if (!existing) {
-    await prisma.product.create({
-      data: {
-        sku: "PRD-0001",
-        name: "Sample Tee",
-        description: "A sample tee for testing",
-        price: new Prisma.Decimal(10000.0),
-        stock: 20,
-      },
-    });
-  }
-  */
 
     console.log("Seed complete");
 }

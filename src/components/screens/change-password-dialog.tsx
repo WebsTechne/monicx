@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
     Dialog,
@@ -13,7 +13,11 @@ import {
 } from "../ui/dialog";
 import { BadgeCheck } from "lucide-react";
 
-export default function ChangePasswordDialog({ children }: { children: any }) {
+export default function ChangePasswordDialog({
+    children,
+}: {
+    children: ReactNode;
+}) {
     const timer: number = 6;
     const [open, setOpen] = useState(false);
     const router = useRouter();
@@ -21,7 +25,7 @@ export default function ChangePasswordDialog({ children }: { children: any }) {
     useEffect(() => {
         if (!open) return;
         const id = setTimeout(() => {
-            router.push("/auth/signin"); // 👈 change to your destination
+            router.push("/auth/sign-in"); // 👈 change to your destination
         }, timer * 1000);
 
         return () => clearTimeout(id);
@@ -52,9 +56,9 @@ export default function ChangePasswordDialog({ children }: { children: any }) {
                         id="change-pass-success-desc"
                         className="m-0! leading-normal"
                     >
-                        You have successfully changed your password. You'll be
-                        redirected to the sign in page shortly to continue
-                        signing in
+                        You have successfully changed your password. You&apos;ll
+                        be redirected to the sign in page shortly to continue
+                        sign-ing in
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>

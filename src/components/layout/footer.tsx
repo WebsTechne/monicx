@@ -36,15 +36,15 @@ const LINKS = [
             },
             {
                 name: "New Arrivals",
-                href: "/shop/products?tab=new-arrivals",
+                href: "/shop?tab=new-arrivals",
             },
             {
                 name: "Best Sellers",
-                href: "/shop/products?tab=best-sellers",
+                href: "/shop?tab=best-sellers",
             },
             {
                 name: "Sales",
-                href: "/shop/products?tab=sales",
+                href: "/shop?tab=sales",
             },
         ],
     },

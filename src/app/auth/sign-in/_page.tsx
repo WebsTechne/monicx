@@ -36,15 +36,21 @@ export default function Page() {
             setError(
                 "Enter a valid email or phone number (include country code).",
             );
-            return;
         }
         if (password.value.length < 6) {
             setError("Password must be at least 6 characters.");
             return;
         }
+        if (!id.trim() || !password.value.trim()) {
+            setError("All fields are required. Fill in all fields.");
+            toast.warning("Fill in all required fields.", {
+                description: "Cannot submit form.",
+            });
+            return;
+        }
 
-        // now submit (fetch / next-auth signIn / form action, whatever you use)
-        // example: fetch('/api/auth/signin', { method: 'POST', body: JSON.stringify({ identifier: id.trim(), password }) })
+        // now submit (fetch / next-auth sign-in / form action, whatever you use)
+        // example: fetch('/api/auth/sign-in', { method: 'POST', body: JSON.stringify({ identifier: id.trim(), password }) })
     };
 
     return (
@@ -53,9 +59,9 @@ export default function Page() {
                 onSubmit={handleSubmit}
                 className="mx-auto flex w-full max-w-[800px] flex-col items-center gap-5"
                 role="form"
-                aria-labelledby="signin-heading"
+                aria-labelledby="sign-in-heading"
             >
-                <FormHeading title="Sign in" titleId="signin-heading" />
+                <FormHeading title="Sign in" titleId="sign-in-heading" />
 
                 <div className="input-group">
                     <label htmlFor="identifier" className="input-label">
@@ -208,7 +214,7 @@ export default function Page() {
                     Don&apos;t have any account?
                     <Button variant="link" asChild>
                         <Link
-                            href="/auth/signup"
+                            href="/auth/sign-up"
                             className="!px-2 font-semibold"
                         >
                             Sign up

@@ -1,13 +1,7 @@
 // sidebar-provider.tsx — mobile-only version
 "use client";
 
-import React, {
-    createContext,
-    useContext,
-    useMemo,
-    useState,
-    useEffect,
-} from "react";
+import React, { createContext, useContext, useMemo, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile-custom";
 
 type SidebarContextProps = {

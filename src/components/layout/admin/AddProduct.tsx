@@ -252,32 +252,34 @@ export default function AddProduct() {
                         <FormField
                             control={form.control}
                             name="category"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Category</FormLabel>
-                                    <FormControl>
-                                        <Select>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select a category"></SelectValue>
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {categories.map((c) => (
-                                                    <SelectItem
-                                                        key={c}
-                                                        value={c}
-                                                    >
-                                                        {c}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
-                                    <FormDescription>
-                                        Enter the category of the product.
-                                    </FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
+                            render={
+                                (/* { field } */) => (
+                                    <FormItem>
+                                        <FormLabel>Category</FormLabel>
+                                        <FormControl>
+                                            <Select>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select a category"></SelectValue>
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {categories.map((c) => (
+                                                        <SelectItem
+                                                            key={c}
+                                                            value={c}
+                                                        >
+                                                            {c}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </FormControl>
+                                        <FormDescription>
+                                            Enter the category of the product.
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )
+                            }
                         />
                         <FormField
                             control={form.control}

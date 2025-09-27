@@ -24,8 +24,8 @@ export default function Page() {
             return;
         }
 
-        // now submit (fetch / next-auth signIn / form action, whatever you use)
-        // example: fetch('/api/auth/signin', { method: 'POST', body: JSON.stringify({ identifier: id.trim(), password }) })
+        // now submit (fetch / next-auth sign-in / form action, whatever you use)
+        // example: fetch('/api/auth/sign-in', { method: 'POST', body: JSON.stringify({ identifier: id.trim(), password }) })
     };
 
     return (
@@ -95,7 +95,7 @@ export default function Page() {
 
                 <div className="item-center text-foreground flex flex-wrap items-center justify-center gap-1">
                     <Button variant="link" asChild>
-                        <Link href="/auth/signin">Back to Sign in</Link>
+                        <Link href="/auth/sign-in">Back to Sign in</Link>
                     </Button>
                 </div>
             </form>

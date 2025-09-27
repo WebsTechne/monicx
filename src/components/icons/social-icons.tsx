@@ -1,4 +1,4 @@
-import { FC, SVGProps, useId } from "react";
+import { FC, SVGProps } from "react";
 
 type SVGIconProps = SVGProps<SVGSVGElement> & {
     size?: number;
@@ -48,6 +48,7 @@ export const AppleIcon: FC<SVGIconProps> = ({
         width={size}
         height={size}
         viewBox="0 0 24 24"
+        {...props}
     >
         <path
             fill={fill}

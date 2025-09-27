@@ -33,7 +33,7 @@ type Props = {
 export default function Categories({
     allTab = true,
     routeType = "auto",
-    categoryBasePath = "/shop/category",
+    categoryBasePath = "/shop/categories",
 }: Props) {
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -71,7 +71,8 @@ export default function Categories({
                     ? `?${currentParams.toString()}`
                     : "";
                 const shopRoot =
-                    categoryBasePath.replace(/\/category\/?$/i, "") || "/shop";
+                    categoryBasePath.replace(/\/categories\/?$/i, "") ||
+                    "/shop";
 
                 const newUrl =
                     value === "all"

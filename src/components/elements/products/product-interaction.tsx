@@ -56,7 +56,7 @@ export default function ProductInteraction({
             {/* SIZE */}
             <div className="flex flex-col gap-1 text-xs">
                 <span className="text-muted-foreground">Size(s)</span>
-                <div className="flex items-center gap-1 md:gap-2">
+                <div className="flex items-center gap-3 md:gap-4">
                     {product.sizes.map((size) => (
                         <button
                             className={cn(
@@ -70,7 +70,7 @@ export default function ProductInteraction({
                         >
                             <span
                                 className={cn(
-                                    "grid size-6! place-items-center rounded-[calc(var(--radius-md)-3px)] leading-tight font-extrabold",
+                                    "grid size-6! place-items-center rounded-[calc(0.625rem-2px-4px)] leading-tight font-extrabold",
                                     selectedSize === size
                                         ? "bg-foreground/80 text-background"
                                         : "bg-muted-foreground/50 text-muted",
@@ -85,7 +85,7 @@ export default function ProductInteraction({
             {/* COLOR */}
             <div className="flex flex-col gap-1 text-sm">
                 <span className="text-muted-foreground">Color(s)</span>
-                <div className="flex items-center gap-1 md:gap-2">
+                <div className="flex items-center gap-3 md:gap-4">
                     {product.colors.map((color) => (
                         <button
                             className="grid size-6! cursor-pointer place-items-center rounded-md border-2 p-0.5"
@@ -131,18 +131,20 @@ export default function ProductInteraction({
             </div>
 
             {/* BUTTONS */}
-            <Button
-                className="mx-auto mb-2 w-full active:scale-x-95 active:scale-y-100!"
-                onClick={handleAddToCart}
-            >
-                <Plus /> Add to Cart
-            </Button>
-            <Button
-                variant="secondary"
-                className="mx-auto w-full active:scale-x-95 active:scale-y-100!"
-            >
-                <ShoppingBag /> Buy now
-            </Button>
+            <div className="flex items-center gap-9">
+                <Button
+                    className="flex-1 active:scale-x-95 active:scale-y-100!"
+                    onClick={handleAddToCart}
+                >
+                    <Plus /> Add to Cart
+                </Button>
+                <Button
+                    variant="secondary"
+                    className="flex-1 active:scale-x-95 active:scale-y-100!"
+                >
+                    <ShoppingBag /> Buy now
+                </Button>
+            </div>
         </div>
     );
 }

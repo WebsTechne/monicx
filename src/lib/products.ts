@@ -27,6 +27,8 @@ export const products: (ProductsType[number] & {
             purple: "/products/1p.png",
             green: "/products/1gr.png",
         },
+        rating: { value: 2.9045, votes: 277 },
+        wishlist: true,
     },
     {
         id: 2,
@@ -41,6 +43,7 @@ export const products: (ProductsType[number] & {
         sizes: ["s", "m", "l", "xl"],
         colors: ["gray", "green"],
         images: { gray: "/products/2g.png", green: "/products/2gr.png" },
+        rating: { value: 4.0005, votes: 243 },
     },
     {
         id: 3,
@@ -59,6 +62,7 @@ export const products: (ProductsType[number] & {
             blue: "/products/3b.png",
             black: "/products/3bl.png",
         },
+        rating: { value: 3.3778, votes: 135 },
     },
     {
         id: 4,
@@ -73,6 +77,8 @@ export const products: (ProductsType[number] & {
         sizes: ["s", "m", "l"],
         colors: ["white", "pink"],
         images: { white: "/products/4w.png", pink: "/products/4p.png" },
+        rating: { value: 2.3036, votes: 188 },
+        wishlist: true,
     },
     {
         id: 5,
@@ -91,6 +97,7 @@ export const products: (ProductsType[number] & {
             orange: "/products/5o.png",
             black: "/products/5bl.png",
         },
+        rating: { value: 4.6114, votes: 174 },
     },
     {
         id: 6,
@@ -105,6 +112,8 @@ export const products: (ProductsType[number] & {
         sizes: ["40", "42", "43", "44"],
         colors: ["gray", "white"],
         images: { gray: "/products/6g.png", white: "/products/6w.png" },
+        rating: { value: 4.7872, votes: 251 },
+        wishlist: true,
     },
     {
         id: 7,
@@ -119,6 +128,7 @@ export const products: (ProductsType[number] & {
         sizes: ["40", "42", "43"],
         colors: ["gray", "pink"],
         images: { gray: "/products/7g.png", pink: "/products/7p.png" },
+        rating: { value: 4.0076, votes: 99 },
     },
     {
         id: 8,
@@ -133,10 +143,11 @@ export const products: (ProductsType[number] & {
         sizes: ["s", "m", "l"],
         colors: ["blue", "green"],
         images: { blue: "/products/8b.png", green: "/products/8gr.png" },
+        rating: { value: 3.7772, votes: 63 },
     },
 ];
 
-export const findProductBySlug = (slug: string) =>
-    products.find((p) => p.slug === slug);
+export const findProduct = (slug: string) =>
+    products.find((p) => p.slug === slug || p.id.toString() === slug);
 export const productsByCategory = (cat: string) =>
     products.filter((p) => p.category === cat);

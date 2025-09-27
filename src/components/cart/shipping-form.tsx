@@ -34,15 +34,13 @@ export default function ShippingForm({
         try {
             await router.push("/cart?step=3");
         } catch (err) {
-            // don't crash the UI; log for debugging
-            // eslint-disable-next-line no-console
             console.error("Navigation failed after shipping form submit:", err);
         }
     };
 
     return (
         <form
-            className="flex flex-col gap-4"
+            className="flex flex-col gap-4 border-0!"
             onSubmit={handleSubmit(handleShippingForm)}
         >
             {/* Name */}

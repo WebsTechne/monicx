@@ -6,7 +6,7 @@ import { Button } from "../../ui/button";
 import ShopSubmenu from "./shop-submenu";
 import CollectionsSubmenu from "./collections-submenu";
 import HelpSubmenu from "./help-submenu";
-import { useSidebar } from "@/components/sidebar-provider";
+import { useSidebar } from "@/components/providers/sidebar-provider";
 import NavLink from "@/components/elements/nav-link";
 
 const NAV_BREAKPOINT = 1100;
@@ -64,7 +64,7 @@ export default function Navbar({ className }: { className?: string }) {
     return (
         <nav
             className={cn(
-                "nav:overflow-visible! nav:relative nav:opacity-100 nav:pointer-events-auto! nav:top-0 nav:h-auto nav:bg-transparent! overlay nav:w-auto absolute top-full left-0 z-100 h-[calc(100dvh_-_100%)] w-dvw transition-[opacity] duration-450",
+                "nav:overflow-visible! nav:relative nav:opacity-100 nav:pointer-events-auto! nav:top-0 nav:h-auto nav:bg-transparent! overlay nav:w-max absolute top-full left-0 z-100 h-[calc(100dvh_-_100%)] w-full transition-[opacity] duration-450",
                 openMobile
                     ? "pointer-events-auto opacity-100"
                     : "pointer-events-none opacity-0",
@@ -74,7 +74,7 @@ export default function Navbar({ className }: { className?: string }) {
         >
             <ul
                 className={cn(
-                    "bg-background nav:h-max nav:border-none! nav:w-max nav:flex-row nav:items-center nav:px-2 nav:gap-4.5 nav:py-0! nav:overflow-visible! scrollbar-width-none flex max-h-[calc(100dvh_-_64px)] w-full flex-col gap-2.25 overflow-scroll border-t-1 px-5 py-2 transition-[height] duration-300",
+                    "not-nav:header-bg! nav:h-max nav:border-none! nav:w-max nav:flex-row nav:items-center nav:px-2 nav:gap-4.5 nav:py-0! nav:overflow-visible! scrollbar-width-none flex max-h-[calc(100dvh_-_64px)] w-full flex-col gap-2.25 overflow-scroll border-t-1 px-5 py-2 transition-[height] duration-300",
                     openMobile ? "h-max" : "h-0",
                 )}
                 role="menubar"
@@ -143,8 +143,8 @@ export default function Navbar({ className }: { className?: string }) {
                             {Submenu && (
                                 <div
                                     className={cn(
-                                        subOpen[i] ? "h-max" : "h-0",
-                                        "nav:cubic-transition overflow-clip pt-2.5 duration-400",
+                                        subOpen[i] ? "h-max pt-2.5" : "h-0 p-0",
+                                        "nav:cubic-transition! not-nav:duration-300 overflow-clip",
                                         "nav:min-h-11 nav:h-auto! nav:left-1/2 nav:-translate-x-1/2 nav:-translate-y-6 nav:group-hover:opacity-100 nav:group-hover:pointer-events-auto nav:absolute nav:top-full",
                                         "nav:opacity-0 nav:pointer-events-none nav:min-w-sm nav:w-max nav:group-hover:translate-y-0",
                                     )}
@@ -153,8 +153,8 @@ export default function Navbar({ className }: { className?: string }) {
                                         id={`submenu-${i}`}
                                         aria-hidden={!subOpen[i]}
                                         className={cn(
-                                            "bg-background nav:dark:border-1! h-max! w-full overflow-clip border-none",
-                                            "nav:rounded-xl nav:shadow-xl",
+                                            "nav:bg-background nav:dark:border-1! h-max! w-full overflow-clip",
+                                            "nav:rounded-xl nav:shadow-xl dark:shadow-none!",
                                             "nav:p-2",
                                         )}
                                     >
@@ -162,7 +162,7 @@ export default function Navbar({ className }: { className?: string }) {
                                             className={cn(
                                                 "nav:border-none! nav:w-max! nav:p-0! nav:min-w-[inherit] min-h-11 w-full border-b-1 pb-2",
                                                 subOpen[i] &&
-                                                    "animate-in slide-in-from-top-[150%] [animate-duration]-500 fade-in",
+                                                    "slide-in-from-top-[150%] [animate-duration]-500 fade-in",
                                             )}
                                         />
                                     </div>

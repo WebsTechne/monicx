@@ -6,10 +6,7 @@ import {
     Calendar,
     Search,
     Settings,
-    User2,
-    ChevronUp,
     Plus,
-    ChevronDown,
     Shirt,
     User,
     ShoppingBasket,
@@ -55,7 +52,6 @@ import AddCategory from "./AddCategory";
 import AddProduct from "./AddProduct";
 import AddCollection from "./AddCollection";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useIsMobile } from "@/hooks/use-mobile-admin";
 
 const items = [
     {

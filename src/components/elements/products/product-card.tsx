@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { CSSProperties, useState } from "react";
 // TYPES & STORES
 import { ProductType } from "@/types";
 import useCartStore from "@/stores/cart-store";
@@ -19,14 +19,25 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { Heart, MoreVertical, ShoppingCart } from "lucide-react";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
+import { useIsMobile } from "@/hooks/use-mobile-custom";
 
 export default function ProductCard({
     product,
+    wishlistPage,
 }: {
     product: ProductType & { slug?: string };
+    wishlistPage?: boolean;
 }) {
+    const inWishlist = product.wishlist;
+    const [isLiked, setIsLiked] = useState<boolean>(inWishlist || false);
+    const isMobile = useIsMobile(768);
+
     const [productTypes, setProductTypes] = useState({
         size: product.sizes[0],
         color: product.colors[0],
@@ -44,7 +55,7 @@ export default function ProductCard({
         setProductTypes((prev) => ({ ...prev, [type]: value }));
     };
 
-    const productUrl = `/shop/product/${product.slug ?? product.id}`;
+    const productUrl = `/shop/${product.slug ?? product.id}`;
 
     const handleAddToCart = () => {
         addToCart({
@@ -73,78 +84,171 @@ export default function ProductCard({
             </Link>
 
             {/* PRODUCT DETAIL */}
-            <div className="flex flex-col gap-1.5 p-1.5">
-                <p className="m-0! line-clamp-1 text-left text-lg font-medium">
+            <div className="flex flex-col p-1.5">
+                <p className="line-clamp-1 text-left font-medium">
                     {product.name}
                 </p>
-                <p className="text-muted-foreground m-0! line-clamp-2 text-sm leading-normal">
-                    {product.shortDescription}
-                </p>
 
-                {/* PRODUCT TYPES */}
-                <div className="flex items-center gap-2 text-xs">
-                    {/* SIZES */}
-                    <div className="flex flex-col gap-1">
-                        <span className="text-muted-foreground">Size</span>
-                        <Select
-                            name="size"
-                            defaultValue={product.sizes[0]}
-                            onValueChange={(value) =>
-                                handleProductType({ type: "size", value })
-                            }
-                        >
-                            <SelectTrigger className="w-20!">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {product.sizes.map((size) => (
-                                    <SelectItem key={size} value={size}>
-                                        {size.toUpperCase()}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                    {/* COLORS */}
-                    <div className="flex flex-col gap-1">
-                        <span className="text-muted-foreground">Color</span>
-                        <div className="flex items-center gap-1">
-                            {product.colors.map((color) => (
-                                <div
-                                    className={cn(
-                                        "inline-grid size-5 place-items-center rounded-full border-(--color)! shadow-[0_0_5px_1px_rgb(from_var(--muted-foreground))_r_g_b_/_.3] transition-[border-width,_padding]",
-                                        `cursor-pointer ${productTypes.color === color ? "border-4 p-0.5" : "border-0"}`,
-                                    )}
-                                    style={
-                                        {
-                                            "--color": color,
-                                        } as React.CSSProperties
-                                    }
-                                    key={color}
-                                    onClick={() =>
-                                        handleProductType({
-                                            type: "color",
-                                            value: color,
-                                        })
-                                    }
-                                >
-                                    <span className="size-full rounded-full bg-(--color)" />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+                <div className="flex items-center">
+                    <span
+                        className="rating inline-block aspect-5/1 h-4"
+                        style={
+                            {
+                                "--rating": product.rating.value.toFixed(1),
+                            } as CSSProperties
+                        }
+                        data-rating={product.rating.value.toFixed(1)}
+                    ></span>
+                    <span className="text-muted-foreground text-sm leading-tight">
+                        {product.rating.value.toFixed(1)} -{" "}
+                        {product.rating.votes}
+                    </span>
                 </div>
 
-                {/* PRICE / ADD TO CART */}
-                <div className="flex items-center justify-between">
-                    <span className="leading-relaxed font-medium">
-                        ${product.price.toFixed(2)}
+                <div className="text-muted-foreground flex items-center">
+                    <span className="text-foreground inline-block flex-1 text-lg font-extrabold">
+                        ${product.price}
                     </span>
-                    <Button size="sm" onClick={handleAddToCart}>
-                        <ShoppingCart className="s-full text-inherit" />
-                        Add to cart
+
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="size-7! rounded-full transition-all!"
+                        onClick={() => {
+                            wishlistPage
+                                ? toast.warning(
+                                      "Do you really want to remove this item from wishlist?",
+                                      {
+                                          action: {
+                                              label: "Remove",
+                                              onClick: () => setIsLiked(false),
+                                          },
+                                      },
+                                  )
+                                : null;
+                        }}
+                    >
+                        <Heart
+                            size={20}
+                            className={
+                                wishlistPage || product.wishlist
+                                    ? "stroke-gold"
+                                    : ""
+                            }
+                            fill={
+                                wishlistPage || product.wishlist
+                                    ? "var(--color-gold)"
+                                    : "transparent"
+                            }
+                        />
                     </Button>
+
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="size-7! rounded-full transition-all!"
+                            >
+                                <MoreVertical size={20} />
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent
+                            side={isMobile ? "top" : "right"}
+                            align={isMobile ? "center" : "end"}
+                            className="z-100! mr-2 rounded-xl! shadow-xl"
+                        >
+                            <p className="flex items-center justify-between text-sm font-bold">
+                                {product.name}
+                                <span className="text-gold font-extrabold">
+                                    $
+                                    <span className="text-base">
+                                        {product.price.toFixed(2)}
+                                    </span>
+                                </span>
+                            </p>
+
+                            <p className="text-muted-foreground mb-1.75 line-clamp-2 text-sm leading-normal">
+                                {product.shortDescription}
+                            </p>
+
+                            {/* PRODUCT SPECS */}
+                            <div className="mb-1.75 flex items-center justify-between gap-2 text-xs">
+                                {/* SIZES */}
+                                <div className="flex flex-col gap-1">
+                                    <span className="text-muted-foreground">
+                                        Size
+                                    </span>
+                                    <Select
+                                        name="size"
+                                        defaultValue={product.sizes[0]}
+                                        onValueChange={(value) =>
+                                            handleProductType({
+                                                type: "size",
+                                                value,
+                                            })
+                                        }
+                                    >
+                                        <SelectTrigger className="w-20! px-2! py-1!">
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent className="z-100! mt-0">
+                                            {product.sizes.map((size) => (
+                                                <SelectItem
+                                                    key={size}
+                                                    value={size}
+                                                >
+                                                    {size.toUpperCase()}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                {/* COLORS */}
+                                <div className="flex flex-col gap-1">
+                                    <span className="text-muted-foreground">
+                                        Color(s)
+                                    </span>
+                                    <div className="flex items-center gap-1">
+                                        {product.colors.map((color) => (
+                                            <div
+                                                className={cn(
+                                                    "inline-grid size-5 place-items-center rounded-full border-(--color)! shadow-md transition-[border-width,_padding]",
+                                                    `cursor-pointer ${productTypes.color === color ? "border-4 p-0.5" : "border-0"}`,
+                                                )}
+                                                style={
+                                                    {
+                                                        "--color": color,
+                                                    } as CSSProperties
+                                                }
+                                                key={color}
+                                                onClick={() =>
+                                                    handleProductType({
+                                                        type: "color",
+                                                        value: color,
+                                                    })
+                                                }
+                                            >
+                                                <span className="size-full rounded-full bg-(--color)" />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* ADD TO CART */}
+                            <div className="flex items-center justify-between">
+                                <Button
+                                    size="sm"
+                                    className="w-full"
+                                    onClick={handleAddToCart}
+                                >
+                                    <ShoppingCart className="s-full text-inherit" />
+                                    Add to cart
+                                </Button>
+                            </div>
+                        </PopoverContent>
+                    </Popover>
                 </div>
             </div>
         </div>

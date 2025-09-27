@@ -1,15 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import Form from "next/form";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
-import useMounted from "@/hooks/use-mounted";
-import { useIsMobile } from "@/hooks/use-mobile-custom";
 import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { CircleX, Command, Search, X } from "lucide-react";
+import { CircleX, Search } from "lucide-react";
 
 export default function SearchForm({
     query, // keep as optional prop fallback if you like
@@ -19,12 +15,9 @@ export default function SearchForm({
     query?: string;
     className?: string;
 }) {
-    const mounted = useMounted();
-
     const formRef = useRef<HTMLFormElement | null>(null);
     const pathname = usePathname();
     const searchParams = useSearchParams();
-    const isMobile = useIsMobile(500);
 
     // initial local state — prefer reading from actual URL when available
     const [value, setValue] = useState(query ?? "");
@@ -51,7 +44,10 @@ export default function SearchForm({
         <Form
             action="/search"
             scroll={false}
-            className={cn("search-form relative h-full w-full", className)}
+            className={cn(
+                "search-form relative h-full w-full border-0 bg-transparent p-0",
+                className,
+            )}
             ref={formRef}
             {...props}
         >

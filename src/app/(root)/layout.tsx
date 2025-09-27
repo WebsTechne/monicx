@@ -27,7 +27,7 @@ export default function Layout({
             {/* Basic Page Elements */}
             <Header query={query} />
 
-            <main className="bg-background mx-auto min-h-[calc(.6*100dvh)] px-3.75 pb-3.75 transition-[width] duration-200 sm:max-w-xl sm:px-0! md:max-w-2xl lg:max-w-3xl xl:max-w-6xl">
+            <main className="bg-background mx-auto min-h-[calc(.6*100dvh)] overflow-x-clip px-3.75 pt-7 pb-3.75 transition-[width] duration-200 sm:max-w-[590px] sm:px-0! md:max-w-4xl lg:max-w-5xl xl:max-w-6xl">
                 {children}
             </main>
 

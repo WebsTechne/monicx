@@ -53,12 +53,12 @@ export default function AuthPromptDialog() {
                         Edit profile
                     </DialogTitle>
                     <DialogDescription className="m-0!" id="auth-prompt-desc">
-                        Sign up or log in to get the best experience.
+                        Sign up or sign in to get the best experience.
                     </DialogDescription>
                 </DialogHeader>
 
                 <Button type="button" className="w-full" asChild>
-                    <Link href="/auth/signup">Sign up</Link>
+                    <Link href="/auth/sign-up">Sign up</Link>
                 </Button>
                 <Button
                     type="button"
@@ -66,7 +66,7 @@ export default function AuthPromptDialog() {
                     className="w-full"
                     asChild
                 >
-                    <Link href="/auth/signin">Sign in</Link>
+                    <Link href="/auth/sign-in">Sign in</Link>
                 </Button>
 
                 <DialogFooter className="items-center sm:justify-center">

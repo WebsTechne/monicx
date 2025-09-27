@@ -10,38 +10,34 @@ import { useIsMobile } from "@/hooks/use-mobile-custom";
 import SearchForm from "../elements/search-form";
 import Navbar from "./navbar/navbar";
 import { Button } from "../ui/button";
-import { Bell, Menu, Search, SearchX, ShoppingCart, X } from "lucide-react";
+import { Bell, Menu, Search, SearchX, X, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { useSidebar } from "../sidebar-provider";
+import { useSidebar } from "../providers/sidebar-provider";
 import CartIcon from "../elements/cart-icon";
-import { ThemeToggle } from "../elements/theme-toggle";
-
-type User = {
-    isUser?: boolean;
-    firstName?: string;
-    lastName?: string;
-    image?: string | null;
-} | null;
+import { useRouter } from "next/navigation";
+import AccountButton from "../elements/account-button";
+import { User } from "@/types";
 
 export default function Header({ query }: { query: string }) {
     const mounted = useMounted();
-    const { setTheme, resolvedTheme } = useTheme();
+    const { resolvedTheme } = useTheme();
     const isDark = mounted && resolvedTheme === "dark";
     const isMobile = useIsMobile(1100);
     const [smSearchShow, setSmSearchShow] = useState(false);
-
-    const theme = resolvedTheme;
-    const toggleThemes = () => {
-        if (theme === "light") setTheme("dark");
-        else setTheme("light");
-    };
+    const { setOpenMobile } = useSidebar();
 
     const user: User = {
         isUser: true,
         firstName: "Triumph",
         lastName: "Aidenojie",
-        image: "https://github.com/evilrabbit.png", // "https://randomuser.me/api/portraits/men/75.jpg", //,
+        image: "https://github.com/evilrabbit.png",
+        get initials() {
+            // safe: optional chaining + filter to avoid 'undefined' characters
+            return [this.firstName?.[0], this.lastName?.[0]]
+                .filter(Boolean)
+                .join("")
+                .toUpperCase();
+        },
     };
 
     const initials =
@@ -51,9 +47,10 @@ export default function Header({ query }: { query: string }) {
 
     const { toggleSidebar, openMobile } = useSidebar();
 
+    const { push } = useRouter();
+
     return (
-        <header className="bg-background nav:px-7 sticky top-0 z-98 flex h-16 w-full items-center justify-between gap-3.5 px-3.75 py-2.5 md:gap-4.5">
-            {/* bg-background/65 backdrop-blur-sm */}
+        <header className="header-bg nav:px-7 sticky top-0 z-98 flex h-16 w-full items-center justify-between gap-3.5 px-3.75 py-2.5 md:gap-4.5">
             <section className="flex h-full items-center justify-start gap-2.5">
                 <Button
                     variant="ghost"
@@ -103,9 +100,7 @@ export default function Header({ query }: { query: string }) {
                 </Link>
             </section>
 
-            <section className="flex h-full items-center justify-start">
-                <Navbar />
-            </section>
+            <Navbar />
 
             <section className="search:min-w-60 flex h-full max-w-120 flex-1 items-center justify-center">
                 <SearchForm
@@ -127,24 +122,27 @@ export default function Header({ query }: { query: string }) {
 
                 {user.isUser ? (
                     <>
-                        <Button variant="ghost" className="header-icon">
+                        <Button
+                            variant="ghost"
+                            className="header-icon hidden sm:inline-block"
+                        >
                             <Bell />
                         </Button>
 
-                        {/* <Button variant="ghost" className="header-icon">
-                            <ShoppingCart />
-                            </Button> */}
+                        <Button
+                            variant="ghost"
+                            className="header-icon"
+                            onClick={() => {
+                                push("/wishlist");
+                                setOpenMobile(false);
+                            }}
+                        >
+                            <Heart />
+                        </Button>
+
                         <CartIcon />
 
-                        <ThemeToggle>
-                            <Avatar className="ring-ring/50 size-9 duration-300 hover:ring-[5px]">
-                                <AvatarImage
-                                    src={user.image || ""}
-                                    alt={`${user.firstName ?? ""} ${user.lastName ?? ""}`}
-                                ></AvatarImage>
-                                <AvatarFallback>{initials}</AvatarFallback>
-                            </Avatar>
-                        </ThemeToggle>
+                        <AccountButton user={user} />
                     </>
                 ) : (
                     <>
@@ -153,10 +151,10 @@ export default function Header({ query }: { query: string }) {
                             variant="ghost"
                             asChild
                         >
-                            <Link href="/auth/signin">Sign in</Link>
+                            <Link href="/auth/sign-in">Sign in</Link>
                         </Button>
                         <Button asChild>
-                            <Link href="/auth/signup">Sign up</Link>
+                            <Link href="/auth/sign-up">Sign up</Link>
                         </Button>
                     </>
                 )}
@@ -164,7 +162,7 @@ export default function Header({ query }: { query: string }) {
 
             <section
                 className={cn(
-                    "search:pointer-events-none search:opacity-0 pointer-events-auto absolute top-full left-0 flex h-full w-full gap-2.5 border-b-1 bg-inherit px-3 py-2 opacity-100 transition-[opacity] duration-300",
+                    "search:pointer-events-none search:opacity-0 header-bg pointer-events-auto absolute top-full left-0 flex h-full w-full gap-2.5 border-b-1 px-3 py-2 transition-[opacity] duration-300",
                     !mounted || !isMobile || !smSearchShow
                         ? "pointer-events-none! opacity-0!"
                         : `pointer-events-auto opacity-100`,

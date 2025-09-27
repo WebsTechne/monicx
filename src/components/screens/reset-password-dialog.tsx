@@ -13,7 +13,7 @@ import {
 } from "../ui/dialog";
 import { BadgeCheck } from "lucide-react";
 
-export default function ChangePasswordDialog({
+export default function ResetPasswordDialog({
     children,
 }: {
     children: ReactNode;

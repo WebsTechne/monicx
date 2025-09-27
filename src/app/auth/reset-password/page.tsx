@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Eye, EyeClosed } from "lucide-react";
-import ChangePasswordDialog from "@/components/screens/reset-password-dialog";
+import ResetPasswordDialog from "@/components/screens/reset-password-dialog";
 import FormHeading from "@/components/elements/form-heading";
 
 export default function Page() {
@@ -220,11 +220,11 @@ export default function Page() {
                     </div>
                 )}
 
-                <ChangePasswordDialog>
+                <ResetPasswordDialog>
                     <Button className="button w-full" type="submit">
                         Change password
                     </Button>
-                </ChangePasswordDialog>
+                </ResetPasswordDialog>
 
                 <div className="item-center text-foreground flex flex-wrap items-center justify-center gap-1">
                     <Button variant="link" asChild>

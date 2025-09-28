@@ -1,13 +1,26 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ProductsType } from "@/types";
-import Categories from "./categories";
 import ProductCard from "./product-card";
 import Link from "next/link";
 import { products as PRODUCTS } from "@/lib/products";
 import { Button } from "@/components/ui/button";
-import { Filter } from "./filter";
+import dynamic from "next/dynamic";
+
+// Dynamically import components that use useSearchParams
+const DynamicCategories = dynamic(() => import("./categories"), {
+    ssr: false,
+    loading: () => <div>Loading categories…</div>,
+});
+
+const DynamicFilter = dynamic(
+    () => import("./filter").then((mod) => ({ default: mod.Filter })),
+    {
+        ssr: false,
+        loading: () => <div>Loading sort…</div>,
+    },
+);
 
 type Props = {
     allTab?: boolean;
@@ -23,6 +36,7 @@ export default function ProductList({
     page,
 }: Props) {
     const detectCategoryFromLocation = () => {
+        if (typeof window === "undefined") return undefined;
         try {
             const sp = new URLSearchParams(location.search);
             const q = sp.get("category");
@@ -34,11 +48,7 @@ export default function ProductList({
         }
     };
 
-    const initialCategory =
-        category ??
-        (typeof window !== "undefined"
-            ? detectCategoryFromLocation()
-            : undefined);
+    const initialCategory = category ?? detectCategoryFromLocation();
 
     const [activeCategory, setActiveCategory] = useState<string | undefined>(
         initialCategory,
@@ -100,15 +110,9 @@ export default function ProductList({
 
     return (
         <>
-            <Suspense fallback={<div>Loading categories…</div>}>
-                <Categories allTab={allTab || undefined} />
-            </Suspense>
+            <DynamicCategories allTab={allTab || undefined} />
 
-            {page === "shop" && (
-                <Suspense fallback={<div>Loading sort…</div>}>
-                    <Filter />
-                </Suspense>
-            )}
+            {page === "shop" && <DynamicFilter />}
 
             <div className="xs:grid-cols-2 grid grid-cols-1 gap-3.5 sm:gap-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5">
                 {items.map((product) => (

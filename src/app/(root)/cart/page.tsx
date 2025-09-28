@@ -11,7 +11,7 @@ import { ArrowRight, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 
 const steps = [
     { id: 1, title: "Shopping Cart" },
@@ -19,7 +19,7 @@ const steps = [
     { id: 3, title: "Payment Method" },
 ];
 
-export default function CartPage() {
+function CartPageContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
 
@@ -224,5 +224,27 @@ export default function CartPage() {
                 </div>
             </div>
         </>
+    );
+}
+
+export default function CartPage() {
+    return (
+        <Suspense
+            fallback={
+                <div className="flex flex-col items-center justify-center gap-4">
+                    <h1 className="text-2xl">Your Shopping Cart</h1>
+                    <div className="flex items-center gap-4">
+                        <div className="bg-muted h-8 w-8 animate-pulse rounded-full"></div>
+                        <div className="bg-muted h-8 w-32 animate-pulse rounded"></div>
+                        <div className="bg-muted h-8 w-8 animate-pulse rounded-full"></div>
+                    </div>
+                    <div className="w-full max-w-4xl">
+                        <div className="bg-muted h-64 animate-pulse rounded-lg"></div>
+                    </div>
+                </div>
+            }
+        >
+            <CartPageContent />
+        </Suspense>
     );
 }

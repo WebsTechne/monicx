@@ -34,8 +34,6 @@ export default function ProductCard({
     product: ProductType & { slug?: string };
     wishlistPage?: boolean;
 }) {
-    const inWishlist = product.wishlist;
-    const [isLiked, setIsLiked] = useState<boolean>(inWishlist || false);
     const isMobile = useIsMobile(768);
 
     const [productTypes, setProductTypes] = useState({
@@ -115,17 +113,19 @@ export default function ProductCard({
                         size="icon"
                         className="size-7! rounded-full transition-all!"
                         onClick={() => {
-                            wishlistPage
-                                ? toast.warning(
-                                      "Do you really want to remove this item from wishlist?",
-                                      {
-                                          action: {
-                                              label: "Remove",
-                                              onClick: () => setIsLiked(false),
-                                          },
-                                      },
-                                  )
-                                : null;
+                            if (wishlistPage) {
+                                toast.warning(
+                                    "Do you really want to remove this item from wishlist?",
+                                    {
+                                        action: {
+                                            label: "Remove",
+                                            onClick: () => {
+                                                // Handle wishlist removal logic here
+                                            },
+                                        },
+                                    },
+                                );
+                            }
                         }}
                     >
                         <Heart

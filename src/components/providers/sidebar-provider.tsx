@@ -1,7 +1,13 @@
 // sidebar-provider.tsx — mobile-only version
 "use client";
 
-import React, { createContext, useContext, useMemo, useState } from "react";
+import React, {
+    createContext,
+    useContext,
+    useMemo,
+    useState,
+    useCallback,
+} from "react";
 import { useIsMobile } from "@/hooks/use-mobile-custom";
 
 type SidebarContextProps = {
@@ -32,10 +38,10 @@ export default function SidebarProvider({
     // only care about mobile open/close state for the simplified provider
     const [openMobile, setOpenMobile] = useState(false);
 
-    const toggleSidebar = () => {
+    const toggleSidebar = useCallback(() => {
         if (isMobile) setOpenMobile((s) => !s);
         // intentionally no desktop state; desktop nav is a row and doesn't collapse
-    };
+    }, [isMobile]);
 
     const value = useMemo(
         () => ({
@@ -44,7 +50,7 @@ export default function SidebarProvider({
             setOpenMobile,
             toggleSidebar,
         }),
-        [isMobile, openMobile],
+        [isMobile, openMobile, toggleSidebar],
     );
 
     return (

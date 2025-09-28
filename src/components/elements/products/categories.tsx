@@ -1,6 +1,6 @@
 "use client";
 
-import { JSX, useCallback, useMemo } from "react";
+import { JSX, useCallback, useMemo, Suspense } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
     Footprints,
@@ -30,7 +30,7 @@ type Props = {
     categoryBasePath?: string;
 };
 
-export default function Categories({
+function CategoriesContent({
     allTab = true,
     routeType = "auto",
     categoryBasePath = "/shop/categories",
@@ -136,5 +136,13 @@ export default function Categories({
                 );
             })}
         </div>
+    );
+}
+
+export default function Categories(props: Props) {
+    return (
+        <Suspense fallback={<div>Loading categories…</div>}>
+            <CategoriesContent {...props} />
+        </Suspense>
     );
 }

@@ -97,16 +97,20 @@ export default function AppSidebar() {
 
     return (
         <Sidebar collapsible="icon">
-            <SidebarHeader className="py-4">
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                            <Link href="/admin">
+            <SidebarHeader className="h-[calc(32px+16px+16px)] py-4">
+                <SidebarMenu className="py-0!">
+                    <SidebarMenuItem className="py-0!">
+                        <SidebarMenuButton asChild className="py-0!">
+                            <Link
+                                href="/admin"
+                                className="flex h-8! items-center overflow-clip py-0!"
+                            >
                                 <Image
                                     src="/logo.svg"
                                     alt="logo"
                                     width={20}
                                     height={20}
+                                    className="h-5! overflow-clip"
                                 />
                                 <span>Lama Dev</span>
                             </Link>
@@ -115,7 +119,7 @@ export default function AppSidebar() {
                 </SidebarMenu>
             </SidebarHeader>
             <SidebarSeparator />
-            <SidebarContent>
+            <SidebarContent className="flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden">
                 <SidebarGroup>
                     <SidebarGroupLabel>Application</SidebarGroupLabel>
                     <SidebarGroupContent>
@@ -296,24 +300,7 @@ export default function AppSidebar() {
                     </SidebarGroupContent>
                 </SidebarGroup>
             </SidebarContent>
-            <SidebarFooter>
-                {/* <SidebarMenu>
-                    <SidebarMenuItem>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <SidebarMenuButton>
-                                    <User2 /> John Doe{" "}
-                                    <ChevronUp className="ml-auto" />
-                                </SidebarMenuButton>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuItem>Account</DropdownMenuItem>
-                                <DropdownMenuItem>Setting</DropdownMenuItem>
-                                <DropdownMenuItem>Sign out</DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </SidebarMenuItem>
-                </SidebarMenu> */}
+            <SidebarFooter className="h-16! overflow-clip">
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <DropdownMenu>

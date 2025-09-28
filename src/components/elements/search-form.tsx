@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, Suspense } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import Form from "next/form";
 import { cn } from "@/lib/utils";
 import { Input } from "../ui/input";
 import { CircleX, Search } from "lucide-react";
 
-export default function SearchForm({
+function SearchFormContent({
     query, // keep as optional prop fallback if you like
     className,
     ...props
@@ -31,8 +31,8 @@ export default function SearchForm({
             // clear input on other pages, or keep it (your choice)
             setValue("");
         }
-        // Intentionally depend on pathname and searchParams.toString() so effect runs when query changes
-    }, [pathname, searchParams?.toString()]);
+        // Intentionally depend on pathname and searchParams so effect runs when query changes
+    }, [pathname, searchParams]);
 
     const reset = () => {
         // If you want clearing to stay on the same page and just clear input:
@@ -96,5 +96,24 @@ export default function SearchForm({
                 </Button> */}
             </div>
         </Form>
+    );
+}
+
+export default function SearchForm(props: {
+    query?: string;
+    className?: string;
+}) {
+    return (
+        <Suspense
+            fallback={
+                <div className="relative h-full w-full">
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                        <div className="bg-muted h-8 w-32 animate-pulse rounded-full"></div>
+                    </div>
+                </div>
+            }
+        >
+            <SearchFormContent {...props} />
+        </Suspense>
     );
 }

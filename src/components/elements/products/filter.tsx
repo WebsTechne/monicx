@@ -8,8 +8,9 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export function Filter() {
+function FilterContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const pathname = usePathname();
@@ -47,5 +48,13 @@ export function Filter() {
                 </SelectContent>
             </Select>
         </div>
+    );
+}
+
+export function Filter() {
+    return (
+        <Suspense fallback={<div>Loading sort…</div>}>
+            <FilterContent />
+        </Suspense>
     );
 }

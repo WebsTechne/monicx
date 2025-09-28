@@ -39,7 +39,7 @@ const TodoList = () => {
                 </PopoverContent>
             </Popover>
             {/* LIST */}
-            <ScrollArea className="mt-4 max-h-[400px] overflow-y-auto">
+            <ScrollArea className="mt-4 max-h-80 overflow-y-auto">
                 <div className="flex flex-col gap-4">
                     {/* LIST ITEM */}
                     <Card className="p-4 shadow-none!">

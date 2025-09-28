@@ -19,7 +19,7 @@ export default function Layout({
     const query = searchParams?.query ?? searchParams?.q ?? "";
 
     useEffect(() => {
-        setSplashActive(!splashActive);
+        setSplashActive(false);
     }, []);
 
     return (

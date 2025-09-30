@@ -87,7 +87,7 @@ export default function ProductCard({
                     {product.name}
                 </p>
 
-                <div className="flex items-center">
+                <div className="flex items-center gap-1">
                     <span
                         className="rating inline-block aspect-5/1 h-4"
                         style={

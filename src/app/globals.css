@@ -182,18 +182,6 @@
     scrollbar-width: none;
 }
 
-@utility cubic-transition {
-    transition:
-        opacity 0.2s ease-in-out 0.05s,
-        visibility 0.2s ease-in-out 0.05s,
-        transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) 0.45s,
-        -webkit-transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) 0.45s;
-}
-
-@utility header-bg {
-    @apply bg-background/96 backdrop-blur-sm!;
-}
-
 @utility rating {
     --rating: attr(data-rating type(<number>), 0);
     --val: calc(var(--rating) / 5 * 100%);
@@ -219,8 +207,12 @@
         @apply bg-black/50;
     }
 
+    .header-bg {
+        @apply bg-background/96 backdrop-blur-sm;
+    }
+
     .header-icon {
-        @apply aspect-1 nav:h-full! m-0! h-8 cursor-pointer rounded-full! p-0! sm:h-9!;
+        @apply aspect-1 nav:h-full! m-0! flex h-8 cursor-pointer items-center justify-center rounded-full! p-0! sm:h-9!;
 
         & > svg {
             @apply text-foreground nav:size-6! size-5!;
@@ -259,4 +251,12 @@
     .button {
         @apply !h-12 max-w-120;
     }
+}
+
+.cubic-transition {
+    transition:
+        opacity 0.2s ease-in-out 0.05s,
+        visibility 0.2s ease-in-out 0.05s,
+        transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) 0.45s,
+        -webkit-transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) 0.45s !important;
 }

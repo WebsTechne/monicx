@@ -17,22 +17,25 @@ A complete redesign and rebuild of the Monicx e-commerce platform, crafted with 
 
 ## 🛠️ Tech Stack
 
-- Frontend: Next.js+Tailwindcss+Shadcn
+- Frontend: Next.js + Tailwindcss + Shadcn
 - Backend: Next.js
-- Database: PostgreSQL+Prisma
+- Database: PostgreSQL + Prisma
 - Hosting: Vercel
 
 ## 📦 Getting Started
 
 ```bash
 # Clone the repository
-git clone [your-repo-url]
+git clone https://github.com/webstechne/monicx
 
 # Install dependencies
-npm install
+pnpm install 
 
 # Start development server
-npm run dev
+pnpm run dev
+
+# Build
+pnpm run build
 ```
 
 ## 🎯 Goals

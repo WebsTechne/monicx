@@ -49,7 +49,7 @@ export default function Header({ query }: { query: string }) {
             <section className="flex h-full items-center justify-start gap-2.5">
                 <Button
                     variant="ghost"
-                    className="nav:hidden! m-0 h-8! rounded-md! p-0!"
+                    className="nav:hidden! m-0 h-8! rounded-md! px-1! py-0!"
                     onClick={toggleSidebar}
                     aria-expanded={isMobile ? openMobile : undefined}
                     aria-controls="sidebar-panel"
@@ -119,7 +119,7 @@ export default function Header({ query }: { query: string }) {
                     <>
                         <Button
                             variant="ghost"
-                            className="header-icon hidden sm:inline-block"
+                            className="header-icon hidden sm:inline-flex"
                         >
                             <Bell />
                         </Button>

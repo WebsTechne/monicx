@@ -19,8 +19,6 @@ export default function LayoutContent({ children }: { children: ReactNode }) {
             <SidebarProvider>
                 <Toaster
                     position="bottom-right"
-                    // @ts-ignore
-                    // theme={theme}
                     theme="system"
                     richColors
                     toastOptions={{

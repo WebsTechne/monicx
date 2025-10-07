@@ -12,7 +12,7 @@ import { LogOut, Monitor, Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function AccountButton({ user }: { user: User }) {
-    const { theme, resolvedTheme, setTheme } = useTheme();
+    const { theme, setTheme } = useTheme();
 
     return (
         <DropdownMenu>

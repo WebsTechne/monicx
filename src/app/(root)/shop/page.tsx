@@ -9,16 +9,17 @@ export const metadata = {
     description: "Browse all products",
 };
 
-export default function ShopPage({
+export default async function ShopPage({
     searchParams,
 }: {
-    searchParams?: Record<string, string | string[]>;
+    searchParams?:
+        | Record<string, string | string[]>
+        | Promise<Record<string, string | string[]>>;
 }) {
     // If the page is loaded with ?category=slug we can server-filter for SEO
+    const params = (await searchParams) ?? {};
     const q =
-        typeof searchParams?.category === "string"
-            ? searchParams.category
-            : undefined;
+        typeof params?.category === "string" ? params.category : undefined;
     const serverItems = q ? products.filter((p) => p.category === q) : products;
 
     return (

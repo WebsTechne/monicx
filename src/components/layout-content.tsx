@@ -1,14 +1,35 @@
 "use client";
 
 import { ReactNode } from "react";
-import { useTheme } from "next-themes";
 import { ThemeProvider } from "./providers/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import SidebarProvider from "./providers/sidebar-provider";
 
-export default function LayoutContent({ children }: { children: ReactNode }) {
-    const { theme } = useTheme();
+import {
+    CategoriesProvider,
+    CollectionsProvider,
+    SizesProvider,
+    ColorsProvider,
+} from "@/context/providers";
 
+import type { CategoryMinimal } from "@/lib/get-categories";
+import type { CollectionMinimal } from "@/lib/get-collections";
+import type { SizeMinimal } from "@/lib/get-sizes";
+import type { ColorMinimal } from "@/lib/get-colors";
+
+export default function LayoutContent({
+    children,
+    initialCategories,
+    initialCollections,
+    initialSizes,
+    initialColors,
+}: {
+    children: ReactNode;
+    initialCategories: CategoryMinimal[];
+    initialCollections: CollectionMinimal[];
+    initialSizes: SizeMinimal[];
+    initialColors: ColorMinimal[];
+}) {
     return (
         <ThemeProvider
             attribute="class"
@@ -27,7 +48,15 @@ export default function LayoutContent({ children }: { children: ReactNode }) {
                         },
                     }}
                 />
-                {children}
+                <CategoriesProvider initial={initialCategories}>
+                    <CollectionsProvider initial={initialCollections}>
+                        <SizesProvider initial={initialSizes}>
+                            <ColorsProvider initial={initialColors}>
+                                {children}
+                            </ColorsProvider>
+                        </SizesProvider>
+                    </CollectionsProvider>
+                </CategoriesProvider>
             </SidebarProvider>
         </ThemeProvider>
     );

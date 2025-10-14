@@ -66,13 +66,8 @@ const items = [
     },
     {
         title: "Inbox",
-        url: "#",
+        url: "inbox",
         icon: Inbox,
-    },
-    {
-        title: "Calendar",
-        url: "#",
-        icon: Calendar,
     },
     {
         title: "Search",
@@ -81,7 +76,7 @@ const items = [
     },
     {
         title: "Settings",
-        url: "#",
+        url: "settings",
         icon: Settings,
     },
 ];
@@ -167,11 +162,7 @@ export default function AppSidebar() {
                                 <SidebarMenuButton asChild>
                                     <Sheet>
                                         <SheetTrigger asChild>
-                                            <SidebarMenuButton
-                                            // onClick={() =>
-                                            //     setOpenMobile(false)
-                                            // }
-                                            >
+                                            <SidebarMenuButton>
                                                 <Plus />
                                                 Add Product
                                             </SidebarMenuButton>
@@ -180,16 +171,23 @@ export default function AppSidebar() {
                                     </Sheet>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
-                            {/* Add Category */}
+                            {/* Categories */}
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild>
+                                    <Link
+                                        href="/admin/categories"
+                                        onClick={() => setOpenMobile(false)}
+                                    >
+                                        <Shirt />
+                                        See All Categories
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild>
                                     <Sheet>
                                         <SheetTrigger asChild>
-                                            <SidebarMenuButton
-                                            // onClick={() =>
-                                            //     setOpenMobile(false)
-                                            // }
-                                            >
+                                            <SidebarMenuButton>
                                                 <Plus />
                                                 Add Category
                                             </SidebarMenuButton>
@@ -198,16 +196,23 @@ export default function AppSidebar() {
                                     </Sheet>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
-                            {/* Add Collection */}
+                            {/* Collections */}
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild>
+                                    <Link
+                                        href="/admin/collections"
+                                        onClick={() => setOpenMobile(false)}
+                                    >
+                                        <Shirt />
+                                        See All Collections
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild>
                                     <Sheet>
                                         <SheetTrigger asChild>
-                                            <SidebarMenuButton
-                                            // onClick={() =>
-                                            //     setOpenMobile(false)
-                                            // }
-                                            >
+                                            <SidebarMenuButton>
                                                 <Plus />
                                                 Add Collection
                                             </SidebarMenuButton>
@@ -243,11 +248,7 @@ export default function AppSidebar() {
                                 <SidebarMenuButton asChild>
                                     <Sheet>
                                         <SheetTrigger asChild>
-                                            <SidebarMenuButton
-                                            // onClick={() =>
-                                            //     setOpenMobile(false)
-                                            // }
-                                            >
+                                            <SidebarMenuButton>
                                                 <Plus />
                                                 Add User
                                             </SidebarMenuButton>
@@ -283,11 +284,7 @@ export default function AppSidebar() {
                                 <SidebarMenuButton asChild>
                                     <Sheet>
                                         <SheetTrigger asChild>
-                                            <SidebarMenuButton
-                                            // onClick={() =>
-                                            //     setOpenMobile(false)
-                                            // }
-                                            >
+                                            <SidebarMenuButton>
                                                 <Plus />
                                                 Add Order
                                             </SidebarMenuButton>
@@ -356,13 +353,6 @@ export default function AppSidebar() {
                                         </div>
                                     </div>
                                 </DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuGroup>
-                                    <DropdownMenuItem>
-                                        <Sparkles />
-                                        Upgrade to Pro
-                                    </DropdownMenuItem>
-                                </DropdownMenuGroup>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuGroup>
                                     <DropdownMenuItem>

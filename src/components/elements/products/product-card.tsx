@@ -68,10 +68,10 @@ export default function ProductCard({
     };
 
     return (
-        <div className="overflow-clip rounded-[16px] border p-1 shadow-none!">
+        <div className="overflow-clip rounded-[1.5rem] border p-1 shadow-none!">
             {/* IMAGE */}
             <Link href={productUrl}>
-                <div className="relative aspect-4/5 overflow-clip rounded-[calc(16px-4px)]">
+                <div className="relative aspect-4/5 overflow-clip rounded-[calc(1.5rem-4px)]">
                     <Image
                         src={product.images[productTypes.color] as string}
                         alt={product.name}
@@ -189,7 +189,10 @@ export default function ProductCard({
                                             })
                                         }
                                     >
-                                        <SelectTrigger className="w-20! px-2! py-1!">
+                                        <SelectTrigger
+                                            className="w-20! px-2! py-1!"
+                                            size="sm"
+                                        >
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent className="z-100! mt-0">

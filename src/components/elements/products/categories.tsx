@@ -1,7 +1,9 @@
 "use client";
 
-import { JSX, useCallback, useMemo, Suspense } from "react";
+import { JSX, useCallback, useMemo, Suspense, useEffect } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
+import { useCategoriesData } from "@/context/providers";
 import {
     Footprints,
     Glasses,
@@ -11,8 +13,18 @@ import {
     Hand,
     Venus,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
-import { categories as SharedCategories } from "@/lib/categories";
+type Category = {
+    id: number;
+    name: string;
+    slug: string;
+    description?: string | null;
+    imagePath?: string | null;
+    // optional field if you ever add iconName on categories
+    iconName?: string | null;
+};
 
 const IconMap: Record<string, JSX.Element> = {
     ShoppingBasket: <ShoppingBasket className="h-4 w-4" />,
@@ -38,6 +50,33 @@ function CategoriesContent({
     const searchParams = useSearchParams();
     const router = useRouter();
     const pathname = usePathname() || "/";
+
+    const {
+        data: categories = [],
+        refresh,
+        isRefreshing,
+    } = useCategoriesData() as {
+        data: Category[];
+        setData?: (d: Category[]) => void;
+        refresh: () => Promise<void>;
+        isRefreshing: boolean;
+    };
+
+    // If provider started with empty data, try to refresh once on mount.
+    useEffect(() => {
+        if ((!categories || categories.length === 0) && refresh) {
+            (async () => {
+                try {
+                    await refresh();
+                } catch (err) {
+                    // swallow — provider will log
+                    console.error("categories refresh failed", err);
+                }
+            })();
+        }
+        // intentionally only run on mount
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const getSlugFromPath = useCallback(() => {
         if (!pathname) return null;
@@ -65,7 +104,6 @@ function CategoriesContent({
             const currentParams = new URLSearchParams(searchParams.toString());
 
             if (usePath) {
-                // path-mode: update URL only (no Next.js navigation) so you can filter client-side
                 currentParams.delete("category");
                 const suffix = currentParams.toString()
                     ? `?${currentParams.toString()}`
@@ -111,28 +149,61 @@ function CategoriesContent({
         ],
     );
 
+    if (categories.length === 0) {
+        return (
+            <div className="bg-muted mb-4 rounded-lg p-4 text-sm">
+                No categories configured.{" "}
+                {refresh && (
+                    <button
+                        onClick={() => refresh()}
+                        className="ml-2 underline"
+                        aria-busy={isRefreshing}
+                    >
+                        Try refresh
+                    </button>
+                )}
+            </div>
+        );
+    }
+
     return (
-        <div className="bg-muted mb-4 grid grid-cols-2 gap-2 rounded-lg p-1.5 text-sm sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
-            {SharedCategories.map((c) => {
+        <div className="mb-4 flex gap-2 overflow-x-scroll rounded-lg p-1.5 text-sm">
+            {categories.map((c, index) => {
                 if (c.slug === "all" && !allTab) return null;
                 const isActive = c.slug === selectedCategory;
-                const icon = IconMap[c.iconName] ?? (
-                    <ShoppingBasket className="h-4 w-4" />
-                );
+                const icon =
+                    (c.iconName && IconMap[c.iconName.toLowerCase()]) ??
+                    (c.imagePath ? (
+                        <span className="relative inline-block aspect-square h-12.5 overflow-clip rounded-full">
+                            {/* guard src: Next/Image will crash if src is empty */}
+                            <Image
+                                src={c.imagePath}
+                                alt={c.name}
+                                fill
+                                sizes="50px"
+                                className="bg-muted/40 pointer-events-none object-cover"
+                            />
+                        </span>
+                    ) : (
+                        <ShoppingBasket className="h-4 w-4" />
+                    ));
+
                 return (
-                    <button
+                    <Button
+                        variant="ghost"
                         key={c.slug}
                         type="button"
                         aria-pressed={isActive}
                         onClick={() => handleChange(c.slug)}
-                        className={`flex cursor-pointer items-center justify-center gap-2 rounded-md px-2 py-1 ${
+                        className={cn(
+                            "flex h-max! w-max! cursor-pointer flex-col items-center justify-center gap-1 rounded-xl p-2",
                             isActive
                                 ? "bg-foreground text-background"
-                                : "text-muted-foreground"
-                        }`}
+                                : "text-muted-foreground",
+                        )}
                     >
                         {icon} {c.name}
-                    </button>
+                    </Button>
                 );
             })}
         </div>

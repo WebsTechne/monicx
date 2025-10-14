@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
     Select,
     SelectContent,
@@ -7,10 +9,22 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import {
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet";
+import { Slider } from "@/components/ui/slider";
+import { FilterIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 
 function FilterContent() {
+    const [price, setPrice] = useState<number[]>([25000, 75000]);
+
     const searchParams = useSearchParams();
     const router = useRouter();
     const pathname = usePathname();
@@ -29,7 +43,7 @@ function FilterContent() {
     };
 
     return (
-        <div className="my-2 flex w-full items-center justify-end gap-1">
+        <div className="my-2 flex w-full items-center justify-end gap-1 px-1">
             <span className="text-muted-foreground text-sm">Sort by:</span>
             <Select
                 name="size"
@@ -46,6 +60,53 @@ function FilterContent() {
                         </SelectItem>
                     ))}
                 </SelectContent>
+
+                <Sheet>
+                    <SheetTrigger asChild>
+                        <Button variant="outline">
+                            <FilterIcon /> Filter
+                        </Button>
+                    </SheetTrigger>
+                    <SheetContent className="z-1000!">
+                        <ScrollArea className="h-screen">
+                            <SheetHeader>
+                                <SheetTitle>Filter Products</SheetTitle>
+                                <SheetDescription>
+                                    Filter the products with the parameters
+                                    below:
+                                </SheetDescription>
+                            </SheetHeader>
+                            <div className="space-y-8 px-4">
+                                <section>
+                                    <h2>Price Range</h2>
+                                    <p>
+                                        Set your budget range ($
+                                        <span className="font-medium tabular-nums">
+                                            {price[0]}
+                                        </span>{" "}
+                                        -{" "}
+                                        <span className="font-medium tabular-nums">
+                                            {price[1]}
+                                        </span>
+                                        ).
+                                    </p>
+                                    <Slider
+                                        value={price}
+                                        onValueChange={setPrice}
+                                        max={100000}
+                                        min={10000}
+                                        minStepsBetweenThumbs={10}
+                                        step={500}
+                                        className="mt-2 w-full"
+                                        aria-label="Price Range"
+                                    />
+                                </section>
+
+                                <section></section>
+                            </div>
+                        </ScrollArea>
+                    </SheetContent>
+                </Sheet>
             </Select>
         </div>
     );

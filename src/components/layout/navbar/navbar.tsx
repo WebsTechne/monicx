@@ -59,12 +59,15 @@ export default function Navbar({ className }: { className?: string }) {
     // }
 
     // variable for setting toggling on mobile
-    const { openMobile, setOpenMobile } = useSidebar();
+    const isMobile = useIsMobile();
+    const { toggleSidebar, openMobile, setOpenMobile } = useSidebar();
 
     return (
         <nav
             className={cn(
-                "nav:overflow-visible! nav:relative nav:opacity-100 nav:pointer-events-auto! nav:top-0 nav:h-auto nav:bg-transparent! overlay nav:w-max absolute top-full left-0 z-100 h-[calc(100dvh_-_100%)] w-full transition-[opacity] duration-450",
+                "transition-[opacity] duration-450",
+                "nav:inline-block nav:overflow-visible! nav:relative nav:opacity-100 nav:pointer-events-auto! nav:top-0 nav:h-auto nav:bg-transparent! nav:w-max",
+                "absolute top-full left-0 z-100 flex h-[calc(100dvh_-_100%)] w-full flex-col-reverse overflow-clip",
                 openMobile
                     ? "pointer-events-auto opacity-100"
                     : "pointer-events-none opacity-0",
@@ -72,9 +75,14 @@ export default function Navbar({ className }: { className?: string }) {
             )}
             aria-label="Main navigation"
         >
+            <div
+                className={cn("nav:hidden overlay flex-1")}
+                onClick={toggleSidebar}
+            ></div>
             <ul
                 className={cn(
-                    "not-nav:header-bg! nav:h-max nav:border-none! nav:w-max nav:flex-row nav:items-center nav:px-2 nav:gap-4.5 nav:py-0! nav:overflow-visible! scrollbar-width-none flex max-h-[calc(100dvh_-_64px)] w-full flex-col gap-2.25 overflow-scroll border-t-1 px-5 py-2 transition-[height] duration-300",
+                    "nav:bg-transparent! nav:backdrop-blur-none! nav:h-max nav:border-none! nav:w-max nav:flex-row nav:items-center nav:px-2 nav:gap-4.5 nav:py-0! nav:overflow-visible!",
+                    "header-bg scrollbar-width-none flex max-h-[calc(100dvh_-_64px)] w-full shrink-0 flex-col gap-2.25 overflow-auto border-t-1 px-5 py-2 transition-[height] duration-300",
                     openMobile ? "h-max" : "h-0",
                 )}
                 role="menubar"

@@ -7,6 +7,7 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { buttonVariants } from "@/components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -49,7 +50,10 @@ export default function MonicxBreadcrumbs({
                                                     key={i}
                                                     asChild
                                                 >
-                                                    <Link href={child.href}>
+                                                    <Link
+                                                        href={child.href}
+                                                        className="text-foreground hover:text-secondary underline-offset-4 hover:underline"
+                                                    >
                                                         {child.name}
                                                     </Link>
                                                 </DropdownMenuItem>
@@ -57,10 +61,15 @@ export default function MonicxBreadcrumbs({
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 ) : isLast ? (
-                                    <BreadcrumbPage>{item.name}</BreadcrumbPage>
+                                    <BreadcrumbPage className="text-primary">
+                                        {item.name}
+                                    </BreadcrumbPage>
                                 ) : (
                                     <BreadcrumbLink asChild>
-                                        <Link href={item.href || "#"}>
+                                        <Link
+                                            href={item.href || "#"}
+                                            className="text-foreground hover:text-secondary underline-offset-4 hover:underline"
+                                        >
                                             {item.name}
                                         </Link>
                                     </BreadcrumbLink>

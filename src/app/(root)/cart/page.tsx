@@ -71,7 +71,7 @@ function CartPageContent() {
                 {/* STEPS & DETAILS */}
                 <div className="flex w-full flex-col gap-4 lg:flex-row lg:gap-8">
                     {/* STEPS */}
-                    <div className="bg-card flex h-max w-full grow-0 flex-col gap-3.5 rounded-lg border-1 p-4 lg:w-7/12">
+                    <div className="bg-card flex h-max w-full grow-0 flex-col gap-3.5 rounded-2xl border-1 p-4 lg:w-7/12">
                         {activeStep === 1 ? (
                             cart.length >= 1 ? (
                                 cart.map((item) => (
@@ -125,7 +125,7 @@ function CartPageContent() {
                                         {/* DELETE BUTTON */}
                                         <button
                                             onClick={() => removeFromCart(item)}
-                                            className="bg-destructive/10 hover:bg-destructive/20 text-destructive grid size-8 place-items-center rounded-full duration-300"
+                                            className="btn bg-destructive/10 hover:bg-destructive/20 text-destructive grid size-8 place-items-center rounded-full duration-300"
                                         >
                                             <Trash2 className="size-5" />
                                         </button>
@@ -154,7 +154,7 @@ function CartPageContent() {
                         )}
                     </div>
                     {/* DETAILS */}
-                    <div className="bg-card flex h-max w-full grow-0 flex-col gap-3.5 rounded-lg border-1 p-4 lg:w-5/12">
+                    <div className="bg-card flex h-max w-full grow-0 flex-col gap-3.5 rounded-2xl border-1 p-4 lg:w-5/12">
                         <h2 className="font-semibold">Cart Details</h2>
                         <div className="flex flex-col gap-2">
                             <div className="flex justify-between text-sm">

@@ -60,7 +60,7 @@ export default function ProductInteraction({
                     {product.sizes.map((size) => (
                         <button
                             className={cn(
-                                "rounded-md border-2 p-0.5",
+                                "rounded-full border-2 p-0.5",
                                 selectedSize === size
                                     ? "border-foreground/80"
                                     : "border-muted-foreground/50",
@@ -70,7 +70,7 @@ export default function ProductInteraction({
                         >
                             <span
                                 className={cn(
-                                    "grid size-6! place-items-center rounded-[calc(0.625rem-2px-4px)] leading-tight font-extrabold",
+                                    "grid size-6! place-items-center rounded-full leading-tight font-extrabold",
                                     selectedSize === size
                                         ? "bg-foreground/80 text-background"
                                         : "bg-muted-foreground/50 text-muted",
@@ -88,7 +88,7 @@ export default function ProductInteraction({
                 <div className="flex items-center gap-3 md:gap-4">
                     {product.colors.map((color) => (
                         <button
-                            className="grid size-6! cursor-pointer place-items-center rounded-md border-2 p-0.5"
+                            className="grid size-6! cursor-pointer place-items-center rounded-full border-2 p-0.5"
                             style={{
                                 borderColor: color,
                                 backgroundColor: color,

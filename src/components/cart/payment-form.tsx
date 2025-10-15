@@ -19,7 +19,7 @@ export default function PaymentForm() {
 
     return (
         <form
-            className="flex flex-col gap-4 border-0!"
+            className="flex max-w-full! flex-col gap-4 border-0!"
             onSubmit={handleSubmit(handlePaymentForm)}
         >
             {/* Name */}

@@ -148,7 +148,7 @@ export default function ProductCard({
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                className="size-7! rounded-full transition-all!"
+                                className="btn size-7! rounded-full transition-all!"
                             >
                                 <MoreVertical size={20} />
                             </Button>

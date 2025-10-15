@@ -8,6 +8,7 @@ export default async function Home() {
         <>
             <AuthPromptDialog />
             {/*  */}
+
             <div className="relative mb-12 aspect-3/1 w-full">
                 <Image
                     src="/featured.png"

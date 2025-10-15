@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import IMAGES from "@/assets/images";
 
 type Category = {
     id: number;
@@ -167,20 +168,42 @@ function CategoriesContent({
     }
 
     return (
-        <div className="mb-4 flex gap-2 overflow-x-scroll rounded-lg p-1.5 text-sm">
+        <div className="mb-4 flex gap-1.5 overflow-x-auto overflow-y-clip rounded-lg text-sm">
+            {/* ALL */}
+            <Button
+                variant="ghost"
+                type="button"
+                // aria-pressed={isActive}
+                onClick={() => handleChange("all")}
+                className={cn(
+                    "btn flex h-max! w-max! cursor-pointer flex-col items-center justify-center gap-1 rounded-xl p-2",
+                )}
+            >
+                <span className="relative inline-block aspect-square h-10.5 overflow-clip rounded-full">
+                    <Image
+                        src={IMAGES.logo.light}
+                        alt="All Products"
+                        fill
+                        sizes="42px"
+                        className="pointer-events-none bg-gray-50 object-cover"
+                    />
+                </span>
+                All
+            </Button>
+
             {categories.map((c, index) => {
                 if (c.slug === "all" && !allTab) return null;
                 const isActive = c.slug === selectedCategory;
                 const icon =
                     (c.iconName && IconMap[c.iconName.toLowerCase()]) ??
                     (c.imagePath ? (
-                        <span className="relative inline-block aspect-square h-12.5 overflow-clip rounded-full">
+                        <span className="relative inline-block aspect-square h-10.5 overflow-clip rounded-full">
                             {/* guard src: Next/Image will crash if src is empty */}
                             <Image
                                 src={c.imagePath}
                                 alt={c.name}
                                 fill
-                                sizes="50px"
+                                sizes="42px"
                                 className="bg-muted/40 pointer-events-none object-cover"
                             />
                         </span>
@@ -196,7 +219,7 @@ function CategoriesContent({
                         aria-pressed={isActive}
                         onClick={() => handleChange(c.slug)}
                         className={cn(
-                            "flex h-max! w-max! cursor-pointer flex-col items-center justify-center gap-1 rounded-xl p-2",
+                            "btn flex h-max! w-max! cursor-pointer flex-col items-center justify-center gap-1 rounded-xl p-2",
                             isActive
                                 ? "bg-foreground text-background"
                                 : "text-muted-foreground",

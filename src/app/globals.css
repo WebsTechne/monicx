@@ -231,7 +231,7 @@
         @apply cursor-pointer!;
     }
     form {
-        @apply bg-card max-w-[550px]! rounded-2xl border-1 px-3 py-5;
+        @apply bg-card max-w-[550px] rounded-2xl border-1 px-3 py-5;
     }
 }
 

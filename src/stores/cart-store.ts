@@ -1,4 +1,5 @@
 import { CartStoreActionsType, CartStoreStateType } from "@/types";
+import { toast } from "sonner";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
@@ -36,17 +37,27 @@ const useCartStore = create<CartStoreStateType & CartStoreActionsType>()(
                         ],
                     };
                 }),
-            removeFromCart: (product) =>
-                set((state) => ({
-                    cart: state.cart.filter(
-                        (p) =>
-                            !(
-                                p.id === product.id &&
-                                p.selectedSize === product.selectedSize &&
-                                p.selectedColor === product.selectedColor
-                            ),
-                    ),
-                })),
+            removeFromCart: (product) => {
+                toast("Do you really want to remove this item from cart?", {
+                    action: {
+                        label: "Remove",
+                        onClick: () => {
+                            set((state) => ({
+                                cart: state.cart.filter(
+                                    (p) =>
+                                        !(
+                                            p.id === product.id &&
+                                            p.selectedSize ===
+                                                product.selectedSize &&
+                                            p.selectedColor ===
+                                                product.selectedColor
+                                        ),
+                                ),
+                            }));
+                        },
+                    },
+                });
+            },
             clearCart: () => set({ cart: [] }),
         }),
         {

@@ -45,7 +45,7 @@ export default function CollectionsSubmenu({ className }: Props) {
             {navInfo.map((item, index) => (
                 <Link
                     href={`/shop/collections/${item.slug}`}
-                    className="hover:bg-muted flex rounded-lg p-1"
+                    className="hover:bg-muted/60 flex rounded-lg p-1"
                     key={`${item.slug}${index}`}
                 >
                     <li className="flex flex-1 items-center gap-1.5">

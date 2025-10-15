@@ -44,7 +44,8 @@ export default function LayoutContent({
                     richColors
                     toastOptions={{
                         classNames: {
-                            toast: "rounded-xl!",
+                            toast: "rounded-2xl!",
+                            actionButton: "rounded-lg!",
                         },
                     }}
                 />

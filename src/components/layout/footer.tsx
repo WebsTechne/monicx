@@ -78,7 +78,7 @@ export default function Footer() {
     const thisYear = new Date().getFullYear();
 
     return (
-        <footer className="bg-sidebar flex flex-col items-center gap-8 p-8 md:flex-row md:items-start md:justify-between md:gap-0">
+        <footer className="bg-sidebar flex flex-col items-center gap-8 p-8 md:flex-row md:items-start md:justify-between md:gap-0 md:px-20">
             <section className="flex flex-col items-center gap-2 md:items-start md:gap-4">
                 <Link href="/" className="flex w-max items-center gap-1">
                     <span className="relative aspect-3/2 h-6 rounded-md md:h-9">

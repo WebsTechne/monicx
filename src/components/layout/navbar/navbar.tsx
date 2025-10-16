@@ -154,7 +154,7 @@ export default function Navbar({ className }: { className?: string }) {
                                         subOpen[i] ? "h-max pt-2.5" : "h-0 p-0",
                                         "nav:cubic-transition not-nav:duration-300 overflow-clip",
                                         "nav:min-h-11 nav:h-auto! nav:left-1/2 nav:-translate-x-1/2 nav:-translate-y-6 nav:group-hover:opacity-100 nav:group-hover:pointer-events-auto nav:absolute nav:top-full",
-                                        "nav:opacity-0 nav:pointer-events-none nav:min-w-sm nav:w-max nav:group-hover:translate-y-0",
+                                        "nav:opacity-0 nav:pointer-events-none nav:w-max nav:group-hover:translate-y-0",
                                     )}
                                 >
                                     <div
@@ -162,13 +162,13 @@ export default function Navbar({ className }: { className?: string }) {
                                         aria-hidden={!subOpen[i]}
                                         className={cn(
                                             "nav:bg-background nav:dark:border-1! h-max! w-full overflow-clip",
-                                            "nav:rounded-xl nav:shadow-xl dark:shadow-none!",
+                                            "nav:rounded-xl nav:shadow-xl nav:w-max! dark:shadow-none!",
                                             "nav:p-2",
                                         )}
                                     >
                                         <Submenu
                                             className={cn(
-                                                "nav:border-none! nav:w-max! nav:p-0! nav:min-w-[inherit] min-h-11 w-full border-b-1 pb-2",
+                                                "nav:border-none! nav:w-max nav:min-w-sm nav:max-w-150 min-h-11 w-full border-b-1 pb-2",
                                                 subOpen[i] &&
                                                     "slide-in-from-top-[150%] [animate-duration]-500 fade-in",
                                             )}

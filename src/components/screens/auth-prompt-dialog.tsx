@@ -39,12 +39,6 @@ export default function AuthPromptDialog() {
                 aria-describedby="auth-prompt-desc"
                 className="overflow-clip rounded-3xl p-5 pt-50 [&_>_*:not(.img-overlay)]:z-[1]"
             >
-                <Image
-                    src={logo}
-                    alt="logo"
-                    className="absolute top-2 left-2 z-100! size-10"
-                />
-                <div className="rounded-inherit absolute inset-0 z-0 bg-[url('https://images.pexels.com/photos/14856268/pexels-photo-14856268.jpeg?auto=compress&cs=tinysrgb&w=1600')] mask-b-from-20% mask-b-to-60% bg-cover bg-center [mask-size:cover]" />
                 <DialogHeader className="!gap-0">
                     <DialogTitle
                         id="auth-prompt-title"
@@ -56,6 +50,12 @@ export default function AuthPromptDialog() {
                         Sign up or sign in to get the best experience.
                     </DialogDescription>
                 </DialogHeader>
+                <Image
+                    src={logo}
+                    alt="logo"
+                    className="img-overlay absolute top-2 left-2 z-100! size-10"
+                />
+                <div className="img-overlay rounded-inherit absolute inset-0 z-0 bg-[url('https://images.pexels.com/photos/14856268/pexels-photo-14856268.jpeg?auto=compress&cs=tinysrgb&w=1600')] mask-b-from-20% mask-b-to-60% bg-cover bg-center [mask-size:cover]" />
 
                 <Button type="button" className="w-full" asChild>
                     <Link href="/auth/sign-up">Sign up</Link>

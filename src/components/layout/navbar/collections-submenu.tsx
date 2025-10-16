@@ -38,7 +38,7 @@ export default function CollectionsSubmenu({ className }: Props) {
     return (
         <ul
             className={cn(
-                "nav:grid-cols-2 grid max-w-150 grid-cols-1 gap-1",
+                "nav:grid-cols-2 nav:p-0! grid max-w-150 grid-cols-1 gap-1",
                 className,
             )}
         >

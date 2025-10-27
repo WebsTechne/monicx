@@ -58,8 +58,6 @@ export default function Navbar({ className }: { className?: string }) {
     //     setSubOpen((prev) => prev.map((v, i) => (i === index ? !v : v)));
     // }
 
-    // variable for setting toggling on mobile
-    const isMobile = useIsMobile();
     const { toggleSidebar, openMobile, setOpenMobile } = useSidebar();
 
     return (

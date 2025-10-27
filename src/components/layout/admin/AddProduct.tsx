@@ -1,11 +1,10 @@
-// app/components/AddProduct.tsx  (or wherever you keep it)
 "use client";
 
 import { useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import type { SubmitHandler, ResolverResult } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Slugify } from "@/lib/utils";
 import {
     SheetClose,
@@ -53,81 +52,252 @@ import {
 } from "@/components/ui/select";
 import UploadImageInput from "@/components/elements/upload-image-input";
 
-import { useCategoriesData, useCollectionsData } from "@/context/providers";
-
-const sizes = [
-    "xs",
-    "s",
-    "m",
-    "l",
-    "xl",
-    "xxl",
-    "34",
-    "35",
-    "36",
-    "37",
-    "38",
-    "39",
-    "40",
-    "41",
-    "42",
-    "43",
-    "44",
-    "45",
-    "46",
-    "47",
-    "48",
-] as const;
-
-const colors = [
-    "blue",
-    "green",
-    "red",
-    "yellow",
-    "purple",
-    "orange",
-    "pink",
-    "brown",
-    "gray",
-    "black",
-    "white",
-] as const;
+import {
+    useCategoriesData,
+    useCollectionsData,
+    useColorsData,
+    useSizesData,
+} from "@/context/providers";
+import type { ColorMinimal } from "@/lib/get-colors";
+import type { SizeMinimal } from "@/lib/get-sizes";
 
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
-/** helper: build a Zod union of literals for runtime values */
-function buildLiteralUnion(values: string[]) {
-    if (values.length === 0) {
-        return z.string();
+type CategoryOrCollection =
+    | string
+    | { slug?: string; name?: string; id?: string | number };
+
+/**
+ * Build a runtime Zod schema using the available option lists.
+ * - categorySlugs, collectionSlugs, colorNames, sizeNames are runtime arrays
+ */
+function buildProductSchema(
+    categorySlugs: string[],
+    collectionSlugs: string[],
+    colorNames: string[],
+    sizeNames: string[],
+) {
+    // helpers: dynamic enum when possible, fallback to string
+    const enumFor = (arr: string[], minLen = 1) =>
+        arr.length >= minLen ? z.enum(arr as [string, ...string[]]) : null;
+
+    const categoryEnum = enumFor(categorySlugs, 1);
+    const collectionEnum = enumFor(collectionSlugs, 1);
+    const colorEnum = enumFor(colorNames, 1);
+    const sizeEnum = enumFor(sizeNames, 1);
+
+    return z.object({
+        name: z.string().min(1, { message: "Product Name is required!" }),
+        slug: z
+            .string()
+            .min(1, { message: "Slug is required" })
+            .regex(
+                slugRegex,
+                "Slug may contain only lowercase letters, numbers and single hyphens",
+            ),
+        shortDescription: z
+            .string()
+            .min(1, { message: "Short description is required!" })
+            .max(60),
+        description: z.string().min(1, { message: "Description is required!" }),
+        price: z.preprocess(
+            (v) => {
+                if (typeof v === "string") return v === "" ? NaN : Number(v);
+                return v;
+            },
+            z.number().min(1, { message: "Price must be at least 1" }),
+        ),
+        category: categoryEnum
+            ? z
+                  .array(categoryEnum)
+                  .min(1, { message: "Select at least one category" })
+            : z
+                  .array(z.string())
+                  .min(1, { message: "Select at least one category" }),
+        collection: collectionEnum
+            ? collectionEnum.optional()
+            : z.string().optional(),
+        sizes: sizeEnum
+            ? z.array(sizeEnum).optional()
+            : z.array(z.string()).optional(),
+        colors: colorEnum
+            ? z
+                  .array(colorEnum)
+                  .min(1, { message: "Select at least one color" })
+            : z
+                  .array(z.string())
+                  .min(1, { message: "Select at least one color" }),
+        images: z.record(z.string(), z.string()).optional(),
+    });
+}
+
+/** convert zod.flatten() result into RHF error record */
+function zodErrorToRHF(err: z.ZodError<unknown>) {
+    // z.flatten().fieldErrors is a map: Record<string, string[] | undefined>
+    const flattened = err.flatten();
+    const fieldErrors = flattened.fieldErrors as Record<
+        string,
+        string[] | undefined
+    >;
+
+    const rhfErrors: Record<string, { type: string; message?: string }> = {};
+
+    for (const key of Object.keys(fieldErrors)) {
+        const msgs = fieldErrors[key];
+        if (msgs && msgs.length > 0) {
+            rhfErrors[key] = { type: "validation", message: msgs.join(", ") };
+        }
     }
-    if (values.length === 1) {
-        return z.literal(values[0]);
-    }
-    const literals = values.map((v) => z.literal(v));
-    // Type assertion to appease TS about minimum tuple length for z.union
-    return z.union(
-        literals as [
-            z.ZodLiteral<string>,
-            z.ZodLiteral<string>,
-            ...z.ZodLiteral<string>[],
-        ],
-    );
+
+    return rhfErrors;
 }
 
 export default function AddProduct() {
-    // NOTE: provider must supply categories and collections as objects with slug/name or as strings
+    const router = useRouter();
+
     const {
         data: categories,
         refresh: refreshCategories,
         isRefreshing: isRefreshingCategories,
     } = useCategoriesData();
-    const {
-        data: collections,
-        refresh: refreshCollections,
-        isRefreshing: isRefreshingCollections,
-    } = useCollectionsData();
+    const { data: collections } = useCollectionsData();
+    const { data: colors } = useColorsData();
+    const { data: sizes } = useSizesData();
 
-    // If categories not loaded yet, show a friendly fallback
+    // Build arrays of slugs (or fallback names/ids) and a lookup for display names
+    const categorySlugs = useMemo(
+        () =>
+            (categories ?? []).map((c: CategoryOrCollection) =>
+                typeof c === "string" ? c : (c.slug ?? c.name ?? String(c.id)),
+            ),
+        [categories],
+    );
+
+    const categoryDisplayMap = useMemo(() => {
+        const map: Record<string, string> = {};
+        (categories ?? []).forEach((c: CategoryOrCollection) => {
+            const key =
+                typeof c === "string" ? c : (c.slug ?? c.name ?? String(c.id));
+            map[key] = typeof c === "string" ? c : (c.name ?? key);
+        });
+        return map;
+    }, [categories]);
+
+    const collectionSlugs = useMemo(
+        () =>
+            (collections ?? []).map((c: CategoryOrCollection) =>
+                typeof c === "string" ? c : (c.slug ?? c.name ?? String(c.id)),
+            ),
+        [collections],
+    );
+
+    const collectionDisplayMap = useMemo(() => {
+        const map: Record<string, string> = {};
+        (collections ?? []).forEach((c: CategoryOrCollection) => {
+            const key =
+                typeof c === "string" ? c : (c.slug ?? c.name ?? String(c.id));
+            map[key] = typeof c === "string" ? c : (c.name ?? key);
+        });
+        return map;
+    }, [collections]);
+
+    const colorNames = useMemo(
+        () => (colors ?? []).map((c: ColorMinimal) => c.name),
+        [colors],
+    );
+
+    const sizeNames = useMemo(
+        () => (sizes ?? []).map((s: SizeMinimal) => s.alpha),
+        [sizes],
+    );
+
+    // 1) create a stable compile-time schema (types only) that matches the shape your form uses
+    const clientFormSchema = z.object({
+        name: z.string().min(1),
+        slug: z.string().min(1),
+        shortDescription: z.string().min(1).max(60),
+        description: z.string().min(1),
+        price: z.preprocess((v) => {
+            if (typeof v === "string") return v === "" ? NaN : Number(v);
+            return v;
+        }, z.number().min(1)),
+        category: z.array(z.string()).min(1),
+        collection: z.string().optional(),
+        sizes: z.array(z.string()).optional(),
+        colors: z.array(z.string()).min(1),
+        images: z.record(z.string(), z.string()).optional(),
+    });
+
+    // 2) derive TS type from that stable schema
+    type FormValues = {
+        name: string;
+        slug: string;
+        shortDescription: string;
+        description: string;
+        price: number;
+        category: string[];
+        collection?: string;
+        sizes?: string[];
+        colors: string[];
+        images?: Record<string, string>;
+    };
+
+    // 3) build the runtime schema like you already do
+    const formSchema = useMemo(
+        () =>
+            buildProductSchema(
+                categorySlugs,
+                collectionSlugs,
+                colorNames,
+                sizeNames,
+            ),
+        [categorySlugs, collectionSlugs, colorNames, sizeNames],
+    );
+
+    /** typed resolver that uses your runtime formSchema */
+    const rhfResolver = async (
+        values: unknown,
+    ): Promise<ResolverResult<FormValues>> => {
+        const parsed = await formSchema.safeParseAsync(values);
+
+        if (parsed.success) {
+            // parsed.data has the typed/parsed values
+            return {
+                values: parsed.data as unknown as FormValues,
+                errors: {},
+            } as ResolverResult<FormValues>;
+        }
+
+        const errors = zodErrorToRHF(parsed.error);
+        return {
+            values: {} as unknown as FormValues,
+            errors,
+        } as ResolverResult<FormValues>;
+    };
+
+    // 4) pass a casted schema to zodResolver so types line up
+    const form = useForm<FormValues>({
+        resolver: rhfResolver,
+        defaultValues: {
+            name: "",
+            slug: "",
+            shortDescription: "",
+            description: "",
+            price: undefined as unknown as number | undefined,
+            category: [],
+            collection: undefined,
+            sizes: [],
+            colors: [],
+            images: {},
+        } satisfies Partial<FormValues>,
+    });
+
+    const generateSlug = useCallback(() => {
+        const name = form.getValues("name") || "";
+        const newSlug = Slugify(name);
+        form.setValue("slug", newSlug, { shouldValidate: true });
+    }, [form]);
+
     if (!categories || categories.length === 0) {
         return (
             <div>
@@ -144,110 +314,7 @@ export default function AddProduct() {
         );
     }
 
-    // Build arrays of slugs (or fallback names/ids) and a lookup for display names
-    const categorySlugs = useMemo(() => {
-        return (categories ?? []).map((c: any) =>
-            typeof c === "string" ? c : (c.slug ?? c.name ?? String(c.id)),
-        );
-    }, [categories]);
-
-    const categoryDisplayMap = useMemo(() => {
-        const map: Record<string, string> = {};
-        (categories ?? []).forEach((c: any) => {
-            const key =
-                typeof c === "string" ? c : (c.slug ?? c.name ?? String(c.id));
-            map[key] = typeof c === "string" ? c : (c.name ?? key);
-        });
-        return map;
-    }, [categories]);
-
-    const collectionSlugs = useMemo(() => {
-        return (collections ?? []).map((c: any) =>
-            typeof c === "string" ? c : (c.slug ?? c.name ?? String(c.id)),
-        );
-    }, [collections]);
-
-    const collectionDisplayMap = useMemo(() => {
-        const map: Record<string, string> = {};
-        (collections ?? []).forEach((c: any) => {
-            const key =
-                typeof c === "string" ? c : (c.slug ?? c.name ?? String(c.id));
-            map[key] = typeof c === "string" ? c : (c.name ?? key);
-        });
-        return map;
-    }, [collections]);
-    // Build runtime schema using current category/collection option values
-    const formSchema = useMemo(() => {
-        const categoryItemSchema = buildLiteralUnion(categorySlugs);
-        const collectionSchema =
-            collectionSlugs.length > 0
-                ? buildLiteralUnion(collectionSlugs).optional()
-                : z.string().optional();
-
-        return z.object({
-            name: z.string().min(1, { message: "Product Name is required!" }),
-            slug: z
-                .string()
-                .min(1, { message: "Slug is required" })
-                .regex(
-                    slugRegex,
-                    "Slug may contain only lowercase letters, numbers and single hyphens",
-                ),
-            shortDescription: z
-                .string()
-                .min(1, { message: "Short description is required!" })
-                .max(60),
-            description: z
-                .string()
-                .min(1, { message: "Description is required!" }),
-            price: z.preprocess(
-                (v) => {
-                    if (typeof v === "string")
-                        return v === "" ? NaN : Number(v);
-                    return v;
-                },
-                z.number().min(1, { message: "Price must be at least 1" }),
-            ),
-            category: z
-                .array(categoryItemSchema)
-                .min(1, { message: "Select at least one category" }),
-            collection: collectionSchema,
-            sizes: z.array(z.enum(sizes)).optional(),
-            colors: z
-                .array(z.enum(colors))
-                .min(1, { message: "Select at least one color" }),
-            images: z.record(z.string(), z.string()).optional(),
-        });
-    }, [categorySlugs, collectionSlugs]);
-
-    type FormValues = z.infer<typeof formSchema>;
-
-    const router = useRouter();
-
-    const form = useForm<FormValues>({
-        // cast to any to avoid TS resolver type friction in some projects
-        resolver: zodResolver(formSchema) as any,
-        defaultValues: {
-            name: "",
-            slug: "",
-            shortDescription: "",
-            description: "",
-            price: undefined as unknown as number,
-            category: [],
-            collection: undefined,
-            sizes: [],
-            colors: [],
-            images: {},
-        } as Partial<FormValues>,
-    });
-
-    const generateSlug = useCallback(() => {
-        const name = form.getValues("name") || "";
-        const newSlug = Slugify(name);
-        form.setValue("slug", newSlug, { shouldValidate: true });
-    }, [form]);
-
-    const onSubmit = async (values: FormValues) => {
+    const onSubmit: SubmitHandler<FormValues> = async (values) => {
         try {
             const res = await fetch("/api/products", {
                 method: "POST",
@@ -408,20 +475,19 @@ export default function AddProduct() {
                                             type="number"
                                             step="0.01"
                                             value={field.value ?? ""}
-                                            onChange={(e) =>
+                                            onChange={(e) => {
+                                                const val = e.target.value;
                                                 field.onChange(
-                                                    e.target.value === ""
-                                                        ? undefined
-                                                        : Number(
-                                                              e.target.value,
-                                                          ),
-                                                )
-                                            }
+                                                    val === ""
+                                                        ? null
+                                                        : Number(val),
+                                                );
+                                            }}
                                             placeholder="0.00"
                                         />
                                     </FormControl>
                                     <FormDescription>
-                                        Enter the product's price.
+                                        Enter the product&apos;s price.
                                     </FormDescription>
                                     <FormMessage />
                                 </FormItem>
@@ -437,7 +503,8 @@ export default function AddProduct() {
                                     <FormLabel>Category</FormLabel>
                                     <MultiSelect
                                         onValuesChange={field.onChange}
-                                        values={field.value || []}
+                                        values={field.value ?? []}
+                                        defaultValues={[]}
                                     >
                                         <FormControl>
                                             <MultiSelectTrigger className="w-full">
@@ -483,11 +550,7 @@ export default function AddProduct() {
                                     <FormLabel>Collection</FormLabel>
                                     <FormControl>
                                         <Select
-                                            value={
-                                                field.value as
-                                                    | string
-                                                    | undefined
-                                            }
+                                            value={field.value}
                                             onValueChange={(v) =>
                                                 field.onChange(v || undefined)
                                             }
@@ -496,9 +559,7 @@ export default function AddProduct() {
                                                 <SelectValue placeholder="Select a collection" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem
-                                                    value={undefined as any}
-                                                >
+                                                <SelectItem value="">
                                                     None
                                                 </SelectItem>
                                                 {collectionSlugs.map((slug) => (
@@ -532,7 +593,7 @@ export default function AddProduct() {
                                     <FormLabel>Sizes</FormLabel>
                                     <FormControl>
                                         <div className="my-1.5 grid grid-cols-3 gap-3">
-                                            {sizes.map((s) => {
+                                            {sizeNames.map((s) => {
                                                 const checked = (
                                                     field.value || []
                                                 ).includes(s);
@@ -599,7 +660,7 @@ export default function AddProduct() {
                                     <FormControl>
                                         <div className="space-y-4">
                                             <div className="my-1.5 grid grid-cols-3 gap-3">
-                                                {colors.map((c) => {
+                                                {colorNames.map((c) => {
                                                     const checked = (
                                                         field.value || []
                                                     ).includes(c);
@@ -672,6 +733,14 @@ export default function AddProduct() {
                                                                     className="size-2 rounded-md"
                                                                     style={{
                                                                         backgroundColor:
+                                                                            colors?.find(
+                                                                                (
+                                                                                    color,
+                                                                                ) =>
+                                                                                    color.name ===
+                                                                                    c,
+                                                                            )
+                                                                                ?.hexCode ||
                                                                             c,
                                                                     }}
                                                                 />
@@ -700,6 +769,14 @@ export default function AddProduct() {
                                                                             className="size-2 rounded-md"
                                                                             style={{
                                                                                 backgroundColor:
+                                                                                    colors?.find(
+                                                                                        (
+                                                                                            color,
+                                                                                        ) =>
+                                                                                            color.name ===
+                                                                                            col,
+                                                                                    )
+                                                                                        ?.hexCode ||
                                                                                     col,
                                                                             }}
                                                                         />

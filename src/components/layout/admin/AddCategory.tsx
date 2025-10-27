@@ -92,7 +92,7 @@ export default function AddCategory() {
             });
 
             if (res.ok) {
-                const created = await res.json();
+                await res.json();
                 toast.success("Category created.");
                 form.reset(); // clear form
                 router.refresh(); // refresh page

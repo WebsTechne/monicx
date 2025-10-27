@@ -36,7 +36,7 @@ export async function POST(req: Request) {
 
     // always add timestamp server-side
     const timestamp = Math.floor(Date.now() / 1000);
-    const toSign: Record<string, any> = { timestamp };
+    const toSign: Record<string, string | number> = { timestamp };
     if (folder) toSign.folder = folder;
     if (public_id) toSign.public_id = public_id;
 

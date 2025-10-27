@@ -49,14 +49,25 @@ async function main() {
             name: "Tops",
             slug: "tops",
             description: "Shirts, blouses and tees",
+            imagePath: "/placeholder-category.jpg",
         },
     });
 
     // keep collections
     await prisma.collection.createMany({
         data: [
-            { name: "Summer 2025", description: "Seasonal collection" },
-            { name: "Basics", description: "Everyday essentials" },
+            {
+                name: "Summer 2025",
+                slug: "summer-2025",
+                description: "Seasonal collection",
+                imagePath: "/placeholder-collection.jpg",
+            },
+            {
+                name: "Basics",
+                slug: "basics",
+                description: "Everyday essentials",
+                imagePath: "/placeholder-collection.jpg",
+            },
         ],
         skipDuplicates: true,
     });

@@ -32,7 +32,19 @@ type Props = {
     publicIdPrefix?: string;
     className?: string;
     inputId?: string;
-    onUploaded?: (result: any) => void; // optional hook for parent
+    onUploaded?: (result: {
+        secure_url?: string;
+        url?: string;
+        public_id?: string;
+    }) => void;
+};
+
+/** explicit Cloudinary response shape we care about */
+type CloudinaryResponse = {
+    secure_url?: string;
+    url?: string;
+    public_id?: string;
+    [key: string]: unknown;
 };
 
 const CloudinaryDirectUploader = forwardRef<UploaderRef, Props>(
@@ -47,12 +59,15 @@ const CloudinaryDirectUploader = forwardRef<UploaderRef, Props>(
         },
         ref,
     ) {
-        const { setValue } = useFormContext();
+        const methods = useFormContext();
+        const setValue = methods?.setValue;
         const inputRef = useRef<HTMLInputElement | null>(null);
+        const xhrRef = useRef<XMLHttpRequest | null>(null);
         const localIdRef = useRef(
             inputId ??
                 `cloudinary-upload-${Math.random().toString(36).slice(2, 9)}`,
         );
+
         const [progress, setProgress] = useState<number | null>(null);
         const [loading, setLoading] = useState(false);
         const [dragActive, setDragActive] = useState(false);
@@ -62,25 +77,40 @@ const CloudinaryDirectUploader = forwardRef<UploaderRef, Props>(
             openFilePicker: () => inputRef.current?.click(),
         }));
 
+        // revoke previous object URL when it changes or on unmount
         useEffect(() => {
             return () => {
-                if (previewUrl) URL.revokeObjectURL(previewUrl);
+                if (xhrRef.current) {
+                    try {
+                        xhrRef.current.abort();
+                    } catch {
+                        /* ignore */
+                    }
+                }
+                if (previewUrl) {
+                    URL.revokeObjectURL(previewUrl);
+                }
             };
         }, [previewUrl]);
 
-        async function getSignature(paramsToSign: Record<string, any> = {}) {
+        async function getSignature(
+            paramsToSign: Record<string, string | number> = {},
+        ) {
             const res = await fetch("/api/cloudinary/sign", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ paramsToSign }),
             });
             if (!res.ok) throw new Error("Failed to get signature");
-            const data: SignResponse = await res.json();
+            const data = (await res.json()) as SignResponse;
             return data;
         }
 
-        function uploadToCloudinary(file: File, sign: SignResponse) {
-            return new Promise<any>((resolve, reject) => {
+        function uploadToCloudinary(
+            file: File,
+            sign: SignResponse,
+        ): Promise<CloudinaryResponse> {
+            return new Promise<CloudinaryResponse>((resolve, reject) => {
                 const {
                     signature,
                     timestamp,
@@ -106,6 +136,7 @@ const CloudinaryDirectUploader = forwardRef<UploaderRef, Props>(
                 }
 
                 const xhr = new XMLHttpRequest();
+                xhrRef.current = xhr;
                 xhr.open("POST", url);
 
                 xhr.upload.onprogress = (e) => {
@@ -116,11 +147,14 @@ const CloudinaryDirectUploader = forwardRef<UploaderRef, Props>(
                 xhr.onload = () => {
                     setLoading(false);
                     setProgress(null);
+                    xhrRef.current = null;
                     if (xhr.status >= 200 && xhr.status < 300) {
                         try {
-                            const resJson = JSON.parse(xhr.responseText);
+                            const resJson = JSON.parse(
+                                xhr.responseText,
+                            ) as CloudinaryResponse;
                             resolve(resJson);
-                        } catch (err) {
+                        } catch {
                             reject(
                                 new Error("Cloudinary response parse error"),
                             );
@@ -137,11 +171,18 @@ const CloudinaryDirectUploader = forwardRef<UploaderRef, Props>(
                 xhr.onerror = () => {
                     setLoading(false);
                     setProgress(null);
+                    xhrRef.current = null;
                     reject(new Error("Network Error during upload"));
                 };
 
                 setLoading(true);
-                xhr.send(fd);
+                try {
+                    xhr.send(fd);
+                } catch (err) {
+                    setLoading(false);
+                    xhrRef.current = null;
+                    reject(err);
+                }
             });
         }
 
@@ -154,14 +195,16 @@ const CloudinaryDirectUploader = forwardRef<UploaderRef, Props>(
 
             // preview
             try {
-                if (previewUrl) URL.revokeObjectURL(previewUrl);
+                if (previewUrl) {
+                    URL.revokeObjectURL(previewUrl);
+                }
                 setPreviewUrl(URL.createObjectURL(file));
             } catch {
                 setPreviewUrl(null);
             }
 
             try {
-                const paramsToSign: Record<string, any> = {};
+                const paramsToSign: Record<string, string | number> = {};
                 if (folder) paramsToSign.folder = folder;
                 if (publicIdPrefix)
                     paramsToSign.public_id = `${publicIdPrefix}/${Date.now()}`;
@@ -169,25 +212,28 @@ const CloudinaryDirectUploader = forwardRef<UploaderRef, Props>(
                 const sign = await getSignature(paramsToSign);
                 const result = await uploadToCloudinary(file, sign);
 
-                const secureUrl = result.secure_url || result.url;
-                const publicId = result.public_id;
+                const secureUrl = result.secure_url ?? result.url;
 
-                setValue(fieldName, secureUrl, {
-                    shouldValidate: true,
-                    shouldDirty: true,
-                });
+                if (setValue) {
+                    setValue(fieldName, secureUrl, {
+                        shouldValidate: true,
+                        shouldDirty: true,
+                    });
+                }
 
                 toast.success("Image uploaded.");
                 onUploaded?.(result);
                 return result;
-            } catch (err: any) {
+            } catch (err: unknown) {
                 console.error(err);
-                toast.error(err?.message || "Upload failed");
+                const message =
+                    err instanceof Error ? err.message : String(err);
+                toast.error(message || "Upload failed");
                 throw err;
             } finally {
-                // reset input for future uploads
                 if (inputRef.current) inputRef.current.value = "";
                 setLoading(false);
+                setProgress(null);
             }
         }
 
@@ -196,19 +242,19 @@ const CloudinaryDirectUploader = forwardRef<UploaderRef, Props>(
             await handleFile(file).catch(() => {});
         }
 
-        function onDragOver(e: React.DragEvent) {
+        function onDragOver(e: React.DragEvent<HTMLDivElement>) {
             e.preventDefault();
             e.stopPropagation();
             setDragActive(true);
         }
 
-        function onDragLeave(e: React.DragEvent) {
+        function onDragLeave(e: React.DragEvent<HTMLDivElement>) {
             e.preventDefault();
             e.stopPropagation();
             setDragActive(false);
         }
 
-        async function onDrop(e: React.DragEvent) {
+        async function onDrop(e: React.DragEvent<HTMLDivElement>) {
             e.preventDefault();
             e.stopPropagation();
             setDragActive(false);
@@ -255,9 +301,12 @@ const CloudinaryDirectUploader = forwardRef<UploaderRef, Props>(
 
                 {previewUrl ? (
                     <div className="mt-2 w-full max-w-xs">
+                        {/* plain <img> works reliably with object URLs */}
                         <img
                             src={previewUrl}
                             alt="preview"
+                            width={300}
+                            height={200}
                             className="w-full rounded-md object-cover"
                         />
                     </div>
@@ -265,7 +314,7 @@ const CloudinaryDirectUploader = forwardRef<UploaderRef, Props>(
 
                 {loading ? (
                     <div className="mt-2 text-sm">
-                        Uploading… {progress ? `${progress}%` : ""}
+                        Uploading… {progress != null ? `${progress}%` : ""}
                     </div>
                 ) : (
                     <div className="absolute right-2 bottom-2 flex gap-2">

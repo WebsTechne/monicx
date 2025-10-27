@@ -7,7 +7,6 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { buttonVariants } from "@/components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -68,7 +67,7 @@ export default function MonicxBreadcrumbs({
                                     <BreadcrumbLink asChild>
                                         <Link
                                             href={item.href || "#"}
-                                            className="text-foreground hover:text-secondary underline-offset-4 hover:underline"
+                                            className="text-foreground hover:text-muted-foreground/90 underline-offset-4 hover:underline"
                                         >
                                             {item.name}
                                         </Link>

@@ -1,0 +1,14 @@
+{
+    "folders": [
+		{
+			"path": "../../../../unigig"
+		},
+		{
+			"path": "../../../../unigig-init"
+		},
+		{
+			"path": "../../../../../react/todo_new"
+		}
+	],
+    "settings": {}
+}

@@ -37,7 +37,7 @@ export default function UploadImageInput({
     const value = useWatch({ name: fieldName }) as string | undefined;
     const inputValue = value ?? "";
 
-    const onUploaded = (result: any) => {
+    const onUploaded = (result: { secure_url?: string; url?: string }) => {
         const secureUrl = result?.secure_url || result?.url;
         if (secureUrl) {
             setValue(fieldName, secureUrl, {

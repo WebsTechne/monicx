@@ -42,12 +42,12 @@ export async function POST(req: Request) {
         invalidateCategories();
 
         return NextResponse.json(created, { status: 201 });
-    } catch (err: any) {
-        if (err?.name === "ZodError") {
+    } catch (err: unknown) {
+        if (err instanceof z.ZodError) {
             return NextResponse.json(
                 {
                     error: "Validation failed",
-                    issues: err.errors || err.format(),
+                    issues: err.issues,
                 },
                 { status: 422 },
             );

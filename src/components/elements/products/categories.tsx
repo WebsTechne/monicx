@@ -191,7 +191,7 @@ function CategoriesContent({
                 All
             </Button>
 
-            {categories.map((c, index) => {
+            {categories.map((c) => {
                 if (c.slug === "all" && !allTab) return null;
                 const isActive = c.slug === selectedCategory;
                 const icon =
@@ -219,9 +219,9 @@ function CategoriesContent({
                         aria-pressed={isActive}
                         onClick={() => handleChange(c.slug)}
                         className={cn(
-                            "btn flex h-max! w-max! cursor-pointer flex-col items-center justify-center gap-1 rounded-xl p-2",
+                            "flex h-max! w-max! cursor-pointer flex-col items-center justify-center gap-1 rounded-xl p-2",
                             isActive
-                                ? "bg-foreground text-background"
+                                ? "bg-primary/70 text-background"
                                 : "text-muted-foreground",
                         )}
                     >

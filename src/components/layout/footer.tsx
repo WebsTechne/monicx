@@ -35,6 +35,10 @@ const LINKS = [
                 href: "/shop",
             },
             {
+                name: "Shop by Categories",
+                href: "/shop/categories",
+            },
+            {
                 name: "New Arrivals",
                 href: "/shop?tab=new-arrivals",
             },
@@ -112,7 +116,7 @@ export default function Footer() {
                 {LINKS.map((linkGroup) => (
                     <ul
                         key={linkGroup.name}
-                        className="text-muted-foreground flex flex-col items-center gap-2 md:items-start md:gap-4"
+                        className="text-muted-foreground flex flex-col items-center gap-2 md:items-start md:gap-2.75"
                     >
                         <p className="text-sidebar-foreground m-0! text-sm font-semibold">
                             {linkGroup.name}

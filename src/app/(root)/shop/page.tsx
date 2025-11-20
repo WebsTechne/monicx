@@ -1,4 +1,3 @@
-// app/(root)/shop/page.tsx  (server component)
 import { products } from "@/lib/products";
 import ProductList from "@/components/elements/products/product-list";
 import Image from "next/image";

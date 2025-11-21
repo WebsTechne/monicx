@@ -35,9 +35,9 @@ const AppBarChart = () => {
             <h1 className="text-lg font-medium mb-6">Total Revenue</h1>
             <ChartContainer
                 config={chartConfig}
-                className="min-h-[200px] w-full"
+                className="aspect-auto h-[250px] w-full"
             >
-                <BarChart accessibilityLayer data={chartData}>
+                <BarChart data={chartData}>
                     <CartesianGrid vertical={false} />
                     <XAxis
                         dataKey="month"

@@ -34,12 +34,28 @@ export default async function RootLayout({
 }: Readonly<{
     children: ReactNode;
 }>) {
-    const [categories, collections, sizes, colors] = await Promise.all([
+    const results = await Promise.allSettled([
         getCategories(),
         getCollections(),
-        getSizes(), // can be a simple exported constant or DB fetch
-        getColors(), // same
+        getSizes(),
+        getColors(),
     ]);
+
+    const categories =
+        results[0].status === "fulfilled" ? results[0].value : [];
+    const collections =
+        results[1].status === "fulfilled" ? results[1].value : [];
+    const sizes = results[2].status === "fulfilled" ? results[2].value : [];
+    const colors = results[3].status === "fulfilled" ? results[3].value : [];
+
+    if (results.some((r) => r.status === "rejected")) {
+        console.error(
+            "Some initial data failed to load:",
+            results
+                .filter((r) => r.status === "rejected")
+                .map((r) => (r as PromiseRejectedResult).reason),
+        );
+    }
 
     return (
         <html lang="en" suppressHydrationWarning>

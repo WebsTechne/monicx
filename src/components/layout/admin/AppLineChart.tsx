@@ -31,7 +31,7 @@ const AppLineChart = () => {
     return (
         <ChartContainer config={chartConfig} className="mt-6">
             <LineChart
-                accessibilityLayer
+                // accessibilityLayer
                 data={chartData}
                 margin={{
                     left: 12,

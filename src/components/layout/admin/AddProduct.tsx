@@ -559,7 +559,7 @@ export default function AddProduct() {
                                                 <SelectValue placeholder="Select a collection" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="">
+                                                <SelectItem value="none">
                                                     None
                                                 </SelectItem>
                                                 {collectionSlugs.map((slug) => (

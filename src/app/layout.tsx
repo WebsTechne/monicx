@@ -58,7 +58,10 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body className={`${nunitoSans.variable} antialiased`}>
+      <body
+        className={`${nunitoSans.variable} antialiased`}
+        suppressHydrationWarning
+      >
         {
           <LayoutContent
             initialCategories={categories}

@@ -10,7 +10,8 @@ import {
 import { LogOut, Monitor, Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Session } from "next-auth";
-import { signOut } from "next-auth/react";
+import { signOut } from "../../../auth";
+import { logOut } from "@/lib/auth";
 
 export default function AccountButton({
   session,
@@ -76,10 +77,7 @@ export default function AccountButton({
         </DropdownMenuGroup>
 
         <DropdownMenuGroup>
-          <DropdownMenuItem
-            variant="destructive"
-            onClick={() => signOut({ callbackUrl: "/auth/sign-in" })}
-          >
+          <DropdownMenuItem variant="destructive" onClick={logOut}>
             <LogOut />
             Sign out
           </DropdownMenuItem>

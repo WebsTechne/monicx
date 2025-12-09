@@ -9,6 +9,8 @@ import { getCategories } from "@/lib/get-categories";
 import { getCollections } from "@/lib/get-collections";
 import { getSizes } from "@/lib/get-sizes";
 import { getColors } from "@/lib/get-colors";
+import SessionProvider from "@/components/providers/session-provider";
+import { auth } from "../../auth";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -34,6 +36,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: ReactNode;
 }>) {
+  const session = await auth();
+
   const results = await Promise.allSettled([
     getCategories(),
     getCollections(),
@@ -63,14 +67,16 @@ export default async function RootLayout({
         suppressHydrationWarning
       >
         {
-          <LayoutContent
-            initialCategories={categories}
-            initialCollections={collections}
-            initialSizes={sizes}
-            initialColors={colors}
-          >
-            {children}
-          </LayoutContent>
+          <SessionProvider session={session}>
+            <LayoutContent
+              initialCategories={categories}
+              initialCollections={collections}
+              initialSizes={sizes}
+              initialColors={colors}
+            >
+              {children}
+            </LayoutContent>
+          </SessionProvider>
         }
       </body>
     </html>

@@ -2,7 +2,6 @@
 
 import { ReactNode } from "react";
 import { ThemeProvider } from "./providers/theme-provider";
-import { SessionProvider } from "next-auth/react";
 import { Toaster } from "@/components/ui/sonner";
 import SidebarProvider from "./providers/sidebar-provider";
 
@@ -38,30 +37,28 @@ export default function LayoutContent({
       enableSystem
       // disableTransitionOnChange
     >
-      <SessionProvider>
-        <SidebarProvider>
-          <Toaster
-            position="bottom-right"
-            theme="system"
-            richColors
-            toastOptions={{
-              classNames: {
-                toast: "rounded-2xl!",
-                actionButton: "rounded-lg!",
-              },
-            }}
-          />
-          <CategoriesProvider initial={initialCategories}>
-            <CollectionsProvider initial={initialCollections}>
-              <SizesProvider initial={initialSizes}>
-                <ColorsProvider initial={initialColors}>
-                  {children}
-                </ColorsProvider>
-              </SizesProvider>
-            </CollectionsProvider>
-          </CategoriesProvider>
-        </SidebarProvider>
-      </SessionProvider>
+      <SidebarProvider>
+        <Toaster
+          position="bottom-right"
+          theme="system"
+          richColors
+          toastOptions={{
+            classNames: {
+              toast: "rounded-2xl!",
+              actionButton: "rounded-lg!",
+            },
+          }}
+        />
+        <CategoriesProvider initial={initialCategories}>
+          <CollectionsProvider initial={initialCollections}>
+            <SizesProvider initial={initialSizes}>
+              <ColorsProvider initial={initialColors}>
+                {children}
+              </ColorsProvider>
+            </SizesProvider>
+          </CollectionsProvider>
+        </CategoriesProvider>
+      </SidebarProvider>
     </ThemeProvider>
   );
 }

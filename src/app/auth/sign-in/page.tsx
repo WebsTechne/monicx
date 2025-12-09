@@ -23,13 +23,9 @@ import { Separator } from "@/components/ui/separator";
 import FormHeading from "@/components/elements/form-heading";
 
 import { Eye, EyeClosed } from "lucide-react";
-import {
-  GoogleIcon,
-  AppleIcon,
-  FacebookIcon,
-} from "@/components/icons/social-icons"; // adjust paths if needed
+import { GoogleIcon, AppleIcon } from "@/components/icons/social-icons";
 import { useTheme } from "next-themes";
-import { signIn } from "next-auth/react";
+import { logIn } from "@/lib/auth";
 
 // validation: identifier must be email OR phone, password 6+
 const identifierSchema = z
@@ -242,7 +238,7 @@ export default function SigninPage() {
               type="button"
               onClick={(e) => {
                 e.preventDefault();
-                signIn("google");
+                logIn("google");
               }}
             >
               <GoogleIcon />
@@ -254,7 +250,7 @@ export default function SigninPage() {
               type="button"
               onClick={(e) => {
                 e.preventDefault();
-                signIn("github");
+                logIn("apple");
               }}
             >
               <AppleIcon

@@ -12,24 +12,7 @@ import {
   ColorsProvider,
 } from "@/context/providers";
 
-import type { CategoryMinimal } from "@/lib/get-categories";
-import type { CollectionMinimal } from "@/lib/get-collections";
-import type { SizeMinimal } from "@/lib/get-sizes";
-import type { ColorMinimal } from "@/lib/get-colors";
-
-export default function LayoutContent({
-  children,
-  initialCategories,
-  initialCollections,
-  initialSizes,
-  initialColors,
-}: {
-  children: ReactNode;
-  initialCategories: CategoryMinimal[];
-  initialCollections: CollectionMinimal[];
-  initialSizes: SizeMinimal[];
-  initialColors: ColorMinimal[];
-}) {
+export default function LayoutContent({ children }: { children: ReactNode }) {
   return (
     <ThemeProvider
       attribute="class"
@@ -49,12 +32,11 @@ export default function LayoutContent({
             },
           }}
         />
-        <CategoriesProvider initial={initialCategories}>
-          <CollectionsProvider initial={initialCollections}>
-            <SizesProvider initial={initialSizes}>
-              <ColorsProvider initial={initialColors}>
-                {children}
-              </ColorsProvider>
+
+        <CategoriesProvider initial={[]}>
+          <CollectionsProvider initial={[]}>
+            <SizesProvider initial={[]}>
+              <ColorsProvider initial={[]}>{children}</ColorsProvider>
             </SizesProvider>
           </CollectionsProvider>
         </CategoriesProvider>

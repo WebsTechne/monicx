@@ -98,6 +98,7 @@ export default function Header({ query }: { query: string }) {
             className="search:flex hidden h-full flex-1 items-center"
           />
         </section>
+
         <section
           className={`nav:gap-3 relative flex h-full items-center justify-end ${session ? "gap-1.5" : "gap-2.5"}`}
         >
@@ -144,32 +145,27 @@ export default function Header({ query }: { query: string }) {
             </>
           )}
         </section>
+
         <section
           className={cn(
-            "search:pointer-events-none search:opacity-0 header-bg pointer-events-auto absolute top-full left-0 flex h-full w-full gap-2.5 border-b-1 px-3 py-2 transition-[opacity] duration-300",
+            "search:pointer-events-none search:opacity-0 header-bg pointer-events-auto absolute top-full left-0 h-full w-full border-b-1 py-2 transition-all duration-300",
             !mounted || !isMobile || !smSearchShow
               ? "pointer-events-none! opacity-0!"
               : `pointer-events-auto opacity-100`,
           )}
         >
-          <div className="h-9/10 w-9/10 max-w-120">
-            <SearchForm
-              query={query}
-              className={cn(
-                "duration-300",
-                !mounted || !isMobile || !smSearchShow
-                  ? "scale-90"
-                  : `scale-100`,
-              )}
-            />
+          <div className="mx-auto flex h-full w-full items-center gap-2.5 px-2.5 sm:max-w-[590px] md:max-w-4xl md:px-0! lg:max-w-5xl xl:max-w-6xl">
+            <div className="h-9/10 w-full">
+              <SearchForm query={query} />
+            </div>
+            <Button
+              variant="ghost"
+              className="aspect-1 h-full rounded-full border-none p-3 outline-0"
+              onClick={() => setSmSearchShow((s) => !s)}
+            >
+              <X className="text-foreground size-full" />
+            </Button>
           </div>
-          <Button
-            variant="ghost"
-            className="aspect-1 h-full rounded-full border-none p-3 outline-0"
-            onClick={() => setSmSearchShow((s) => !s)}
-          >
-            <X className="text-foreground size-full" />
-          </Button>
         </section>
       </div>
     </header>

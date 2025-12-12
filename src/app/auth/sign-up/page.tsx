@@ -413,9 +413,7 @@ export default function Page() {
               type="button"
               onClick={(e) => {
                 e.preventDefault();
-                logIn("google").then(() =>
-                  toast.success("Account created successfully."),
-                );
+                logIn("google");
               }}
             >
               <GoogleIcon />
@@ -427,9 +425,7 @@ export default function Page() {
               type="button"
               onClick={(e) => {
                 e.preventDefault();
-                logIn("apple").then(() =>
-                  toast.success("Account created successfully."),
-                );
+                logIn("apple");
               }}
             >
               <AppleIcon

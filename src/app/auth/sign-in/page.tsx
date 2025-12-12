@@ -239,9 +239,7 @@ export default function SigninPage() {
               type="button"
               onClick={(e) => {
                 e.preventDefault();
-                logIn("google").then(() =>
-                  toast.success("Signed-in successfully."),
-                );
+                logIn("google");
               }}
             >
               <GoogleIcon />
@@ -253,9 +251,7 @@ export default function SigninPage() {
               type="button"
               onClick={(e) => {
                 e.preventDefault();
-                logIn("apple").then(() =>
-                  toast.success("Signed-in successfully."),
-                );
+                logIn("apple");
               }}
             >
               <AppleIcon

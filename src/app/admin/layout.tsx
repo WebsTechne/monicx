@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import type { Metadata } from "next";
 import { GeistMono, GeistSans } from "geist/font";
 import AppSidebar from "@/components/layout/admin/AppSidebar";
-import Navbar from "@/components/layout/admin/Navbar";
+import AdminHeader from "@/components/layout/admin/AdminHeader";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
@@ -48,9 +48,9 @@ export default async function AdminLayout({
               classNames: { toast: "rounded-xl!" },
             }}
           />
-          <AppSidebar />
+          <AppSidebar session={session} />
           <main className="w-full">
-            <Navbar />
+            <AdminHeader session={session} />
             <div className="px-4">{children}</div>
           </main>
         </SidebarProvider>

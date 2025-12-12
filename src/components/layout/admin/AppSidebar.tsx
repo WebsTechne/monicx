@@ -50,6 +50,11 @@ import AddCategory from "./AddCategory";
 import AddProduct from "./AddProduct";
 import AddCollection from "./AddCollection";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Session } from "next-auth";
+import getInitials from "@/lib/initials";
+import IMAGES from "@/assets/images";
+import { useTheme } from "next-themes";
+import { logOut } from "@/lib/auth";
 
 const items = [
   {
@@ -79,14 +84,15 @@ const items = [
   },
 ];
 
-const admin = {
-  name: "Monicx",
-  email: "admin@monicxed.com",
-  avatar: "https://avatars.githubusercontent.com/u/1486366",
-};
-
-export default function AppSidebar() {
+export default function AppSidebar({ session }: { session: Session | null }) {
   const { setOpenMobile, isMobile } = useSidebar();
+
+  const { firstName, lastName, initials } = getInitials(
+    session?.user.name || "x x",
+  );
+
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
 
   return (
     <Sidebar collapsible="icon">
@@ -99,13 +105,13 @@ export default function AppSidebar() {
                 className="flex h-8! items-center overflow-clip py-0!"
               >
                 <Image
-                  src="/logo.svg"
+                  src={isDark ? IMAGES.logo.dark : IMAGES.logo.light}
                   alt="logo"
                   width={20}
                   height={20}
                   className="h-5! overflow-clip"
                 />
-                <span>Lama Dev</span>
+                <span>Admin Panel — Monicx</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -135,6 +141,7 @@ export default function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
         {/* PRODUCTS */}
         <SidebarGroup>
           <SidebarGroupLabel>Products</SidebarGroupLabel>
@@ -216,6 +223,7 @@ export default function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
         {/* USERS */}
         <SidebarGroup>
           <SidebarGroupLabel>Users</SidebarGroupLabel>
@@ -252,6 +260,7 @@ export default function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
         {/* PAYMENT*/}
         <SidebarGroup>
           <SidebarGroupLabel>Orders</SidebarGroupLabel>
@@ -300,18 +309,25 @@ export default function AppSidebar() {
                   className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                 >
                   <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarImage src={admin.avatar} alt={admin.name} />
-                    <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                    <AvatarImage
+                      src={session?.user.image || ""}
+                      alt={`${firstName} ${lastName}`}
+                    />
+                    <AvatarFallback className="rounded-lg">
+                      {initials}
+                    </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-medium">{admin.name}</span>
-                    <span className="truncate text-xs">{admin.email}</span>
+                    <span className="truncate font-medium">{`${firstName} ${lastName}`}</span>
+                    <span className="truncate text-xs">
+                      {session?.user.email || ""}
+                    </span>
                   </div>
                   <ChevronsUpDown className="ml-auto size-4" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+                className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-2xl"
                 side={isMobile ? "bottom" : "right"}
                 align="end"
                 sideOffset={4}
@@ -319,12 +335,19 @@ export default function AppSidebar() {
                 <DropdownMenuLabel className="p-0 font-normal">
                   <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                     <Avatar className="h-8 w-8 rounded-lg">
-                      <AvatarImage src={admin.avatar} alt={admin.name} />
-                      <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                      <AvatarImage
+                        src={session?.user.image || ""}
+                        alt={`${firstName} ${lastName}`}
+                      />
+                      <AvatarFallback className="rounded-lg">
+                        {initials}
+                      </AvatarFallback>
                     </Avatar>
                     <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-medium">{admin.name}</span>
-                      <span className="truncate text-xs">{admin.email}</span>
+                      <span className="truncate font-medium">{`${firstName} ${lastName}`}</span>
+                      <span className="truncate text-xs">
+                        {session?.user.email}
+                      </span>
                     </div>
                   </div>
                 </DropdownMenuLabel>
@@ -344,7 +367,7 @@ export default function AppSidebar() {
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem variant="destructive">
+                <DropdownMenuItem variant="destructive" onClick={logOut}>
                   <LogOut />
                   Log out
                 </DropdownMenuItem>

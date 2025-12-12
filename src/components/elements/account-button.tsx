@@ -10,8 +10,8 @@ import {
 import { LogOut, Monitor, Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Session } from "next-auth";
-import { signOut } from "../../../auth";
 import { logOut } from "@/lib/auth";
+import getInitials from "@/lib/initials";
 
 export default function AccountButton({
   session,
@@ -22,14 +22,7 @@ export default function AccountButton({
 
   const { theme = "system", setTheme } = useTheme();
 
-  const name = session.user?.name ?? "";
-  const nameParts = name.split(" ");
-  const firstName = nameParts[0] ?? "";
-  const lastName = nameParts.at(-1) ?? "";
-  const initials = nameParts
-    .filter(Boolean)
-    .map((n) => n.charAt(0).toUpperCase())
-    .join("");
+  const { firstName, lastName, initials } = getInitials(session.user.name!);
 
   return (
     <DropdownMenu>

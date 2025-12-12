@@ -41,7 +41,7 @@ export default function Header({ query }: { query: string }) {
   const { push } = useRouter();
 
   return (
-    <header className="header-bg sticky top-0 z-98 flex items-center justify-center">
+    <header className="header-bg flex-center sticky top-0 z-98 flex">
       <div
         className={cn(
           "nav:px-7 flex h-16 w-full items-center justify-between gap-3.5 py-2.5 md:gap-4.5",
@@ -92,7 +92,7 @@ export default function Header({ query }: { query: string }) {
           </Link>
         </section>
         <Navbar />
-        <section className="search:min-w-60 flex h-full max-w-120 flex-1 items-center justify-center">
+        <section className="search:min-w-60 flex-center flex h-full max-w-120 flex-1">
           <SearchForm
             query={query}
             className="search:flex hidden h-full flex-1 items-center"

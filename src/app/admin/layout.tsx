@@ -7,6 +7,8 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
 import { Toaster } from "@/components/ui/sonner";
+import { auth } from "../../../auth";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Admin • Monicx",
@@ -18,6 +20,10 @@ export default async function AdminLayout({
 }: {
   children: ReactNode;
 }) {
+  const session = await auth();
+
+  if (!session || session.user.role !== "admin") return redirect("/403");
+
   const cookieStore = await cookies();
   const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
 

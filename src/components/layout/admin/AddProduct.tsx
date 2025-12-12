@@ -311,7 +311,7 @@ export default function AddProduct() {
 
   const onSubmit: SubmitHandler<FormValues> = async (values) => {
     try {
-      const res = await fetch("/api/products", {
+      const res = await fetch("/api/admin/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),

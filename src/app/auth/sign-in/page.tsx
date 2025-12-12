@@ -26,6 +26,7 @@ import { Eye, EyeClosed } from "lucide-react";
 import { GoogleIcon, AppleIcon } from "@/components/icons/social-icons";
 import { useTheme } from "next-themes";
 import { logIn } from "@/lib/auth";
+import { toast } from "sonner";
 
 // validation: identifier must be email OR phone, password 6+
 const identifierSchema = z
@@ -223,7 +224,7 @@ export default function SigninPage() {
             Sign in
           </Button>
 
-          <div className="flex w-full max-w-120 items-center justify-center gap-5 px-6 py-2.5">
+          <div className="flex-center flex w-full max-w-120 gap-5 px-6 py-2.5">
             <Separator className="max-w-54 flex-1" />
             <span className="text-muted-foreground text-sm">
               Or sign in with
@@ -238,7 +239,9 @@ export default function SigninPage() {
               type="button"
               onClick={(e) => {
                 e.preventDefault();
-                logIn("google");
+                logIn("google").then(() =>
+                  toast.success("Signed-in successfully."),
+                );
               }}
             >
               <GoogleIcon />
@@ -250,7 +253,9 @@ export default function SigninPage() {
               type="button"
               onClick={(e) => {
                 e.preventDefault();
-                logIn("apple");
+                logIn("apple").then(() =>
+                  toast.success("Signed-in successfully."),
+                );
               }}
             >
               <AppleIcon
@@ -261,7 +266,7 @@ export default function SigninPage() {
             </Button>
           </div>
 
-          <div className="item-center text-foreground flex flex-wrap items-center justify-center gap-1">
+          <div className="item-center text-foreground flex-center flex flex-wrap gap-1">
             Don&apos;t have any account?
             <Button variant="link" asChild>
               <Link href="/auth/sign-up" className="!px-2 font-semibold">

@@ -169,7 +169,7 @@ function CategoriesContent({
         // aria-pressed={isActive}
         onClick={() => handleChange("all")}
         className={cn(
-          "btn flex h-max! w-max! cursor-pointer flex-col items-center justify-center gap-1 rounded-xl p-2",
+          "flex-center flex h-max! w-max! cursor-pointer flex-col gap-1 rounded-xl p-2",
         )}
       >
         <span className="relative inline-block aspect-square h-10.5 overflow-clip rounded-full">
@@ -212,7 +212,7 @@ function CategoriesContent({
             aria-pressed={isActive}
             onClick={() => handleChange(c.slug)}
             className={cn(
-              "flex h-max! w-max! cursor-pointer flex-col items-center justify-center gap-1 rounded-xl p-2",
+              "flex-center flex h-max! w-max! cursor-pointer flex-col gap-1 rounded-xl p-2",
               isActive
                 ? "bg-primary/70 text-background"
                 : "text-muted-foreground",

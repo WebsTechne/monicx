@@ -259,7 +259,7 @@ const CloudinaryDirectUploader = forwardRef<UploaderRef, Props>(
         onDragLeave={onDragLeave}
         onDrop={onDrop}
         className={cn(
-          "relative flex flex-col items-center justify-center gap-3 rounded-md p-4 transition-colors",
+          "flex-center relative flex flex-col gap-3 rounded-md p-4 transition-colors",
           "border-2 border-dashed",
           dragActive ? "border-primary/80 bg-primary/5" : "border-muted",
           className,
@@ -276,7 +276,7 @@ const CloudinaryDirectUploader = forwardRef<UploaderRef, Props>(
           className="sr-only"
         />
 
-        <div className="flex flex-col items-center justify-center gap-2 py-5">
+        <div className="flex-center flex flex-col gap-2 py-5">
           <CloudUpload
             strokeWidth={1.2}
             className="text-muted-foreground size-20"

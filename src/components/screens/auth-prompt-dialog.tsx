@@ -39,7 +39,7 @@ export default function AuthPromptDialog() {
         aria-describedby="auth-prompt-desc"
         className="overflow-clip rounded-3xl p-5 pt-50 [&_>_*:not(.img-overlay)]:z-[1]"
       >
-        <DialogHeader className="mx-auto w-85/100 !gap-0">
+        <DialogHeader className="mx-auto w-95/100 !gap-0 md:w-85/100">
           <DialogTitle
             id="auth-prompt-title"
             className="!border-none font-black tracking-normal"

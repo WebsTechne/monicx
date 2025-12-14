@@ -2,11 +2,11 @@
 import prisma from "@/lib/prisma";
 
 export type ColorMinimal = {
-    id: number;
-    hexCode: string;
-    name: string;
-    groupName: string | null;
-    productColors: { productId: string; colorId: number }[];
+  id: number;
+  hexCode: string;
+  name: string;
+  groupName: string | null;
+  productColors: { productId: string; colorId: number }[];
 };
 
 let cache: { ts: number; data: ColorMinimal[] } | null = null;
@@ -14,28 +14,28 @@ let cache: { ts: number; data: ColorMinimal[] } | null = null;
 const TTL_MS = 1000 * 60 * 60 * 24; // 24 hours
 
 export async function getColors({ force = false } = {}): Promise<
-    ColorMinimal[]
+  ColorMinimal[]
 > {
-    if (!force && cache && Date.now() - cache.ts < TTL_MS) {
-        return cache.data;
-    }
+  if (!force && cache && Date.now() - cache.ts < TTL_MS) {
+    return cache.data;
+  }
 
-    const data = await prisma.color.findMany({
-        select: {
-            id: true,
-            hexCode: true,
-            name: true,
-            groupName: true,
-            productColors: true,
-        },
-        orderBy: { id: "asc" },
-    });
+  const data = await prisma.color.findMany({
+    select: {
+      id: true,
+      hexCode: true,
+      name: true,
+      groupName: true,
+      productColors: true,
+    },
+    orderBy: { id: "asc" },
+  });
 
-    cache = { ts: Date.now(), data };
-    return data;
+  cache = { ts: Date.now(), data };
+  return data;
 }
 
 /** Call this from admin POST/PUT/DELETE handlers after mutating colors */
 export function invalidateColors() {
-    cache = null;
+  cache = null;
 }

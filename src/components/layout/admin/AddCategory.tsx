@@ -156,6 +156,7 @@ export default function AddCategory() {
                             variant="outline"
                             aria-label="Generate Slug"
                             type="button"
+                            className="rounded-r-lg! rounded-br-lg!"
                             onClick={(e) => {
                               e.preventDefault();
                               generateSlug();
@@ -193,6 +194,7 @@ export default function AddCategory() {
                                 variant="outline"
                                 aria-label="Upload Image"
                                 type="button"
+                                className="rounded-r-lg! rounded-br-lg!"
                               >
                                 <UploadCloud />
                               </Button>

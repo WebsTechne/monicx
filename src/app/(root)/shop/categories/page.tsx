@@ -1,12 +1,14 @@
 // app/(root)/shop/categories/page.tsx
-"use client";
-
+import { Category } from "@prisma/client";
 import { redirect } from "next/navigation";
-import { useCategoriesData } from "@/context/providers";
 
-export default function Page() {
-    const { data: categories } = useCategoriesData();
+export default async function Page() {
+  const res = await fetch("/api/categories?limit=200", {
+    cache: "force-cache",
+  });
+  const categories = (await res.json()).data ?? [];
 
-    const first = categories.find((c) => c.slug !== "all")?.slug ?? "men";
-    redirect(`/shop/categories/${encodeURIComponent(first)}`);
+  const firstSlug =
+    categories.find((c: Category) => c.slug !== "all")?.slug ?? "men";
+  redirect(`/shop/categories/${encodeURIComponent(firstSlug)}`);
 }

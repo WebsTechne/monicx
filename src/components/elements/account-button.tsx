@@ -75,7 +75,7 @@ export default function AccountButton() {
         </DropdownMenuGroup>
 
         <DropdownMenuGroup>
-          <DropdownMenuItem variant="destructive" onClick={logOut}>
+          <DropdownMenuItem variant="destructive" onClick={() => {}}>
             <LogOut />
             Sign out
           </DropdownMenuItem>

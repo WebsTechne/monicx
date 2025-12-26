@@ -51,15 +51,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import UploadImageInput from "@/components/elements/upload-image-input";
-
-import {
-  useCategoriesData,
-  useCollectionsData,
-  useColorsData,
-  useSizesData,
-} from "@/context/providers";
-import type { ColorMinimal } from "@/lib/get-colors";
-import type { SizeMinimal } from "@/lib/get-sizes";
+import { Data } from "./AppSidebar";
 
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -146,17 +138,10 @@ function zodErrorToRHF(err: z.ZodError<unknown>) {
   return rhfErrors;
 }
 
-export default function AddProduct() {
+export default function AddProduct({ data }: { data: Data }) {
   const router = useRouter();
 
-  const {
-    data: categories,
-    refresh: refreshCategories,
-    isRefreshing: isRefreshingCategories,
-  } = useCategoriesData();
-  const { data: collections } = useCollectionsData();
-  const { data: colors } = useColorsData();
-  const { data: sizes } = useSizesData();
+  const { categories, collections, colors, sizes } = data;
 
   // Build arrays of slugs (or fallback names/ids) and a lookup for display names
   const categorySlugs = useMemo(
@@ -195,15 +180,9 @@ export default function AddProduct() {
     return map;
   }, [collections]);
 
-  const colorNames = useMemo(
-    () => (colors ?? []).map((c: ColorMinimal) => c.name),
-    [colors],
-  );
+  const colorNames = useMemo(() => (colors ?? []).map((c) => c.name), [colors]);
 
-  const sizeNames = useMemo(
-    () => (sizes ?? []).map((s: SizeMinimal) => s.alpha),
-    [sizes],
-  );
+  const sizeNames = useMemo(() => (sizes ?? []).map((s) => s.alpha), [sizes]);
 
   // 1) create a stable compile-time schema (types only) that matches the shape your form uses
   const clientFormSchema = z.object({
@@ -287,31 +266,9 @@ export default function AddProduct() {
     form.setValue("slug", newSlug, { shouldValidate: true });
   }, [form]);
 
-  if (!categories || categories.length === 0) {
-    return (
-      <div>
-        <p>No categories yet.</p>
-        <button
-          onClick={async (e) => {
-            e.preventDefault();
-            try {
-              await refreshCategories();
-            } catch (err) {
-              console.error("Failed to refresh categories", err);
-              toast.error("Could not refresh categories");
-            }
-          }}
-          disabled={isRefreshingCategories}
-        >
-          {isRefreshingCategories ? "Refreshing…" : "Refresh categories"}
-        </button>
-      </div>
-    );
-  }
-
   const onSubmit: SubmitHandler<FormValues> = async (values) => {
     try {
-      const res = await fetch("/api/admin/products", {
+      const res = await fetch("/api/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),

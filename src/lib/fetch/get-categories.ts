@@ -1,7 +1,8 @@
 // lib/get-categories.ts
 import prisma from "@/lib/prisma";
+import { cache } from "react";
 
-async function getCategories() {
+const _getCategories = async () => {
   return prisma.category.findMany({
     select: {
       id: true,
@@ -13,6 +14,6 @@ async function getCategories() {
     },
     orderBy: { createdAt: "desc" },
   });
-}
+};
 
-export { getCategories };
+export const getCategories = cache(_getCategories);

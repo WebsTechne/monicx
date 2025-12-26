@@ -50,12 +50,11 @@ import AddCategory from "./AddCategory";
 import AddProduct from "./AddProduct";
 import AddCollection from "./AddCollection";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Session } from "next-auth";
 import getInitials from "@/lib/helpers/initials";
 import IMAGES from "@/assets/images";
 import { useTheme } from "next-themes";
-import { logOut } from "@/lib/auth";
 import useMounted from "@/hooks/use-mounted";
+import { Category, Collection, Color, Size } from "@prisma/client";
 
 const items = [
   {
@@ -85,12 +84,25 @@ const items = [
   },
 ];
 
-export default function AppSidebar({ session }: { session: Session | null }) {
+export type Data = {
+  categories: Category[];
+  collections: Collection[];
+  colors: Color[];
+  sizes: Size[];
+};
+
+export default function AppSidebar({
+  // session,
+  data,
+}: {
+  // session: Session | null;
+  data: Data;
+}) {
   const { setOpenMobile, isMobile } = useSidebar();
 
-  const { firstName, lastName, initials } = getInitials(
-    session?.user.name || "x x",
-  );
+  // const { firstName, lastName, initials } = getInitials(
+  //   session?.user.name || "x x",
+  // );
 
   const mounted = useMounted();
   const { resolvedTheme } = useTheme();
@@ -173,7 +185,7 @@ export default function AppSidebar({ session }: { session: Session | null }) {
                 <SidebarMenuButton asChild>
                   <Sheet>
                     <SheetTrigger></SheetTrigger>
-                    <AddProduct />
+                    <AddProduct data={data} />
                   </Sheet>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -315,7 +327,7 @@ export default function AppSidebar({ session }: { session: Session | null }) {
                   size="lg"
                   className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                 >
-                  <Avatar className="h-8 w-8 rounded-lg">
+                  {/* <Avatar className="h-8 w-8 rounded-lg">
                     <AvatarImage
                       src={session?.user.image || ""}
                       alt={`${firstName} ${lastName}`}
@@ -329,7 +341,7 @@ export default function AppSidebar({ session }: { session: Session | null }) {
                     <span className="truncate text-xs">
                       {session?.user.email || ""}
                     </span>
-                  </div>
+                  </div> */}
                   <ChevronsUpDown className="ml-auto size-4" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
@@ -339,7 +351,7 @@ export default function AppSidebar({ session }: { session: Session | null }) {
                 align="end"
                 sideOffset={4}
               >
-                <DropdownMenuLabel className="p-0 font-normal">
+                {/* <DropdownMenuLabel className="p-0 font-normal">
                   <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                     <Avatar className="h-8 w-8 rounded-lg">
                       <AvatarImage
@@ -357,7 +369,7 @@ export default function AppSidebar({ session }: { session: Session | null }) {
                       </span>
                     </div>
                   </div>
-                </DropdownMenuLabel>
+                </DropdownMenuLabel> */}
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                   <DropdownMenuItem>
@@ -374,7 +386,7 @@ export default function AppSidebar({ session }: { session: Session | null }) {
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem variant="destructive" onClick={logOut}>
+                <DropdownMenuItem variant="destructive" onClick={() => {}}>
                   <LogOut />
                   Log out
                 </DropdownMenuItem>

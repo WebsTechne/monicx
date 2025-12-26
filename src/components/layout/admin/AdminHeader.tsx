@@ -15,13 +15,11 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import getInitials from "@/lib/helpers/initials";
-import { Session } from "next-auth";
-import { logOut } from "@/lib/auth";
 
-export default function AdminHeader({ session }: { session: Session }) {
+export default function AdminHeader() {
   const { setTheme } = useTheme();
 
-  const { firstName, lastName, initials } = getInitials(session.user.name!);
+  // const { firstName, lastName, initials } = getInitials(session.user.name!);
 
   return (
     <nav className="bg-background sticky top-0 z-10 flex items-center justify-between p-4">
@@ -57,11 +55,11 @@ export default function AdminHeader({ session }: { session: Session }) {
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Avatar className="ring-ring/50 duration-300 hover:ring-[5px]">
-              <AvatarImage
+              {/* <AvatarImage
                 src={session?.user.image || ""}
                 alt={`${firstName} ${lastName}`}
               ></AvatarImage>
-              <AvatarFallback>{initials}</AvatarFallback>
+              <AvatarFallback>{initials}</AvatarFallback> */}
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -80,7 +78,10 @@ export default function AdminHeader({ session }: { session: Session }) {
               Settings
             </DropdownMenuItem>
             <DropdownMenuItem variant="destructive">
-              <LogOut className="mr-2 h-[1.2rem] w-[1.2rem]" onClick={logOut} />
+              <LogOut
+                className="mr-2 h-[1.2rem] w-[1.2rem]"
+                onClick={() => {}}
+              />
               Logout
             </DropdownMenuItem>
           </DropdownMenuContent>

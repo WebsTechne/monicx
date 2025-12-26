@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { z } from "zod";
-import { getCategories } from "@/lib/get-categories";
+import { getCategories } from "@/lib/fetch/get-categories";
 import { revalidateTag } from "next/cache";
 
 const bodySchema = z.object({

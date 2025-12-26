@@ -85,7 +85,7 @@ export default function AddCategory() {
 
   const onSubmit = async (values: FormValues) => {
     try {
-      const res = await fetch("/api/admin/categories", {
+      const res = await fetch(`/api/categories`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),

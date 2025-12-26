@@ -1,18 +1,29 @@
 import { ReactNode } from "react";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+// import { Geist, Geist_Mono } from "next/font/google";
 import AppSidebar from "@/components/layout/admin/AppSidebar";
 import AdminHeader from "@/components/layout/admin/AdminHeader";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
 import { Toaster } from "@/components/ui/sonner";
+import { getColors } from "@/lib/fetch/get-colors";
+import { getSizes } from "@/lib/fetch/get-sizes";
+import { getCollections } from "@/lib/fetch/get-collections";
+import { getCategories } from "@/lib/fetch/get-categories";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// const geistSans = Geist({
+//   variable: "--font-geist-sans",
+//   subsets: ["latin"],
+//   display: "swap",
+//   fallback: ["sans-serif"],
+// });
+// const geistMono = Geist_Mono({
+//   variable: "--font-geist-mono",
+//   subsets: ["latin"],
+//   display: "swap",
+//   fallback: ["monospace"],
+// });
 
 export const metadata: Metadata = {
   title: "Admin • Monicx",
@@ -27,10 +38,15 @@ export default async function AdminLayout({
   const cookieStore = await cookies();
   const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
 
-  // Keep classes that were on <body> but apply them to a wrapper div
+  const categories = (await getCategories()) ?? [];
+  const collections = (await getCollections()) ?? [];
+  const colors = (await getColors()) ?? [];
+  const sizes = (await getSizes()) ?? [];
+
   return (
     <div
-      className={`${geistSans.variable} ${geistMono.variable} admin-dashboard flex antialiased`}
+      // className={`${geistSans.variable} ${geistMono.variable} admin-dashboard flex antialiased`}
+      className="admin-dashboard flex antialiased"
     >
       <ThemeProvider
         attribute="class"
@@ -47,7 +63,7 @@ export default async function AdminLayout({
               classNames: { toast: "rounded-xl!" },
             }}
           />
-          {/* <AppSidebar session={session} /> */}
+          {/* <AppSidebar session={session} data={{categories,collections,colors,sizes}} /> */}
           <main className="w-full">
             {/* <AdminHeader session={session} /> */}
             <div className="px-4">{children}</div>

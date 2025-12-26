@@ -112,7 +112,44 @@ export default function Navbar({
         role="menubar"
       >
         {navItems.map((item, i) => {
-          const Submenu = item.Submenu;
+          // keep a generic Submenu reference (used for narrowing below)
+          const Submenu = item.Submenu as ComponentType<any> | undefined;
+
+          // build the submenu element ahead of time (no statements inside JSX)
+          let submenuElement: React.ReactNode = null;
+
+          if (item.hasSub && Submenu) {
+            if ("getData" in item && typeof item.getData === "function") {
+              // submenu that expects data
+              const SubWithData = Submenu as ComponentType<{
+                className: string;
+                data: any;
+              }>;
+              submenuElement = (
+                <SubWithData
+                  className={cn(
+                    "nav:border-none! nav:w-max nav:min-w-sm nav:max-w-150 min-h-11 w-full border-b-1 pb-2",
+                    subOpen[i] &&
+                      "slide-in-from-top-[150%] [animate-duration]-500 fade-in",
+                  )}
+                  data={item.getData(appData)}
+                />
+              );
+            } else {
+              // submenu that does not expect data
+              const SubNoData = Submenu as ComponentType<{ className: string }>;
+              submenuElement = (
+                <SubNoData
+                  className={cn(
+                    "nav:border-none! nav:w-max nav:min-w-sm nav:max-w-150 min-h-11 w-full border-b-1 pb-2",
+                    subOpen[i] &&
+                      "slide-in-from-top-[150%] [animate-duration]-500 fade-in",
+                  )}
+                />
+              );
+            }
+          }
+
           return (
             <li
               key={item.href}
@@ -185,16 +222,7 @@ export default function Navbar({
                       "nav:p-2",
                     )}
                   >
-                    <item.Submenu
-                      className={cn(
-                        "nav:border-none! nav:w-max nav:min-w-sm nav:max-w-150 min-h-11 w-full border-b-1 pb-2",
-                        subOpen[i] &&
-                          "slide-in-from-top-[150%] [animate-duration]-500 fade-in",
-                      )}
-                      {...("getData" in item && item.getData
-                        ? { data: item.getData(appData) }
-                        : {})}
-                    />
+                    {submenuElement}
                   </div>
                 </div>
               )}

@@ -30,7 +30,7 @@ import { useSidebar } from "../providers/sidebar-provider";
 import SearchForm from "../elements/search-form";
 import CartIcon from "../elements/cart-icon";
 import AccountButton from "../elements/account-button";
-import Navbar from "./navbar/navbar";
+import Navbar from "./navbar";
 import { Button, buttonVariants } from "../ui/button";
 import { Category, Collection } from "@prisma/client";
 
@@ -62,7 +62,7 @@ export default function Header({
       <div
         className={cn(
           "nav:px-7 flex h-16 w-full items-center justify-between gap-3.5 py-2.5 md:gap-4.5",
-          "px-2.5 sm:max-w-[590px] md:max-w-4xl md:px-0! lg:max-w-5xl xl:max-w-6xl",
+          "px-3 sm:max-w-[590px] md:max-w-4xl lg:max-w-5xl xl:max-w-6xl",
         )}
       >
         {/* //////    LOGO    //// */}

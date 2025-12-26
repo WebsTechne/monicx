@@ -11,8 +11,6 @@ export default function ShopSubmenu({
   className,
   data: categories = [],
 }: Props) {
-  console.log("ShopSubmenu categories:", categories);
-
   return (
     <div
       className={cn(

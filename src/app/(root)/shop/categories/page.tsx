@@ -1,17 +1,13 @@
 // app/(root)/shop/categories/page.tsx
-import { Category } from "@prisma/client";
+export const dynamic = "force-dynamic";
+
 import { redirect } from "next/navigation";
+import { getCategories } from "@/lib/fetch/get-categories";
 
-export default async function Page() {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_SITE_URL}/api/categories?limit=200`,
-    {
-      cache: "force-cache",
-    },
-  );
-  const categories = (await res.json()).data ?? [];
+export default async function CategoriesPage() {
+  // Direct DB calls — no fetch to /api
+  const categories = (await getCategories()) ?? [];
+  const firstSlug = categories.find((c) => c.slug !== "all")?.slug ?? "men";
 
-  const firstSlug =
-    categories.find((c: Category) => c.slug !== "all")?.slug ?? "men";
   redirect(`/shop/categories/${encodeURIComponent(firstSlug)}`);
 }

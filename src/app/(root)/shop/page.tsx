@@ -1,6 +1,6 @@
 import Image from "next/image";
 import ProductListServer from "@/components/products/products-list.server";
-import CategoriesServer from "@/components/products/CategoriesServer";
+import CategoriesServer from "@/components/products/categories.server";
 import { ShopButton } from "@/components/elements/shop-button";
 
 export const metadata = {

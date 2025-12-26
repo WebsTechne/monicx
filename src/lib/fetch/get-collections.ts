@@ -1,7 +1,8 @@
 // lib/get-collections.ts
 import prisma from "@/lib/prisma";
+import { cache } from "react";
 
-async function getCollections() {
+const _getCollections = async () => {
   return prisma.collection.findMany({
     select: {
       id: true,
@@ -13,6 +14,6 @@ async function getCollections() {
     },
     orderBy: { createdAt: "desc" },
   });
-}
+};
 
-export { getCollections };
+export const getCollections = cache(_getCollections);

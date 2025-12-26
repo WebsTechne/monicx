@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve(__dirname), // or path.resolve(__dirname, './')
   },
-  cacheComponents: true,
+  // cacheComponents: true,
   images: {
     remotePatterns: [
       {

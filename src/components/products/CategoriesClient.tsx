@@ -24,9 +24,12 @@ export default function CategoriesClient({
   async function refresh() {
     try {
       setIsRefreshing(true);
-      const res = await fetch("/api/categories?limit=200", {
-        cache: "no-store", // client-side fresh fetch
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SITE_URL}/api/categories?limit=200`,
+        {
+          cache: "no-store", // client-side fresh fetch
+        },
+      );
       if (!res.ok) throw new Error("Failed to fetch");
       const json = await res.json();
       setCategories(json.data ?? json);

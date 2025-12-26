@@ -12,14 +12,20 @@ export default async function Layout({
 }) {
   const query = searchParams?.query ?? searchParams?.q ?? "";
 
-  const res1 = await fetch(`/api/categories?limit=200`, {
-    cache: "force-cache", // for durable caching
-  });
+  const res1 = await fetch(
+    `${process.env.NEXT_PUBLIC_SITE_URL}/api/categories?limit=200`,
+    {
+      cache: "force-cache", // for durable caching
+    },
+  );
   const categories = (await res1.json()).data ?? [];
 
-  const res2 = await fetch(`/api/collections?limit=200`, {
-    cache: "force-cache", // for durable caching
-  });
+  const res2 = await fetch(
+    `${process.env.NEXT_PUBLIC_SITE_URL}/api/collections?limit=200`,
+    {
+      cache: "force-cache", // for durable caching
+    },
+  );
   const collections = (await res2.json()).data ?? [];
 
   return (

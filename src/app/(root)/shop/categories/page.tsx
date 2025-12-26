@@ -3,9 +3,12 @@ import { Category } from "@prisma/client";
 import { redirect } from "next/navigation";
 
 export default async function Page() {
-  const res = await fetch("/api/categories?limit=200", {
-    cache: "force-cache",
-  });
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_SITE_URL}/api/categories?limit=200`,
+    {
+      cache: "force-cache",
+    },
+  );
   const categories = (await res.json()).data ?? [];
 
   const firstSlug =

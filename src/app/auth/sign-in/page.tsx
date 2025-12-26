@@ -25,7 +25,6 @@ import FormHeading from "@/components/elements/form-heading";
 import { Eye, EyeClosed } from "lucide-react";
 import { GoogleIcon, AppleIcon } from "@/components/icons/social-icons";
 import { useTheme } from "next-themes";
-import { logIn } from "@/lib/auth";
 import { toast } from "sonner";
 
 // validation: identifier must be email OR phone, password 6+
@@ -239,7 +238,7 @@ export default function SigninPage() {
               type="button"
               onClick={(e) => {
                 e.preventDefault();
-                logIn("google");
+                // logIn("google");
               }}
             >
               <GoogleIcon />
@@ -251,7 +250,7 @@ export default function SigninPage() {
               type="button"
               onClick={(e) => {
                 e.preventDefault();
-                logIn("apple");
+                // logIn("apple");
               }}
             >
               <AppleIcon

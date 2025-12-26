@@ -51,10 +51,11 @@ import AddProduct from "./AddProduct";
 import AddCollection from "./AddCollection";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Session } from "next-auth";
-import getInitials from "@/lib/initials";
+import getInitials from "@/lib/helpers/initials";
 import IMAGES from "@/assets/images";
 import { useTheme } from "next-themes";
 import { logOut } from "@/lib/auth";
+import useMounted from "@/hooks/use-mounted";
 
 const items = [
   {
@@ -91,6 +92,7 @@ export default function AppSidebar({ session }: { session: Session | null }) {
     session?.user.name || "x x",
   );
 
+  const mounted = useMounted();
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
 
@@ -104,13 +106,18 @@ export default function AppSidebar({ session }: { session: Session | null }) {
                 href="/admin"
                 className="flex h-8! items-center overflow-clip py-0!"
               >
-                <Image
-                  src={isDark ? IMAGES.logo.dark : IMAGES.logo.light}
-                  alt="logo"
-                  width={20}
-                  height={20}
-                  className="h-5! overflow-clip"
-                />
+                {mounted ? (
+                  <Image
+                    src={isDark ? IMAGES.logo.dark : IMAGES.logo.light}
+                    alt="logo"
+                    width={20}
+                    height={20}
+                    className="h-5! overflow-clip"
+                  />
+                ) : (
+                  <span className="bg-muted aspect-1/2 w-5 rounded-sm"></span>
+                )}
+
                 <span>Admin Panel — Monicx</span>
               </Link>
             </SidebarMenuButton>

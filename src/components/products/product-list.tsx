@@ -3,16 +3,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { ProductsType } from "@/types";
 import ProductCard from "./product-card";
-import Link from "next/link";
 import { products as PRODUCTS } from "@/lib/products";
-import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
-
-// Dynamically import components that use useSearchParams
-const DynamicCategories = dynamic(() => import("./categories"), {
-  ssr: false,
-  loading: () => <div>Loading categories…</div>,
-});
+import CategoriesServer from "./CategoriesServer";
 
 const DynamicFilter = dynamic(
   () => import("./filter").then((mod) => ({ default: mod.Filter })),
@@ -110,7 +103,7 @@ export default function ProductList({
 
   return (
     <>
-      <DynamicCategories allTab={allTab || undefined} />
+      <CategoriesServer allTab={allTab || undefined} />
 
       {page === "shop" && <DynamicFilter />}
 

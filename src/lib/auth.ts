@@ -1,13 +1,26 @@
-"use server";
+import { betterAuth } from "better-auth";
+import { prismaAdapter } from "better-auth/adapters/prisma";
+import { PrismaClient } from "@prisma/client";
 
-import { signIn, signOut } from "../../auth";
+const prisma = new PrismaClient();
 
-type AuthProvider = "google" | "apple";
-
-export const logIn = async (provider: AuthProvider) => {
-  await signIn(provider, { redirectTo: "/" });
-};
-
-export const logOut = async () => {
-  await signOut({ redirectTo: "/auth/sign-in" });
-};
+export const auth = betterAuth({
+  database: prismaAdapter(prisma, {
+    provider: "postgresql",
+  }),
+  emailAndPassword: {
+    enabled: true,
+  },
+  socialProviders: {
+    google: {
+      clientId: "",
+      clientSecret: "",
+      mapProfileToUser: (profile) => {
+        return {
+          firstName: profile.given_name,
+          lastName: profile.family_name,
+        };
+      },
+    },
+  },
+});

@@ -19,15 +19,11 @@ export default function AuthPromptDialog() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    // only show if user is not logged in
-    const isLoggedIn = false; // replace with your auth check
-    if (!isLoggedIn) {
-      const timer = setTimeout(() => {
-        setOpen(true);
-      }, 2000); // 2s delay
+    const timer = setTimeout(() => {
+      setOpen(true);
+    }, 2000); // 2s delay
 
-      return () => clearTimeout(timer);
-    }
+    return () => clearTimeout(timer);
   }, []);
 
   return (

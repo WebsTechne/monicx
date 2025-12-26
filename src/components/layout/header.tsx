@@ -6,12 +6,19 @@ import { useState } from "react";
 // Next.js
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
-import { useSession } from "next-auth/react";
 
 // External libraries
-import { Bell, Menu, Search, SearchX, X, Heart } from "lucide-react";
+import {
+  Bell,
+  Menu,
+  Search,
+  SearchX,
+  X,
+  Heart,
+  SunIcon,
+  MoonIcon,
+} from "lucide-react";
 
 // Internal assets, hooks, components, utils
 import IMAGES from "@/assets/images";
@@ -24,21 +31,31 @@ import SearchForm from "../elements/search-form";
 import CartIcon from "../elements/cart-icon";
 import AccountButton from "../elements/account-button";
 import Navbar from "./navbar/navbar";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
+import { Category, Collection } from "@prisma/client";
 
-export default function Header({ query }: { query: string }) {
+export type AppData = {
+  categories: Category[];
+  collections: Collection[];
+};
+
+export default function Header({
+  query,
+  appData,
+}: {
+  query: string;
+  appData: AppData;
+}) {
   const mounted = useMounted();
-  const { resolvedTheme } = useTheme();
+  const { resolvedTheme, theme, setTheme } = useTheme();
   const isDark = mounted && resolvedTheme === "dark";
   const isMobile = useIsMobile(1100);
   const [smSearchShow, setSmSearchShow] = useState(false);
   const { setOpenMobile } = useSidebar();
 
-  const { data: session } = useSession();
+  const session = false; // Replace with actual better-auth session logic Triumph!
 
   const { toggleSidebar, openMobile } = useSidebar();
-
-  const { push } = useRouter();
 
   return (
     <header className="header-bg flex-center sticky top-0 z-98 flex">
@@ -48,6 +65,7 @@ export default function Header({ query }: { query: string }) {
           "px-2.5 sm:max-w-[590px] md:max-w-4xl md:px-0! lg:max-w-5xl xl:max-w-6xl",
         )}
       >
+        {/* //////    LOGO    //// */}
         <section className="flex h-full items-center justify-start gap-2.5">
           <Button
             variant="ghost"
@@ -91,7 +109,10 @@ export default function Header({ query }: { query: string }) {
             </span>
           </Link>
         </section>
-        <Navbar />
+
+        <Navbar appData={appData} />
+
+        {/* //////    BUTTONS & PROFILE    //// */}
         <section className="search:min-w-60 flex-center flex h-full max-w-120 flex-1">
           <SearchForm
             query={query}
@@ -109,6 +130,17 @@ export default function Header({ query }: { query: string }) {
           >
             {smSearchShow ? <SearchX /> : <Search />}
           </Button>
+
+          {/* THEME TOGGLE */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="header-icon"
+            onClick={() => setTheme(isDark ? "light" : "dark")}
+          >
+            {isDark ? <SunIcon /> : <MoonIcon />}
+          </Button>
+
           {session ? (
             <>
               <Button
@@ -117,23 +149,28 @@ export default function Header({ query }: { query: string }) {
               >
                 <Bell />
               </Button>
-              <Button
-                variant="ghost"
-                className="header-icon"
+              <Link
+                href="/wishlist"
+                prefetch
+                className={cn(
+                  buttonVariants({ variant: "ghost" }),
+                  "header-icon",
+                )}
                 onClick={() => {
-                  push("/wishlist");
                   setOpenMobile(false);
                 }}
               >
                 <Heart />
-              </Button>
+              </Link>
               <CartIcon />
-              <AccountButton session={session} />
+              <AccountButton
+              // session={session}
+              />
             </>
           ) : (
             <>
               <Button
-                className="hidden sm:inline-block"
+                className="hidden md:inline-block"
                 variant="ghost"
                 asChild
               >

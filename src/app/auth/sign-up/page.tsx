@@ -23,7 +23,7 @@ import {
 import z from "zod";
 import parsePhoneNumberFromString from "libphonenumber-js";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { logIn } from "@/lib/auth";
+// import { logIn } from "@/lib/auth";
 
 export default function Page() {
   const { resolvedTheme } = useTheme();
@@ -90,9 +90,6 @@ export default function Page() {
       });
       return;
     }
-
-    // now submit (fetch / next-auth sign-in / form action, whatever you use)
-    // example: fetch('/api/auth/sign-up', { method: 'POST', body: JSON.stringify({ firstName: info.firstName, ... }) })
   };
 
   const [info, setInfo] = useState({
@@ -413,7 +410,7 @@ export default function Page() {
               type="button"
               onClick={(e) => {
                 e.preventDefault();
-                logIn("google");
+                // logIn("google");
               }}
             >
               <GoogleIcon />
@@ -425,7 +422,7 @@ export default function Page() {
               type="button"
               onClick={(e) => {
                 e.preventDefault();
-                logIn("apple");
+                // logIn("apple");
               }}
             >
               <AppleIcon

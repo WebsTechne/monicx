@@ -5,13 +5,6 @@ import { ThemeProvider } from "./providers/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import SidebarProvider from "./providers/sidebar-provider";
 
-import {
-  CategoriesProvider,
-  CollectionsProvider,
-  SizesProvider,
-  ColorsProvider,
-} from "@/context/providers";
-
 export default function LayoutContent({ children }: { children: ReactNode }) {
   return (
     <ThemeProvider
@@ -24,7 +17,7 @@ export default function LayoutContent({ children }: { children: ReactNode }) {
         <Toaster
           position="bottom-right"
           theme="system"
-          richColors
+          // richColors
           toastOptions={{
             classNames: {
               toast: "rounded-2xl!",
@@ -33,13 +26,7 @@ export default function LayoutContent({ children }: { children: ReactNode }) {
           }}
         />
 
-        <CategoriesProvider initial={[]}>
-          <CollectionsProvider initial={[]}>
-            <SizesProvider initial={[]}>
-              <ColorsProvider initial={[]}>{children}</ColorsProvider>
-            </SizesProvider>
-          </CollectionsProvider>
-        </CategoriesProvider>
+        {children}
       </SidebarProvider>
     </ThemeProvider>
   );

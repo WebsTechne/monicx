@@ -18,9 +18,6 @@ export default function Page() {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setError("");
-
-    // now submit (fetch / next-auth sign-in / form action, whatever you use)
-    // example: fetch('/api/auth/sign-in', { method: 'POST', body: JSON.stringify({ identifier: id.trim(), password }) })
   };
 
   return (

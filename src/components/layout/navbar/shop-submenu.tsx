@@ -1,57 +1,68 @@
+"use client";
+
 import { cn } from "@/lib/utils";
-type Props = { className?: string };
-import { useCategoriesData } from "@/context/providers";
+import { Category } from "@prisma/client";
 import Link from "next/link";
+import Image from "next/image";
 
-export default function ShopSubmenu({ className }: Props) {
-    const { data: categories } = useCategoriesData();
+type Props = { className?: string; data: Category[] };
 
-    return (
-        <div
-            className={cn(
-                "nav:gap-7 grid max-w-dvw! grid-cols-3 gap-2 px-10!",
-                className,
-            )}
-        >
-            <ul className="">
-                <li className="font-bold">Categories</li>
-                {categories.map((c) => (
-                    <li key={c.id}>
-                        <Link
-                            href={`/shop/categories/${c.slug}`}
-                            className="underline-offset-3 hover:underline"
-                        >
-                            {c.name}
-                        </Link>
-                    </li>
-                ))}
-            </ul>
-            <ul className="">
-                <li className="font-bold">Categories</li>
-                {categories.map((c) => (
-                    <li key={c.id}>
-                        <Link
-                            href={`/shop/categories/${c.slug}`}
-                            className="underline-offset-3 hover:underline"
-                        >
-                            {c.name}
-                        </Link>
-                    </li>
-                ))}
-            </ul>
-            <ul className="">
-                <li className="font-bold">Categories</li>
-                {categories.map((c) => (
-                    <li key={c.id}>
-                        <Link
-                            href={`/shop/categories/${c.slug}`}
-                            className="underline-offset-3 hover:underline"
-                        >
-                            {c.name}
-                        </Link>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
+export default function ShopSubmenu({
+  className,
+  data: categories = [],
+}: Props) {
+  console.log("ShopSubmenu categories:", categories);
+
+  return (
+    <div
+      className={cn(
+        "nav:gap-7 grid max-w-dvw! grid-cols-3 gap-2 px-10!",
+        className,
+      )}
+    >
+      <ul className="">
+        <li className="font-bold">Categories</li>
+        {categories.map((c: Category) => (
+          <li key={c.id}>
+            <Link
+              href={`/shop/categories/${c.slug}`}
+              className="gap-1 underline-offset-3 hover:underline"
+            >
+              <span className="relative size-4 bg-red-300">
+                <Image src={c.imagePath} alt={c.name} fill />
+              </span>
+
+              {c.name}
+            </Link>
+          </li>
+        ))}
+      </ul>
+      <ul className="">
+        <li className="font-bold">Categories</li>
+        {categories.map((c: Category) => (
+          <li key={c.id}>
+            <Link
+              href={`/shop/categories/${c.slug}`}
+              className="underline-offset-3 hover:underline"
+            >
+              {c.name}
+            </Link>
+          </li>
+        ))}
+      </ul>
+      <ul className="">
+        <li className="font-bold">Categories</li>
+        {categories.map((c: Category) => (
+          <li key={c.id}>
+            <Link
+              href={`/shop/categories/${c.slug}`}
+              className="underline-offset-3 hover:underline"
+            >
+              {c.name}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }

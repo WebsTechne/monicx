@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { ComponentType, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile-custom";
 import { ChevronDown } from "lucide-react";
@@ -8,18 +8,36 @@ import CollectionsSubmenu from "./collections-submenu";
 import HelpSubmenu from "./help-submenu";
 import { useSidebar } from "@/components/providers/sidebar-provider";
 import NavLink from "@/components/elements/nav-link";
+import { AppData } from "../header";
+import { Category, Collection } from "@prisma/client";
 
 const NAV_BREAKPOINT = 1100;
 
-type SubmenuProps = { className?: string };
-
-type NavItem = {
+type NavItemBase = {
   label: string;
   href: string;
-  hasSub: boolean;
-  Submenu?: React.ComponentType<SubmenuProps>;
   exclude?: string | string[];
 };
+
+type NavItemNoSub = NavItemBase & {
+  hasSub: false;
+  Submenu?: never;
+  getData?: never;
+};
+
+type NavItemSubStatic = NavItemBase & {
+  hasSub: true;
+  Submenu: ComponentType<{ className: string }>;
+  getData?: never;
+};
+
+type NavItemSubWithData<T> = NavItemBase & {
+  hasSub: true;
+  Submenu: ComponentType<{ className: string; data: T }>;
+  getData: (appData: AppData) => T;
+};
+
+type NavItem = NavItemNoSub | NavItemSubStatic | NavItemSubWithData<any>;
 
 const navItems: NavItem[] = [
   {
@@ -27,34 +45,44 @@ const navItems: NavItem[] = [
     href: "/shop",
     hasSub: true,
     Submenu: ShopSubmenu,
-    exclude: "/shop/collections",
+    getData: (appData) => appData.categories,
   },
   {
     label: "Collections",
     href: "/shop/collections",
     hasSub: true,
     Submenu: CollectionsSubmenu,
+    getData: (appData) => appData.collections,
   },
-  { label: "About", href: "/about", hasSub: false },
-  { label: "Help", href: "/help-center", hasSub: true, Submenu: HelpSubmenu },
+  {
+    label: "About",
+    href: "/about",
+    hasSub: false,
+  },
+  {
+    label: "Help",
+    href: "/help-center",
+    hasSub: true,
+    Submenu: HelpSubmenu,
+  },
 ];
 
-export default function Navbar({ className }: { className?: string }) {
+export default function Navbar({
+  className,
+  appData,
+}: {
+  className?: string;
+  appData: AppData;
+}) {
   const isBelowNavBreakpoint = useIsMobile(NAV_BREAKPOINT);
 
-  // start closed by default
   const [subOpen, setSubOpen] = useState<boolean[]>(() =>
     Array(navItems.length).fill(false),
   );
 
-  // toggle while only one open at a time
   function toggleSingle(index: number) {
     setSubOpen((prev) => prev.map((_, i) => (i === index ? !prev[i] : false)));
   }
-  // if you prefer keeping other panels in their current state, use this instead:
-  // function toggleByIndex(index: number) {
-  //     setSubOpen((prev) => prev.map((v, i) => (i === index ? !v : v)));
-  // }
 
   const { toggleSidebar, openMobile, setOpenMobile } = useSidebar();
 
@@ -139,7 +167,7 @@ export default function Navbar({ className }: { className?: string }) {
                   ))}
               </div>
 
-              {Submenu && (
+              {item.hasSub && Submenu && (
                 <div
                   className={cn(
                     subOpen[i] ? "h-max pt-2.5" : "h-0 p-0",
@@ -157,12 +185,15 @@ export default function Navbar({ className }: { className?: string }) {
                       "nav:p-2",
                     )}
                   >
-                    <Submenu
+                    <item.Submenu
                       className={cn(
                         "nav:border-none! nav:w-max nav:min-w-sm nav:max-w-150 min-h-11 w-full border-b-1 pb-2",
                         subOpen[i] &&
                           "slide-in-from-top-[150%] [animate-duration]-500 fade-in",
                       )}
+                      {...("getData" in item && item.getData
+                        ? { data: item.getData(appData) }
+                        : {})}
                     />
                   </div>
                 </div>

@@ -1,6 +1,6 @@
 import { CSSProperties, Suspense } from "react";
-import MonicxBreadcrumbs from "@/components/elements/products/monicx-breadcrumbs";
-import ProductInteraction from "@/components/elements/products/product-interaction";
+import MonicxBreadcrumbs from "@/components/products/monicx-breadcrumbs";
+import ProductInteraction from "@/components/products/product-interaction";
 import { findProduct } from "@/lib/products";
 import { ProductType } from "@/types";
 import { Metadata } from "next";

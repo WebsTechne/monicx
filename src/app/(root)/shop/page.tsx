@@ -1,48 +1,31 @@
-import { products } from "@/lib/products";
-import ProductList from "@/components/elements/products/product-list";
 import Image from "next/image";
-import { Suspense } from "react";
+import ProductListServer from "@/components/products/products-list.server";
+import CategoriesServer from "@/components/products/CategoriesServer";
+import { ShopButton } from "@/components/elements/shop-button";
 
 export const metadata = {
-    title: "Shop — All Products",
-    description: "Browse all products",
+  title: "Shop — All Products",
+  description: "Browse all products",
 };
 
-export default async function ShopPage({
-    searchParams,
-}: {
-    searchParams?:
-        | Record<string, string | string[]>
-        | Promise<Record<string, string | string[]>>;
-}) {
-    // If the page is loaded with ?category=slug we can server-filter for SEO
-    const params = (await searchParams) ?? {};
-    const q =
-        typeof params?.category === "string" ? params.category : undefined;
-    const serverItems = q ? products.filter((p) => p.category === q) : products;
+export default async function ShopPage() {
+  return (
+    <div className="w-full">
+      {/* hero or banner (optional) */}
+      <div className="relative mb-12 aspect-3/1 w-full">
+        <Image
+          src="/featured.png"
+          alt="Featured"
+          fill
+          className="object-cover"
+        />
+      </div>
 
-    return (
-        <div className="w-full">
-            {/* hero or banner (optional) */}
-            <div className="relative mb-8 aspect-[3/1] w-full">
-                <Image
-                    src="/featured.png"
-                    alt="Featured"
-                    fill
-                    className="object-cover"
-                />
-            </div>
-
-            {/* categories: force query-mode here so clicking applies ?category=slug and triggers router navigation */}
-
-            {/* product list: render serverItems so initial HTML is filtered when ?category is present */}
-            <Suspense fallback={<div>Loading products…</div>}>
-                <ProductList
-                    serverItems={serverItems}
-                    category={q}
-                    page="shop"
-                />
-            </Suspense>
-        </div>
-    );
+      <CategoriesServer />
+      <ProductListServer />
+      <div className="mt-3 flex w-full items-center justify-end">
+        <ShopButton />
+      </div>
+    </div>
+  );
 }

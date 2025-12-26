@@ -14,7 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import getInitials from "@/lib/initials";
+import getInitials from "@/lib/helpers/initials";
 import { Session } from "next-auth";
 import { logOut } from "@/lib/auth";
 

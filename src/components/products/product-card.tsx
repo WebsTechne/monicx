@@ -26,8 +26,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useIsMobile } from "@/hooks/use-mobile-custom";
+import { Skeleton } from "../ui/skeleton";
 
-export default function ProductCard({
+function ProductCard({
   product,
   wishlistPage,
 }: {
@@ -100,7 +101,7 @@ export default function ProductCard({
           </span>
         </div>
 
-        <div className="text-muted-foreground flex items-center">
+        <div className="flex items-center">
           <span className="text-foreground inline-block flex-1 text-lg font-extrabold">
             ${product.price}
           </span>
@@ -233,3 +234,70 @@ export default function ProductCard({
     </div>
   );
 }
+
+function ProductCardSkeleton() {
+  return (
+    <div className="overflow-clip rounded-[1.5rem] border p-1 shadow-none!">
+      {/* IMAGE SKELETON */}
+      <Skeleton className="aspect-4/5 rounded-[calc(1.5rem-4px)]" />
+
+      {/* DETAILS SKELETON */}
+      <div className="flex flex-col p-1.5">
+        {/* NAME SKELETON */}
+        <div className="pointer-events-none relative text-left font-medium text-transparent">
+          <Skeleton className="absolute size-full" />
+          Random name
+        </div>
+
+        {/* RATING SKELETON */}
+        <div className="flex items-center gap-1">
+          <span
+            className="rating inline-block aspect-5/1 h-4"
+            style={
+              {
+                "--rating": 0,
+              } as CSSProperties
+            }
+            data-rating={0}
+          ></span>
+          <span className="pointer-events-none relative inline-block text-sm leading-tight text-transparent">
+            4.3 (100)
+            <Skeleton className="absolute top-1/2 left-1/2 size-full h-8/10! -translate-1/2" />
+          </span>
+        </div>
+
+        {/* PRICE SKELETON */}
+        <div className="text-muted-foreground flex items-center justify-between text-lg font-extrabold">
+          <span>
+            $
+            <span className="relative inline-block flex-1 font-extrabold text-transparent">
+              4200
+              <Skeleton className="absolute top-1/2 left-1/2 size-full h-8/10! -translate-1/2" />
+            </span>
+          </span>
+          <div className="flex items-center">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="pointer-events-none size-7! rounded-full"
+            >
+              <Heart
+                size={20}
+                className="text-muted-foreground fill-muted-foreground"
+              />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="btn pointer-events-none size-7! rounded-full"
+            >
+              <MoreVertical size={20} className="text-muted-foreground" />
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export { ProductCard, ProductCardSkeleton };

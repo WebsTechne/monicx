@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { z } from "zod";
-import { getCollections, invalidateCollections } from "@/lib/get-collections";
+import { getCollections } from "@/lib/get-collections";
+import { revalidateTag } from "next/cache";
 
 const bodySchema = z.object({
   name: z.string().min(1),
@@ -18,7 +19,7 @@ export async function POST(req: Request) {
     const json = await req.json();
     const data = bodySchema.parse(json);
 
-    // optional: check if slug already exists
+    // check if slug already exists
     const existing = await prisma.collection.findUnique({
       where: { slug: data.slug },
     });
@@ -39,7 +40,7 @@ export async function POST(req: Request) {
       },
     });
 
-    invalidateCollections();
+    revalidateTag("collections", {});
 
     return NextResponse.json(created, { status: 201 });
   } catch (err: unknown) {

@@ -1,58 +1,56 @@
+import { Metadata } from "next";
 import { Suspense } from "react";
 import { products } from "@/lib/products";
-import ProductList from "@/components/elements/products/product-list";
-import { Metadata } from "next";
-import MonicxBreadcrumbs from "@/components/elements/products/monicx-breadcrumbs";
+import ProductListServer from "@/components/products/products-list.server";
+import MonicxBreadcrumbs from "@/components/products/monicx-breadcrumbs";
+import capitalize from "@/lib/helpers/capitalize";
 
 export async function generateMetadata({
-    params,
+  params,
 }: {
-    params: { slug: string };
+  params: { slug: string };
 }): Promise<Metadata> {
-    const raw = params.slug;
-    const slug = decodeURIComponent(raw);
+  const { slug: raw } = await params;
+  const slug = decodeURIComponent(raw);
 
-    return {
-        title: `${slug} category @ Monicx`,
-        description: `Browse our many products under the ${slug} category @ Monicx`,
-    };
+  return {
+    title: `${slug} category @ Monicx`,
+    description: `Browse our many products under the ${slug} category @ Monicx`,
+  };
 }
 
-export default function CategorySlugPage({
-    params,
+export default async function CategorySlugPage({
+  params,
 }: {
-    params: { slug: string };
+  params: { slug: string };
 }) {
-    const slug = params.slug;
-    const items = products.filter((p) => p.category === slug);
+  const { slug } = await params;
+  const items = products.filter((p) => p.category === slug);
 
-    const breadcrumbItems = [
-        { name: "Home", href: "/" },
-        { name: "Shop", href: "/shop" },
-        { name: slug, href: `/shop/categories/${slug}` },
-    ];
+  const breadcrumbLoadingItems = [
+    { name: "Home", href: "/" },
+    { name: "Shop", href: "/shop" },
+  ];
 
-    return (
-        <>
-            <div>
-                {/* wrap client components in Suspense for SSR/prerender */}
-                <Suspense
-                    fallback={<div className="mb-2">Loading breadcrumbs…</div>}
-                >
-                    <MonicxBreadcrumbs items={breadcrumbItems} />
-                </Suspense>
-            </div>
-            <h1 className="mb-3 text-2xl! md:text-4xl">
-                Scan by Category: {slug}
-            </h1>
-            <Suspense fallback={<div>Loading products…</div>}>
-                <ProductList
-                    allTab={false}
-                    serverItems={items}
-                    category={slug}
-                    page="shop"
-                />
-            </Suspense>
-        </>
-    );
+  const breadcrumbItems = [
+    { name: "Home", href: "/" },
+    { name: "Shop", href: "/shop" },
+    { name: capitalize(slug) },
+  ];
+
+  return (
+    <>
+      <div>
+        <Suspense
+          fallback={<MonicxBreadcrumbs items={breadcrumbLoadingItems} />}
+        >
+          <MonicxBreadcrumbs items={breadcrumbItems} />
+        </Suspense>
+      </div>
+      <h1 className="mb-3 text-2xl! md:text-4xl">
+        Scan by Category: {capitalize(slug)}
+      </h1>
+      <ProductListServer serverItems={items} category={slug} />
+    </>
+  );
 }

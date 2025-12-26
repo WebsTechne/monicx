@@ -1,9 +1,11 @@
-import { cn } from "@/lib/utils";
-import Image from "next/image";
-import Link from "next/link";
-import { useCollectionsData } from "@/context/providers";
+"use client";
 
-type Props = { className?: string };
+import { cn } from "@/lib/utils";
+import { Collection } from "@prisma/client";
+import Link from "next/link";
+import Image from "next/image";
+
+type Props = { className?: string; data: Collection[] };
 
 /* const navInfo = [
     {
@@ -32,42 +34,43 @@ type Props = { className?: string };
     },
 ]; */
 
-export default function CollectionsSubmenu({ className }: Props) {
-    const { data: navInfo } = useCollectionsData();
-
-    return (
-        <ul
-            className={cn(
-                "nav:grid-cols-2 nav:p-0! grid max-w-150 grid-cols-1 gap-1",
-                className,
-            )}
+export default function CollectionsSubmenu({
+  className,
+  data: collections = [],
+}: Props) {
+  return (
+    <ul
+      className={cn(
+        "nav:grid-cols-2 nav:p-0! grid max-w-150 grid-cols-1 gap-1",
+        className,
+      )}
+    >
+      {collections.map((item: Collection, index: number) => (
+        <Link
+          href={`/shop/collections/${item.slug}`}
+          className="hover:bg-muted/60 flex rounded-lg p-1"
+          key={`${item.slug}${index}`}
         >
-            {navInfo.map((item, index) => (
-                <Link
-                    href={`/shop/collections/${item.slug}`}
-                    className="hover:bg-muted/60 flex rounded-lg p-1"
-                    key={`${item.slug}${index}`}
-                >
-                    <li className="flex flex-1 items-center gap-1.5">
-                        <span className="aspect-1 nav:w-9! relative w-10 overflow-clip rounded-md">
-                            <Image
-                                src={item.imagePath}
-                                alt={item.slug}
-                                fill
-                                className="object-cover"
-                            />
-                        </span>
-                        <div className="flex flex-1 flex-col items-center justify-start">
-                            <h3 className="text-foreground w-full shrink-0 text-base leading-tight text-ellipsis whitespace-nowrap">
-                                {item.name}
-                            </h3>
-                            <span className="text-muted-foreground line-clamp-1 w-full shrink-0 text-left! text-[13px] leading-tight">
-                                {item.description}
-                            </span>
-                        </div>
-                    </li>
-                </Link>
-            ))}
-        </ul>
-    );
+          <li className="flex flex-1 items-center gap-1.5">
+            <span className="aspect-1 nav:w-9! relative w-10 overflow-clip rounded-md">
+              <Image
+                src={item.imagePath}
+                alt={item.slug}
+                fill
+                className="object-cover"
+              />
+            </span>
+            <div className="flex flex-1 flex-col items-center justify-start">
+              <h3 className="text-foreground w-full shrink-0 text-base leading-tight text-ellipsis whitespace-nowrap">
+                {item.name}
+              </h3>
+              <span className="text-muted-foreground line-clamp-1 w-full shrink-0 text-left! text-[13px] leading-tight">
+                {item.description}
+              </span>
+            </div>
+          </li>
+        </Link>
+      ))}
+    </ul>
+  );
 }

@@ -21,9 +21,6 @@ export default function Page() {
       setError("Enter a valid email or phone number (include country code).");
       return;
     }
-
-    // now submit (fetch / next-auth sign-in / form action, whatever you use)
-    // example: fetch('/api/auth/sign-in', { method: 'POST', body: JSON.stringify({ identifier: id.trim(), password }) })
   };
 
   return (

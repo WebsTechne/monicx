@@ -7,35 +7,40 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, Monitor, Moon, Sun } from "lucide-react";
+import { LogOut, Monitor, Moon, Sun, UserRound } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Session } from "next-auth";
-import { logOut } from "@/lib/auth";
-import getInitials from "@/lib/initials";
+import getInitials from "@/lib/helpers/initials";
+import Link from "next/link";
 
-export default function AccountButton({
-  session,
-}: {
-  session: Session | null;
-}) {
-  if (!session?.user) return null;
+export default function AccountButton() {
+  const logOut = () => {};
+
+  // if (!session?.user) return null;
 
   const { theme = "system", setTheme } = useTheme();
 
-  const { firstName, lastName, initials } = getInitials(session.user.name!);
+  // const { firstName, lastName, initials } = getInitials(session.user.name!);
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className="ring-ring/50 size-8 duration-300 hover:ring-[5px]">
+        {/* <Avatar className="ring-ring/50 size-8 duration-300 hover:ring-[5px]">
           <AvatarImage
             src={session.user?.image || ""}
             alt={`${firstName} ${lastName}`}
           ></AvatarImage>
           <AvatarFallback>{initials}</AvatarFallback>
-        </Avatar>
+        </Avatar> */}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="z-100! mr-5 min-w-40">
+        <DropdownMenuGroup>
+          <DropdownMenuItem asChild>
+            <Link href="/profile">
+              <UserRound /> Profile
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+
         <DropdownMenuGroup className="text-muted-foreground flex flex-row! items-center justify-between gap-2 p-1 text-sm">
           Change Theme
           <span className="flex items-center rounded-full bg-black/7 p-0.5 dark:bg-black/25">

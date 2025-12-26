@@ -1,12 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { v2 as cloudinary } from "cloudinary";
-
-// server-only config (do NOT use NEXT_PUBLIC_* for secrets)
-cloudinary.config({
-  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
 
 const ALLOWED_FOLDERS = new Set([
   "monicx/categories",
@@ -21,9 +13,17 @@ const ALLOWED_FOLDERS = new Set([
 export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
-  // <-- use Request or NextRequest
   // optionally enforce authentication here
   // const user = await getUserFromRequest(req); if (!user) return NextResponse.json({ error: 'unauth' }, { status: 401 });
+
+  // lazy / dynamic import to avoid Turbopack trying to bundle Cloudinary at build time
+  const { v2: cloudinary } = await import("cloudinary");
+
+  cloudinary.config({
+    cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  });
 
   const body = await req.json().catch(() => ({}));
   const params = body.paramsToSign ?? {};

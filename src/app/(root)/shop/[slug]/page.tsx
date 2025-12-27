@@ -46,7 +46,7 @@ export async function generateMetadata({
       description,
       url: `/shop/${slug}`,
       siteName,
-      images: [product.images?.[0] ?? "/og/monicx-og-default.jpeg"],
+      images: [product.images?.[0]],
       // type: "product",
     },
     twitter: { card: "summary_large_image", title },

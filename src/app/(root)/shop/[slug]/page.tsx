@@ -9,7 +9,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Heart, MessageCircle } from "lucide-react";
-import { metadataBase, siteName } from "@/app/metadata-base";
+import { defaultOGImage, metadataBase, siteName } from "@/app/metadata-base";
 
 export async function generateMetadata({
   params,
@@ -22,18 +22,21 @@ export async function generateMetadata({
   const product = await findProduct(slug);
   if (!product) {
     return {
-      title: `Product not found — ${siteName}`,
+      title: `Product not found`,
       description: `Product not found.`,
       metadataBase,
       robots: { index: false, follow: false },
     };
   }
 
-  const title = `${product.name} — ${siteName}`;
+  const title = `${product.name}`;
   const description =
     product.description ??
     product.shortDescription ??
     `Buy ${product.name} on ${siteName}. ${product.shortDescription ?? ""}`;
+
+  const firstColor = product.colors?.[0];
+  const firstImage = product.images?.[firstColor];
 
   return {
     title,
@@ -46,7 +49,7 @@ export async function generateMetadata({
       description,
       url: `/shop/${slug}`,
       siteName,
-      images: [product.images?.[0]],
+      images: [firstImage ?? defaultOGImage],
       // type: "product",
     },
     twitter: { card: "summary_large_image", title },
@@ -70,7 +73,7 @@ export default async function ProductPage({
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
-    image: product.images || [],
+    image: Object.values(product.images ?? []),
     description: product.description || product.shortDescription,
     sku: /* product.sku || */ undefined,
     mpn: /* product.sku || */ undefined,

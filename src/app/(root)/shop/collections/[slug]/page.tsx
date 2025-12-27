@@ -17,7 +17,17 @@ export async function generateMetadata({
   const slug = decodeURIComponent(raw);
   const collections = await getCollections();
   const collection = collections.find((c) => c.slug === slug);
-  const title = `${collection?.name ?? slug} — ${siteName}`;
+
+  if (!collection) {
+    return {
+      title: `Collection not found`,
+      description: `Collection not found.`,
+      metadataBase,
+      robots: { index: false, follow: false },
+    };
+  }
+
+  const title = `${collection?.name ?? slug}`;
   const description = `Shop ${collection?.name ?? slug} at ${siteName}. Curated clothing tailored to fit and style preferences.`;
 
   return {

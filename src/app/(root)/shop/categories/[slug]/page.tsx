@@ -16,7 +16,17 @@ export async function generateMetadata({
   const slug = decodeURIComponent(raw);
   const categories = await getCategories();
   const category = categories.find((c) => c.slug === slug);
-  const title = `${category?.name ?? slug} — ${siteName}`;
+
+  if (!category) {
+    return {
+      title: `Category not found`,
+      description: `Category not found.`,
+      metadataBase,
+      robots: { index: false, follow: false },
+    };
+  }
+
+  const title = `${category?.name ?? slug}`;
   const description = `Shop ${category?.name ?? slug} at ${siteName}. Curated clothing tailored to fit and style preferences.`;
 
   return {

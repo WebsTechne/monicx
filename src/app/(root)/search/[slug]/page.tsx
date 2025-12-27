@@ -10,11 +10,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const query = params.slug ?? searchParams.q ?? "";
   return {
-    title: `Search results for "${query}" — ${siteName}`,
+    title: `Search results for "${query}"`,
     description: `Search results for "${query}" on ${siteName}. Find local tailors, suits, accessories, and more.`,
     metadataBase,
     robots: { index: false, follow: false },
-    alternates: { canonical: `/search/${encodeURIComponent(query)}` },
+    alternates: { canonical: `/search?q=${encodeURIComponent(query)}` },
   };
 }
 

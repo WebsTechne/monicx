@@ -5,7 +5,7 @@ import { ProductCard } from "@/components/products/product-card";
 import { siteName } from "@/app/metadata-base";
 
 export const metadata = {
-  title: `Wishlist — ${siteName}`,
+  title: `Wishlist`,
   description: "Items you've saved for later on Monicx.",
   robots: { index: false, follow: false },
   alternates: { canonical: "/wishlist" },

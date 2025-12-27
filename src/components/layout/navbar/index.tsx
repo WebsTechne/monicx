@@ -9,7 +9,6 @@ import HelpSubmenu from "./help-submenu";
 import { useSidebar } from "@/components/providers/sidebar-provider";
 import NavLink from "@/components/elements/nav-link";
 import { AppData } from "../header";
-import { Category, Collection } from "@prisma/client";
 
 const NAV_BREAKPOINT = 1100;
 

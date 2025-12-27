@@ -2,11 +2,14 @@ import type { Metadata } from "next";
 import { products as PRODUCTS } from "@/lib/products";
 import {} from "react";
 import { ProductCard } from "@/components/products/product-card";
+import { siteName } from "@/app/metadata-base";
 
-export function generateMetadata(): Metadata {
-  return { title: "Your wishlist @ Monicx" };
-}
-
+export const metadata = {
+  title: `Wishlist — ${siteName}`,
+  description: "Items you've saved for later on Monicx.",
+  robots: { index: false, follow: false },
+  alternates: { canonical: "/wishlist" },
+};
 const wishlist = PRODUCTS.filter((p) => p.wishlist === true);
 
 export default function Page() {

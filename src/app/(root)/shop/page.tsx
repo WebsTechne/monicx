@@ -2,10 +2,32 @@ import Image from "next/image";
 import ProductListServer from "@/components/products/products-list.server";
 import CategoriesServer from "@/components/products/categories.server";
 import { ShopButton } from "@/components/elements/shop-button";
+import { metadataBase, siteName } from "@/app/metadata-base";
 
 export const metadata = {
-  title: "Shop — All Products",
-  description: "Browse all products",
+  title: `Shop — ${siteName}`,
+  description:
+    "Shop tailored clothing and ready-to-wear from Monicx — locally made in Nigeria. Browse suits, casual wear, and custom orders.",
+  metadataBase,
+  keywords: [
+    "Monicx",
+    "Nigerian tailoring",
+    "suits",
+    "tuxedos",
+    "custom clothing",
+    "made in Nigeria",
+  ],
+  openGraph: {
+    title: `Shop — ${siteName}`,
+    description:
+      "Shop tailored clothing and ready-to-wear from Monicx — locally made in Nigeria.",
+    url: "/shop",
+    siteName,
+    // images: ["/og/shop.png"],
+    type: "website",
+  },
+  twitter: { card: "summary_large_image", title: `Shop — ${siteName}` },
+  alternates: { canonical: "/shop" },
 };
 
 export default async function ShopPage() {

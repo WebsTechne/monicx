@@ -1,7 +1,7 @@
 import { CSSProperties, Suspense } from "react";
 import MonicxBreadcrumbs from "@/components/products/monicx-breadcrumbs";
 import ProductInteraction from "@/components/products/product-interaction";
-import { findProduct } from "@/lib/products";
+import { findProduct, products } from "@/lib/products";
 import { ProductType } from "@/types";
 import { Metadata } from "next";
 import Image from "next/image";
@@ -9,24 +9,48 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Heart, MessageCircle } from "lucide-react";
+import { metadataBase, siteName } from "@/app/metadata-base";
 
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string | string[] };
+  params: { slug: string };
 }): Promise<Metadata> {
-  const raw = params.slug;
-  const slug = Array.isArray(raw) ? raw[0] : raw;
-  if (!slug) return { title: "Product not found" };
+  const { slug: raw } = await params;
+  const slug = decodeURIComponent(raw);
+  // Example server call - implement to return product details
+  const product = await findProduct(slug);
+  if (!product) {
+    return {
+      title: `Product not found — ${siteName}`,
+      description: `Product not found.`,
+      metadataBase,
+      robots: { index: false, follow: false },
+    };
+  }
 
-  const clean = decodeURIComponent(slug);
-  const product = findProduct(clean);
-  if (!product) return { title: "Product not found" };
+  const title = `${product.name} — ${siteName}`;
+  const description =
+    product.description ??
+    product.shortDescription ??
+    `Buy ${product.name} on ${siteName}. ${product.shortDescription ?? ""}`;
 
   return {
-    title: `${product.name} — Monicx`,
-    description: product.description, // <-- correct key
-    // optionally: openGraph, twitter, etc.
+    title,
+    description,
+    metadataBase,
+    keywords:
+      product.colors ?? [product.category, product.name].filter(Boolean),
+    openGraph: {
+      title,
+      description,
+      url: `/shop/${slug}`,
+      siteName,
+      images: [product.images?.[0] ?? "/og/monicx-og-default.jpeg"],
+      // type: "product",
+    },
+    twitter: { card: "summary_large_image", title },
+    alternates: { canonical: `/shop/${slug}` },
   };
 }
 
@@ -34,15 +58,36 @@ export default async function ProductPage({
   params,
   searchParams,
 }: {
-  params: { slug?: string | string[] };
+  params: { slug: string };
   searchParams: Promise<{ size: string; color: string }>;
 }) {
-  const raw = params.slug;
-  const slug = Array.isArray(raw) ? raw[0] : raw;
-  if (!slug) return notFound();
-  const clean = decodeURIComponent(slug);
-  const product: ProductType | undefined = findProduct(clean);
+  const { slug: raw } = await params;
+  const slug = decodeURIComponent(raw);
+  const product: ProductType | undefined = findProduct(slug);
   if (!product) return notFound();
+
+  const ldJson = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    image: product.images || [],
+    description: product.description || product.shortDescription,
+    sku: /* product.sku || */ undefined,
+    mpn: /* product.sku || */ undefined,
+    brand: { "@type": "Brand", name: /* product.brand || */ "Monicx" },
+    offers: {
+      "@type": "Offer",
+      url: `https://monicxed.com/shop/${product.slug}`,
+      priceCurrency: "NGN", // change to your currency
+      price: product.price?.toFixed(2),
+      availability:
+        // product.stock > 0
+        product.price > 0
+          ? "https://schema.org/InStock"
+          : "https://schema.org/OutOfStock",
+      itemCondition: "https://schema.org/NewCondition",
+    },
+  };
 
   const { size, color } = await searchParams;
   const selectedSize = size || (product.sizes[0] as string);
@@ -165,6 +210,8 @@ export default async function ProductPage({
           </div>
         </section>
       </div>
+
+      <script type="application/ld+json">{JSON.stringify(ldJson)}</script>
     </>
   );
 }

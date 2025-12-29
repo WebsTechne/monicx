@@ -2,8 +2,9 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import IMAGES from "@/assets/images";
 import type { Category } from "@prisma/client";
@@ -26,7 +27,10 @@ export default function CategoriesClient({
 
   if (!categories || categories.length === 0) {
     return (
-      <div className="mb-4 flex h-[97px] w-full items-center gap-4 border border-dashed">
+      <div
+        id="categoriesSelector"
+        className="mb-4 flex h-[97px] w-full items-center gap-4 border border-dashed"
+      >
         Refresh
         <Button
           variant="secondary"
@@ -143,13 +147,16 @@ export default function CategoriesClient({
         className="scrollbar-width-none flex gap-1.5 overflow-x-auto overflow-y-clip rounded-lg text-sm"
       >
         {/* All tab */}
-        <Button
-          variant="ghost"
+        <Link
+          href="/shop"
           type="button"
-          className="flex-center flex h-max! w-max! cursor-pointer flex-col gap-1 rounded-xl p-2"
-          onClick={() => {
-            void handleChange(null);
-          }}
+          className={cn(
+            buttonVariants({ variant: "ghost" }),
+            "flex-center flex h-max! w-max! cursor-pointer flex-col gap-1 rounded-xl p-2",
+            isAllActive
+              ? "bg-accent text-accent-foreground dark:bg-accent/50 border-primary border"
+              : "text-muted-foreground",
+          )}
           aria-pressed={isAllActive}
         >
           <span className="relative inline-block aspect-square h-10.5 overflow-clip rounded-full">
@@ -162,21 +169,20 @@ export default function CategoriesClient({
             />
           </span>
           All
-        </Button>
+        </Link>
 
         {categories.map((c) => {
           const isActive = activeSlug === c.slug;
           return (
-            <Button
-              variant="ghost"
+            <Link
               key={c.slug}
-              type="button"
+              href={`${categoryBasePath}/${encodeURIComponent(c.slug)}`}
               aria-pressed={isActive}
-              onClick={() => handleChange(c.slug)}
               className={cn(
+                buttonVariants({ variant: "ghost" }),
                 "flex-center flex h-max! w-max! cursor-pointer flex-col gap-1 rounded-xl p-2",
                 isActive
-                  ? "bg-primary/70 text-background"
+                  ? "bg-accent text-accent-foreground dark:bg-accent/50 border-primary border"
                   : "text-muted-foreground",
               )}
             >
@@ -190,7 +196,7 @@ export default function CategoriesClient({
                 />
               </span>
               {c.name}
-            </Button>
+            </Link>
           );
         })}
       </div>

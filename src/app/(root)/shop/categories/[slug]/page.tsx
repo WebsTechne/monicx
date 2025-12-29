@@ -6,6 +6,7 @@ import MonicxBreadcrumbs from "@/components/products/monicx-breadcrumbs";
 import capitalize from "@/lib/helpers/capitalize";
 import { getCategories } from "@/lib/fetch/get-categories";
 import { metadataBase, siteName } from "@/app/metadata-base";
+import CategoriesServer from "@/components/products/categories.server";
 
 export async function generateMetadata({
   params,
@@ -52,7 +53,10 @@ export default async function CategorySlugPage({
   params: { slug: string };
 }) {
   const { slug } = await params;
-  const items = products.filter((p) => p.category === slug);
+  const slugLower = slug.toString().trim().toLowerCase();
+  const items = products.filter(
+    (p) => (p.category ?? "").toString().trim().toLowerCase() === slugLower,
+  );
 
   const breadcrumbLoadingItems = [
     { name: "Home", href: "/" },
@@ -74,6 +78,9 @@ export default async function CategorySlugPage({
           <MonicxBreadcrumbs items={breadcrumbItems} />
         </Suspense>
       </div>
+
+      <CategoriesServer />
+
       <h1 className="mb-3 text-2xl! md:text-4xl">
         Scan by Category: {capitalize(slug)}
       </h1>

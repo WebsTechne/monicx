@@ -1,11 +1,5 @@
 import type { ProductsType } from "@/types";
 
-/**
- * Note: categories chosen to match your existing category set:
- * - "t-shirts", "jackets", "shoes"
- * Adjust if you add more category types (e.g. "bottoms", "denim").
- */
-
 export const products: (ProductsType[number] & {
   slug?: string;
   category?: string;
@@ -13,7 +7,7 @@ export const products: (ProductsType[number] & {
   {
     id: 1,
     slug: "adidas-corefit-t-shirt",
-    category: "t-shirts",
+    category: "casual",
     name: "Adidas CoreFit T-Shirt",
     shortDescription:
       "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
@@ -33,7 +27,7 @@ export const products: (ProductsType[number] & {
   {
     id: 2,
     slug: "puma-ultra-warm-zip",
-    category: "jackets",
+    category: "casual",
     name: "Puma Ultra Warm Zip",
     shortDescription:
       "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
@@ -48,7 +42,7 @@ export const products: (ProductsType[number] & {
   {
     id: 3,
     slug: "nike-air-essentials-pullover",
-    category: "jackets",
+    category: "casual",
     name: "Nike Air Essentials Pullover",
     shortDescription:
       "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
@@ -67,7 +61,7 @@ export const products: (ProductsType[number] & {
   {
     id: 4,
     slug: "nike-dri-flex-t-shirt",
-    category: "t-shirts",
+    category: "women",
     name: "Nike Dri Flex T-Shirt",
     shortDescription:
       "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
@@ -83,7 +77,7 @@ export const products: (ProductsType[number] & {
   {
     id: 5,
     slug: "under-armour-stormfleece",
-    category: "jackets",
+    category: "casual",
     name: "Under Armour StormFleece",
     shortDescription:
       "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
@@ -102,7 +96,7 @@ export const products: (ProductsType[number] & {
   {
     id: 6,
     slug: "nike-air-max-270",
-    category: "shoes",
+    category: "Men",
     name: "Nike Air Max 270",
     shortDescription:
       "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
@@ -118,7 +112,7 @@ export const products: (ProductsType[number] & {
   {
     id: 7,
     slug: "nike-ultraboost-pulse",
-    category: "shoes",
+    category: "women",
     name: "Nike Ultraboost Pulse",
     shortDescription:
       "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
@@ -133,7 +127,7 @@ export const products: (ProductsType[number] & {
   {
     id: 8,
     slug: "levis-classic-denim",
-    category: "t-shirts", // temporary: consider adding "bottoms" or "denim" category later
+    category: "everyday", // temporary: consider adding "bottoms" or "denim" category later
     name: "Levi’s Classic Denim",
     shortDescription:
       "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
@@ -150,4 +144,6 @@ export const products: (ProductsType[number] & {
 export const findProduct = (slug: string) =>
   products.find((p) => p.slug === slug || p.id.toString() === slug);
 export const productsByCategory = (cat: string) =>
-  products.filter((p) => p.category === cat);
+  products.filter(
+    (p) => (p.category ?? "").toString().toLowerCase() === cat.toLowerCase(),
+  );

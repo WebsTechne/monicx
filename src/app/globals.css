@@ -216,7 +216,7 @@
     @apply cursor-pointer!;
   }
   form {
-    @apply bg-card max-w-[550px] rounded-2xl border-1 px-3 py-5;
+    /* @apply bg-card max-w-[550px] rounded-2xl border-1 px-3 py-5; */
   }
 }
 
@@ -283,11 +283,11 @@
       margin-left: 1px;
     }
 
-    @apply flex h-max w-full max-w-120 flex-col items-start gap-[1.5px];
+    @apply flex h-max w-full flex-col items-start gap-[1.5px];
   }
-
+  /* max-w-120 for input-group */
   .input-label {
-    @apply text-muted-foreground;
+    @apply text-muted-foreground gap-0!;
   }
 
   .input {

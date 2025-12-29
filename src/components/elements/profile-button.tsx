@@ -11,26 +11,49 @@ import { LogOut, Monitor, Moon, Sun, UserRound } from "lucide-react";
 import { cn } from "@/lib/utils";
 import getInitials from "@/lib/helpers/initials";
 import Link from "next/link";
+import { AuthSession } from "@/app/layout";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
-export default function AccountButton() {
-  const logOut = () => {};
-
-  // if (!session?.user) return null;
-
+export default function ProfileButton({
+  returnTo,
+  session,
+}: {
+  returnTo: string;
+  session: AuthSession;
+}) {
+  const { push } = useRouter();
   const { theme = "system", setTheme } = useTheme();
+  const user = session?.user;
 
-  // const { firstName, lastName, initials } = getInitials(session.user.name!);
+  if (!user) return null;
+
+  const { firstName, lastName, initials } = getInitials(user?.name || "x x");
+
+  const handleSignOut = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          push(`/auth/sign-in?returnTo=${returnTo}`);
+        },
+        onError: () => {
+          toast.error("Couldn't sign-out. Please try again.", {});
+        },
+      },
+    });
+  };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        {/* <Avatar className="ring-ring/50 size-8 duration-300 hover:ring-[5px]">
+        <Avatar className="ring-ring/50 size-8 duration-300 hover:ring-[5px]">
           <AvatarImage
-            src={session.user?.image || ""}
+            src={user?.image || ""}
             alt={`${firstName} ${lastName}`}
           ></AvatarImage>
           <AvatarFallback>{initials}</AvatarFallback>
-        </Avatar> */}
+        </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="z-100! mr-5 min-w-40">
         <DropdownMenuGroup>
@@ -75,7 +98,7 @@ export default function AccountButton() {
         </DropdownMenuGroup>
 
         <DropdownMenuGroup>
-          <DropdownMenuItem variant="destructive" onClick={() => {}}>
+          <DropdownMenuItem variant="destructive" onClick={handleSignOut}>
             <LogOut />
             Sign out
           </DropdownMenuItem>

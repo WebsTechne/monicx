@@ -1,7 +1,7 @@
 import { ComponentType, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile-custom";
-import { ChevronDown } from "lucide-react";
+import { ChevronDownIcon } from "lucide-react";
 import { Button } from "../../ui/button";
 import ShopSubmenu from "./shop-submenu";
 import CollectionsSubmenu from "./collections-submenu";
@@ -187,18 +187,18 @@ export default function Navbar({
                       className="flex-center flex size-8 rounded-full text-inherit duration-270"
                       title={subOpen[i] ? "Close submenu" : "Open submenu"}
                     >
-                      <ChevronDown
+                      <ChevronDownIcon
                         strokeWidth={1.5}
                         className={cn(
-                          "size-5 text-inherit transition-transform",
+                          "size-4 text-inherit transition-transform",
                           subOpen[i] && "text-foreground! rotate-180",
                         )}
                       />
                     </Button>
                   ) : (
-                    <ChevronDown
+                    <ChevronDownIcon
                       strokeWidth={1.5}
-                      className="size-5 text-inherit transition-transform"
+                      className="size-4 text-inherit transition-transform"
                     />
                   ))}
               </div>

@@ -5,7 +5,7 @@ import { ShopButton } from "@/components/elements/shop-button";
 import { metadataBase, siteName } from "@/app/metadata-base";
 
 export const metadata = {
-  title: `Shop — ${siteName}`,
+  title: `Shop`,
   description:
     "Shop tailored clothing and ready-to-wear from Monicx — locally made in Nigeria. Browse suits, casual wear, and custom orders.",
   metadataBase,

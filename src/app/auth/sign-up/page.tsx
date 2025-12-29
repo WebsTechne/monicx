@@ -2,7 +2,7 @@ import { siteName } from "@/app/metadata-base";
 import { SignUpClient } from "./sign-up.client";
 
 export const metadata = {
-  title: `Create account — ${siteName}`,
+  title: `Create account`,
   description:
     "Join Monicx today and start exploring the latest fashion, tailored just for you. Signing up is fast and easy!",
   metadataBase: new URL("https://monicxed.com"),

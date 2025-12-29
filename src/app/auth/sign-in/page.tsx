@@ -2,7 +2,7 @@ import { siteName } from "@/app/metadata-base";
 import { SignInClient } from "./sign-in.client";
 
 export const metadata = {
-  title: `Sign in — ${siteName}`,
+  title: `Sign in`,
   description:
     "Welcome back! Log in to your Monicx account to shop, track orders, and enjoy your favorite styles.",
   metadataBase: new URL("https://monicxed.com"),

@@ -25,14 +25,17 @@ import IMAGES from "@/assets/images";
 import { useIsMobile } from "@/hooks/use-mobile-custom";
 import useMounted from "@/hooks/use-mounted";
 import { cn } from "@/lib/utils";
-import { useSidebar } from "../providers/sidebar-provider";
+import { useSidebar } from "../../providers/sidebar-provider";
 
-import SearchForm from "../elements/search-form";
-import CartIcon from "../elements/cart-icon";
-import AccountButton from "../elements/account-button";
-import Navbar from "./navbar";
-import { Button, buttonVariants } from "../ui/button";
+import SearchForm from "../../elements/search-form";
+import CartIcon from "../../elements/cart-icon";
+import ProfileButton from "../../elements/profile-button";
+import Navbar from "../navbar";
+import { Button, buttonVariants } from "../../ui/button";
 import { Category, Collection } from "@prisma/client";
+import { ThemeToggle } from "@/components/elements/theme-toggle";
+import { AuthSession } from "@/app/layout";
+import { usePathname, useSearchParams } from "next/navigation";
 
 export type AppData = {
   categories: Category[];
@@ -42,20 +45,24 @@ export type AppData = {
 export default function Header({
   query,
   appData,
+  session,
 }: {
   query: string;
   appData: AppData;
+  session: AuthSession;
 }) {
   const mounted = useMounted();
   const { resolvedTheme, theme, setTheme } = useTheme();
   const isDark = mounted && resolvedTheme === "dark";
-  const isMobile = useIsMobile(1100);
   const [smSearchShow, setSmSearchShow] = useState(false);
-  const { setOpenMobile } = useSidebar();
 
-  const session = false; // Replace with actual better-auth session logic Triumph!
+  const isMobile = useIsMobile(1100);
+  const { toggleSidebar, openMobile, setOpenMobile } = useSidebar();
 
-  const { toggleSidebar, openMobile } = useSidebar();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const returnTo =
+    pathname + (searchParams.toString() ? `?${searchParams.toString()}` : "");
 
   return (
     <header className="header-bg flex-center sticky top-0 z-98 flex">
@@ -132,14 +139,7 @@ export default function Header({
           </Button>
 
           {/* THEME TOGGLE */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="header-icon"
-            onClick={() => setTheme(isDark ? "light" : "dark")}
-          >
-            {isDark ? <SunIcon /> : <MoonIcon />}
-          </Button>
+          <ThemeToggle className="header-icon" />
 
           {session ? (
             <>
@@ -163,22 +163,29 @@ export default function Header({
                 <Heart />
               </Link>
               <CartIcon />
-              <AccountButton
-              // session={session}
-              />
+              <ProfileButton session={session} returnTo={returnTo || ""} />
             </>
           ) : (
             <>
-              <Button
-                className="hidden md:inline-block"
-                variant="ghost"
-                asChild
+              <Link
+                href={`/auth/sign-in?returnTo=${encodeURIComponent(returnTo)}`}
+                className={buttonVariants({
+                  variant: "secondary",
+                  className: "",
+                })}
               >
-                <Link href="/auth/sign-in">Sign in</Link>
-              </Button>
-              <Button asChild>
-                <Link href="/auth/sign-up">Sign up</Link>
-              </Button>
+                Sign in
+              </Link>
+
+              <Link
+                href={`/auth/sign-up?returnTo=${encodeURIComponent(returnTo)}`}
+                className={buttonVariants({
+                  variant: "default",
+                  className: "hidden md:inline-block",
+                })}
+              >
+                Sign up
+              </Link>
             </>
           )}
         </section>

@@ -1,448 +1,282 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form"; // <- added
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-import { toast } from "sonner";
 import Link from "next/link";
-import { AppleIcon, GoogleIcon } from "@/components/icons/social-icons";
-import { Eye, EyeClosed, Loader2 } from "lucide-react";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useTheme } from "next-themes";
-import FormHeading from "@/components/elements/form-heading";
 
 import {
-  Form,
-  FormField,
-  FormItem,
-  FormControl,
-  FormDescription,
-  FormMessage,
-} from "@/components/ui/form";
-import z from "zod";
-import parsePhoneNumberFromString from "libphonenumber-js";
-import { zodResolver } from "@hookform/resolvers/zod";
-// import { logIn } from "@/lib/auth";
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+  FieldSeparator,
+  FieldTitle,
+} from "@/components/ui/field";
+
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
+import { Eye, EyeClosed } from "lucide-react";
+import { GoogleIcon, AppleIcon } from "@/components/icons/social-icons";
+
+import { signInSocial } from "@/lib/actions/auth-actions";
+import capitalize from "@/lib/helpers/capitalize";
+import { authClient } from "@/lib/auth-client";
+import { getPublicErrorMessage, reportErrorToServer } from "@/lib/error-utils";
+import { Spinner } from "@/components/ui/spinner";
+import { AuthHeader } from "../_components/auth-header";
+import { toast } from "sonner";
+
+// validation: identifier must be email, password 6+ chars
+const formSchema = z.object({
+  email: z.email("Please enter a valid email address."),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters." })
+    .max(72, "Password must be at most 72 characters."),
+});
+type FormValues = z.infer<typeof formSchema>;
 
 export function SignUpClient() {
   const { resolvedTheme } = useTheme();
+  const { replace } = useRouter();
+  const searchParams = useSearchParams();
+  const raw = searchParams.get("returnTo") ?? "";
+  const returnTo =
+    raw && raw.startsWith("/") && !raw.startsWith("//") ? raw : "/";
 
-  const formSchema = z.object({
-    email: z.string().trim().email("Invalid email format"),
-    phone: z
-      .string()
-      .trim()
-      .min(7)
-      .max(20)
-      .refine(
-        (val) => {
-          const pn = parsePhoneNumberFromString(val, "NG");
-          return !!(pn && pn.isValid());
-        },
-        { message: "Invalid phone number for Nigeria" },
-      )
-      // Optionally transform to E.164 when you store:
-      .transform((val) => {
-        const pn = parsePhoneNumberFromString(val, "NG");
-        return pn ? pn.number : val; // pn.number is E.164
-      }),
-    password: z
-      .string()
-      .min(6, { message: "Password must be at least 6 characters." }),
-    firstName: z.string().trim().min(1, { message: "First name is required." }),
-    lastName: z.string().trim().min(1, { message: "Last name is required." }),
-  });
-  type FormValues = z.infer<typeof formSchema>;
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [error, setError] = useState("");
 
-  const {
-    formState: { errors, isSubmitting },
-  } = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      phone: "",
-      email: "",
-      password: "",
-      firstName: "",
-      lastName: "",
-    },
-  });
+  const handleSocialAuth = async (
+    provider: "google" | "apple",
+    callbackURL: string,
+  ) => {
+    setError("");
 
-  const onSubmit = () => {
-    if (
-      !(
-        info.firstName &&
-        info.lastName &&
-        info.email &&
-        info.phone &&
-        info.password.value
-      )
-    ) {
-      toast.warning("Fill in all required fields.", {
-        description: "Cannot submit form.",
-      });
-      return;
-    }
-
-    if (info.password.value.length < 6) {
-      toast.warning("Password must be at least 6 characters.", {
-        description: "Cannot submit form.",
-      });
-      return;
+    try {
+      await signInSocial({ provider, callbackURL });
+    } catch (err) {
+      const publicMsg = getPublicErrorMessage(err);
+      const ref = await reportErrorToServer(err);
+      setError(`${publicMsg} (ref: ${ref})`);
     }
   };
 
-  const [info, setInfo] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    password: { value: "", visible: false },
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: { email: "", password: "" },
   });
 
-  // Minimal addition: create form object and pass it to <Form {...form}>
-  const form = useForm({
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      // keep password as empty string in form state; you're still using local state for visibility & value
-      password: "",
-    },
-  });
+  const emailError = form.formState.errors.email;
+  const passwordError = form.formState.errors.password;
+
+  const {
+    formState: { isSubmitting },
+  } = form;
+
+  const onSubmit = async (data: FormValues) => {
+    const payload = {
+      ...data,
+      name: "",
+      email: data.email.toLowerCase().trim(),
+    };
+
+    setError("");
+
+    try {
+      const result = await authClient.signUp.email(payload);
+      console.log("signUp result:", result);
+
+      if (result.error) {
+        switch (result.error.code) {
+          case "USER_ALREADY_EXISTS":
+            setError("This email is already registered. Try signing in.");
+            return;
+
+          case "INVALID_EMAIL":
+            setError("Please enter a valid email address.");
+            return;
+
+          case "WEAK_PASSWORD":
+            setError("Password is too weak.");
+            return;
+
+          default:
+            setError(result.error.message ?? "Failed to create account.");
+            return;
+        }
+      }
+
+      // No error means sign-up was accepted
+      toast.success("Account created. You can sign in now.");
+      replace(`/auth/sign-in?returnTo${returnTo}`);
+    } catch (err) {
+      // This is for network / unexpected errors only
+      setError(
+        err instanceof Error ? err.message : "Unexpected authentication error",
+      );
+    }
+  };
 
   return (
-    <div className="p-4.5 pt-7 pb-4">
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="mx-auto flex w-full flex-col items-center gap-5"
-          role="form"
-          aria-labelledby="signup-heading"
-        >
-          <FormHeading title="Sign up" titleId="signup-heading" />
-
-          <div className="input-group w-full">
-            <label htmlFor="email" className="input-label">
-              Email Address
-            </label>
-
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormControl className="flex-1">
-                    <Input
-                      className="input required size-full"
-                      id="email"
-                      {...field}
-                      value={info.email}
-                      onChange={(e) =>
-                        setInfo((prev) => ({
-                          ...prev,
-                          email: e.target.value,
-                        }))
-                      }
-                      type="email"
-                      autoComplete="email"
-                      spellCheck={false}
-                      placeholder="you@example.com"
-                      aria-describedby="email-desc form-error"
-                      aria-invalid={!!errors.email}
-                    />
-                  </FormControl>
-
-                  <FormMessage />
-
-                  <FormDescription>
-                    <span id="identifier-desc" className="sr-only">
-                      Enter your email address.
-                    </span>
-                  </FormDescription>
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="input-group w-full">
-            <label htmlFor="phone" className="input-label">
-              Phone number
-            </label>
-
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormControl className="flex-1">
-                    <Input
-                      className="input required size-full"
-                      id="phone"
-                      {...field}
-                      value={info.phone}
-                      onChange={(e) =>
-                        setInfo((prev) => ({
-                          ...prev,
-                          phone: e.target.value,
-                        }))
-                      }
-                      type="tel"
-                      autoComplete="tel"
-                      spellCheck={false}
-                      placeholder="+234 801 234 5678  "
-                      aria-describedby="phone-desc form-error"
-                      aria-invalid={!!errors.phone}
-                    />
-                  </FormControl>
-
-                  <FormMessage />
-
-                  <FormDescription>
-                    <span id="identifier-desc" className="sr-only">
-                      Enter your phone number including country code.
-                    </span>
-                  </FormDescription>
-                </FormItem>
-              )}
-            />
-          </div>
-
-          {/* Password with visibility toggle */}
-          <div className="input-group w-full">
-            <label htmlFor="password" className="input-label">
-              Password
-            </label>
-
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <div className="relative flex h-max w-full items-center">
-                    <FormControl className="flex-1">
-                      <Input
-                        className="input required size-full"
-                        id="password"
-                        {...field}
-                        type={info.password.visible ? "text" : "password"}
-                        value={info.password.value}
-                        onChange={(e) =>
-                          setInfo((prev) => ({
-                            ...prev,
-                            password: {
-                              ...prev.password,
-                              value: e.target.value,
-                            },
-                          }))
-                        }
-                        autoComplete="new-password"
-                        spellCheck={false}
-                        placeholder="Your password"
-                        aria-describedby="password-desc form-error"
-                        aria-invalid={!!errors.password}
-                      />
-                    </FormControl>
-
-                    <button
-                      type="button"
-                      aria-label={
-                        info.password.visible
-                          ? "Hide password"
-                          : "Show password"
-                      }
-                      aria-pressed={info.password.visible}
-                      className="aspect-1 absolute top-1/2 right-0 grid h-full -translate-y-1/2 place-items-center"
-                      onClick={() =>
-                        setInfo((prev) => ({
-                          ...prev,
-                          password: {
-                            ...prev.password,
-                            visible: !prev.password.visible,
-                          },
-                        }))
-                      }
-                    >
-                      {info.password.visible ? (
-                        <EyeClosed
-                          size={20}
-                          className="animate-in fade-in text-muted-foreground"
-                        />
-                      ) : (
-                        <Eye
-                          size={20}
-                          className="animate-in fade-in text-muted-foreground"
-                        />
-                      )}
-                    </button>
-                  </div>
-
-                  <FormMessage />
-
-                  <FormDescription>
-                    <span
-                      id="password-desc"
-                      className="sr-only"
-                      aria-live="polite"
-                    >
-                      {info.password.visible
-                        ? "Password is visible"
-                        : "Password is hidden"}
-                      . Password must be at least 6 characters.
-                    </span>
-                  </FormDescription>
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="input-group w-full">
-            <label htmlFor="firstName" className="input-label">
-              First name
-            </label>
-
-            <FormField
-              control={form.control}
-              name="firstName"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormControl className="flex-1">
-                    <Input
-                      className="input required size-full"
-                      id="firstName"
-                      {...field}
-                      value={info.firstName}
-                      onChange={(e) =>
-                        setInfo((prev) => ({
-                          ...prev,
-                          firstName: e.target.value,
-                        }))
-                      }
-                      type="text"
-                      autoComplete="given-name"
-                      spellCheck={false}
-                      placeholder="John"
-                      aria-describedby="firstName-desc form-error"
-                      aria-invalid={!!errors.firstName}
-                    />
-                  </FormControl>
-
-                  <FormMessage />
-
-                  <FormDescription>
-                    <span id="identifier-desc" className="sr-only">
-                      Enter your first name as it appears on official documents.
-                    </span>
-                  </FormDescription>
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="input-group w-full">
-            <label htmlFor="lastName" className="input-label">
-              Last name
-            </label>
-
-            <FormField
-              control={form.control}
-              name="lastName"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormControl className="flex-1">
-                    <Input
-                      className="input required size-full"
-                      id="lastName"
-                      {...field}
-                      value={info.lastName}
-                      onChange={(e) =>
-                        setInfo((prev) => ({
-                          ...prev,
-                          lastName: e.target.value,
-                        }))
-                      }
-                      type="text"
-                      autoComplete="family-name"
-                      spellCheck={false}
-                      placeholder="Doe"
-                      aria-describedby="lastName-desc form-error"
-                      aria-invalid={!!errors.lastName}
-                    />
-                  </FormControl>
-
-                  <FormMessage />
-
-                  <FormDescription>
-                    <span id="identifier-desc" className="sr-only">
-                      Enter your family name or surname.
-                    </span>
-                  </FormDescription>
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <Button
-            className="button w-full"
-            type="submit"
-            disabled={isSubmitting}
+    <form
+      onSubmit={form.handleSubmit(onSubmit)}
+      className="mx-auto flex w-9/10 max-w-115 flex-col items-center gap-5"
+      role="form"
+      aria-labelledby="sign-up-heading"
+    >
+      <AuthHeader />
+      <FieldGroup className="gap-4.5!">
+        {/* Title*/}
+        <Field className="gap-0!">
+          <FieldTitle
+            className="mx-auto w-fit! text-center text-4xl leading-tight font-extrabold"
+            id="sign-up-heading"
           >
-            {!isSubmitting ? (
-              "Sign up"
-            ) : (
-              <Loader2 className="size-5 animate-spin" />
-            )}
-          </Button>
+            Create account
+          </FieldTitle>
+          <FieldDescription className="text-center text-base">
+            Sign up for the best experience
+          </FieldDescription>
+        </Field>
 
-          <div className="flex-center flex w-full max-w-120 gap-5 px-6 py-2.5">
-            <Separator className="flex-1" />
-            <span className="text-muted-foreground text-sm">
-              Or sign up with
+        {/* Email */}
+        <Field data-invalid={!!emailError} className="input-group gap-1.5!">
+          <FieldLabel htmlFor="form-rhf-email" className="input-label">
+            Email
+          </FieldLabel>
+          <Input
+            {...form.register("email")}
+            id="form-rhf-email"
+            aria-invalid={!!emailError}
+            aria-describedby={emailError ? "form-rhf-email-error" : undefined}
+            autoComplete="email"
+            className="input required"
+            type="email"
+            placeholder="j@example.com"
+          />
+          <FieldError
+            errors={[emailError]}
+            id="form-rhf-email-error"
+            role="alert"
+          />
+        </Field>
+
+        {/* Password with visibility toggle */}
+        <Field data-invalid={!!passwordError} className="input-group gap-1.5!">
+          <FieldLabel
+            htmlFor="form-rhf-password"
+            className="input-label gap-1.5!"
+          >
+            Password
+          </FieldLabel>
+
+          <div className="relative flex h-max w-full items-center">
+            <Input
+              {...form.register("password")}
+              id="form-rhf-password"
+              type={showPassword ? "text" : "password"}
+              autoComplete="current-password"
+              aria-invalid={!!passwordError}
+              aria-describedby={
+                passwordError ? "form-rhf-password-error" : undefined
+              }
+              className="input required"
+            />
+
+            <button
+              type="button"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-pressed={showPassword}
+              className="aspect-1 absolute top-1/2 right-0 grid h-full -translate-y-1/2 place-items-center"
+              onClick={() => setShowPassword((v) => !v)}
+            >
+              {showPassword ? (
+                <EyeClosed
+                  size={20}
+                  className="animate-in fade-in text-muted-foreground"
+                />
+              ) : (
+                <Eye
+                  size={20}
+                  className="animate-in fade-in text-muted-foreground"
+                />
+              )}
+            </button>
+          </div>
+
+          <FieldError
+            errors={[passwordError]}
+            id="form-rhf-password-error"
+            role="alert"
+          />
+          <FieldDescription>
+            <span id="password-desc" className="sr-only" aria-live="polite">
+              {showPassword ? "Password is visible" : "Password is hidden"}.
+              Password must be at least 6 characters.
             </span>
-            <Separator className="flex-1" />
-          </div>
+          </FieldDescription>
+        </Field>
 
-          <div className="grid w-full max-w-120 grid-cols-2 gap-2">
-            <Button
-              variant="outline"
-              className="button w-full"
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                // logIn("google");
-              }}
-            >
-              <GoogleIcon />
-              Google
-            </Button>
-            <Button
-              variant="outline"
-              className="button w-full"
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                // logIn("apple");
-              }}
-            >
-              <AppleIcon
-                size={28}
-                fill={resolvedTheme === "light" ? "black" : "white"}
-              />
-              Apple
-            </Button>
-          </div>
+        <Button className="button w-full" type="submit" disabled={isSubmitting}>
+          {isSubmitting ? <Spinner /> : "Sign up"}
+        </Button>
 
-          <div className="item-center text-foreground flex-center flex flex-wrap gap-1">
-            Have an account?
-            <Button variant="link" asChild>
-              <Link href="/auth/sign-in" className="!px-2 font-semibold">
-                Sign in
-              </Link>
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
+        {/* Error field */}
+        {error && (
+          <Field>
+            <p className="w-full rounded-lg border border-red-500/50 bg-red-300/50 p-2 text-[15px] text-red-500 dark:bg-red-500/25">
+              {error}
+            </p>
+          </Field>
+        )}
+
+        <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card my-2">
+          Or continue with
+        </FieldSeparator>
+
+        <Field className="grid w-full grid-cols-2 gap-4">
+          <Button
+            variant="secondary"
+            className="button w-full"
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              handleSocialAuth("google", returnTo);
+            }}
+          >
+            <GoogleIcon />
+            Google
+          </Button>
+          <Button
+            variant="secondary"
+            className="button w-full"
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              handleSocialAuth("apple", returnTo);
+            }}
+          >
+            <AppleIcon size={28} fill="black" />
+            Apple
+          </Button>
+        </Field>
+
+        <div className="item-center text-foreground flex-center flex flex-wrap gap-1">
+          Have an account?
+          <Button variant="link" asChild>
+            <Link href="/auth/sign-in" className="!px-2 font-semibold">
+              Sign in
+            </Link>
+          </Button>
+        </div>
+      </FieldGroup>
+    </form>
   );
 }

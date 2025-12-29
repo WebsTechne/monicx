@@ -1,62 +1,52 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
 import { useTheme } from "next-themes";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuLabel,
-    DropdownMenuRadioGroup,
-    DropdownMenuRadioItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Button } from "../ui/button";
 import { MoonIcon, SunIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-type ThemeValue = "light" | "dark" | "system";
+const ThemeToggle = ({
+  className,
+  variant = "ghost",
+  size = "icon",
+}: {
+  className?: string;
+  variant?:
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "link";
+  size?: "icon" | "sm" | "lg" | "default";
+}) => {
+  const { resolvedTheme: theme, setTheme } = useTheme();
 
-export function ThemeToggle({ children }: { children: ReactNode }) {
-    const { theme, setTheme, resolvedTheme } = useTheme();
-    const [value, setValue] = useState<ThemeValue>("system");
+  return (
+    <Button
+      variant={variant}
+      size={size}
+      type="button"
+      className={cn("transition-none", className)}
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+    >
+      {theme === "dark" ? (
+        <span className="group">
+          <SunIcon
+            // strokeWidth={1.5}
+            className="size-6 transition-transform duration-150 ease-out will-change-transform"
+          />
+        </span>
+      ) : (
+        <span className="group">
+          <MoonIcon
+            // strokeWidth={1.5}
+            className="size-6 transition-transform duration-150 ease-out will-change-transform"
+          />
+        </span>
+      )}
+    </Button>
+  );
+};
 
-    useEffect(() => {
-        const t = (theme as ThemeValue) || "system";
-        setValue(t);
-    }, [theme]);
-
-    function onChange(v: string) {
-        const tv = v as ThemeValue;
-        setValue(tv);
-        setTheme(tv);
-    }
-
-    return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-            <DropdownMenuContent className="z-1000! mr-2 min-w-46">
-                <DropdownMenuLabel className="text-muted-foreground">
-                    Theme
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuRadioGroup value={value} onValueChange={onChange}>
-                    <DropdownMenuRadioItem value="light">
-                        <SunIcon className="size-5" />
-                        Light
-                    </DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="dark">
-                        <MoonIcon className="size-5" />
-                        Dark
-                    </DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="system">
-                        {resolvedTheme === "dark" ? (
-                            <MoonIcon className="size-5" />
-                        ) : (
-                            <SunIcon className="size-5" />
-                        )}
-                        System
-                    </DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-        </DropdownMenu>
-    );
-}
+export { ThemeToggle };

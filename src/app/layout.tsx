@@ -4,6 +4,8 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
 import LayoutContent from "@/components/layout-content";
+import type { Session, User } from "better-auth";
+
 import { defaultOGImage, metadataBase, siteName } from "./metadata-base";
 
 export const viewport: Viewport = {
@@ -12,6 +14,11 @@ export const viewport: Viewport = {
     { media: "(prefers-color-scheme: dark)", color: "#262624" },
   ],
 };
+
+// temporary, server-only
+console.log(
+  process.env.DATABASE_URL?.replace(/:\/\/([^:]+):([^@]+)@/, "://$1:***@"),
+);
 
 export const metadata: Metadata = {
   metadataBase,
@@ -84,6 +91,11 @@ const nunitoSans = localFont({
   ],
   variable: "--font-nunito-sans",
 });
+
+export type AuthSession = {
+  session: Session;
+  user: User;
+} | null;
 
 export default async function RootLayout({
   children,

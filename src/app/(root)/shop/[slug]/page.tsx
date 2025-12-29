@@ -2,7 +2,7 @@ import { CSSProperties, Suspense } from "react";
 import MonicxBreadcrumbs from "@/components/products/monicx-breadcrumbs";
 import ProductInteraction from "@/components/products/product-interaction";
 import { findProduct, products } from "@/lib/products";
-import { ProductType } from "@/types";
+import type { ProductType } from "@/types";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,7 +14,7 @@ import { defaultOGImage, metadataBase, siteName } from "@/app/metadata-base";
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug: raw } = await params;
   const slug = decodeURIComponent(raw);
@@ -33,27 +33,39 @@ export async function generateMetadata({
   const description =
     product.description ??
     product.shortDescription ??
-    `Buy ${product.name} on ${siteName}. ${product.shortDescription ?? ""}`;
+    `Buy ${product.name} on ${siteName}.`;
 
   const firstColor = product.colors?.[0];
-  const firstImage = product.images?.[firstColor];
+  const firstImage = firstColor
+    ? new URL(product.images[firstColor], metadataBase).toString()
+    : null;
+
+  const canonicalUrl = new URL(`/shop/${slug}`, metadataBase).toString();
 
   return {
     title,
     description,
     metadataBase,
-    keywords:
-      product.colors ?? [product.category, product.name].filter(Boolean),
+    keywords: [
+      product.name,
+      product.category,
+      ...(product.colors ?? []),
+    ].filter(Boolean),
     openGraph: {
       title,
       description,
-      url: `/shop/${slug}`,
+      url: canonicalUrl,
       siteName,
       images: [firstImage ?? defaultOGImage],
       // type: "product",
     },
-    twitter: { card: "summary_large_image", title },
-    alternates: { canonical: `/shop/${slug}` },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [firstImage ?? defaultOGImage],
+    },
+    alternates: { canonical: canonicalUrl },
   };
 }
 
@@ -61,38 +73,36 @@ export default async function ProductPage({
   params,
   searchParams,
 }: {
-  params: { slug: string };
-  searchParams: Promise<{ size: string; color: string }>;
+  params: Promise<{ slug: string }>;
+  searchParams: { size?: string; color?: string };
 }) {
   const { slug: raw } = await params;
   const slug = decodeURIComponent(raw);
-  const product: ProductType | undefined = findProduct(slug);
+  const product: ProductType | undefined = await findProduct(slug);
   if (!product) return notFound();
 
   const ldJson = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
-    image: Object.values(product.images ?? []),
+    image: Object.values(product.images ?? {}).map((img) =>
+      new URL(img, "https://monicxed.com").toString(),
+    ),
     description: product.description || product.shortDescription,
-    sku: /* product.sku || */ undefined,
-    mpn: /* product.sku || */ undefined,
+    // sku: product.sku || undefined,
+    // mpn: product.sku || undefined,
     brand: { "@type": "Brand", name: /* product.brand || */ "Monicx" },
     offers: {
       "@type": "Offer",
       url: `https://monicxed.com/shop/${product.slug}`,
       priceCurrency: "NGN", // change to your currency
       price: product.price?.toFixed(2),
-      availability:
-        // product.stock > 0
-        product.price > 0
-          ? "https://schema.org/InStock"
-          : "https://schema.org/OutOfStock",
+      availability: "https://schema.org/InStock",
       itemCondition: "https://schema.org/NewCondition",
     },
   };
 
-  const { size, color } = await searchParams;
+  const { size, color } = searchParams;
   const selectedSize = size || (product.sizes[0] as string);
   const selectedColor = color || (product.colors[0] as string);
 
@@ -120,10 +130,10 @@ export default async function ProductPage({
         {/* DETAILS */}
 
         <section className="flex h-max w-full flex-col lg:w-75/120">
-          <div className="flex flex-col items-start justify-between gap-1 px-4 sm:flex-row sm:items-center sm:gap-0">
+          <div className="flex flex-row items-center justify-between gap-1 px-4 sm:items-center sm:gap-0">
             <div className="flex items-center gap-1">
               <span
-                className="rating inline-block aspect-5/1 h-4.5"
+                className="rating inline-block aspect-5/1 h-3.5 md:h-4.5"
                 style={
                   {
                     "--rating": product.rating.value.toFixed(1),
@@ -139,11 +149,11 @@ export default async function ProductPage({
 
             <div className="flex items-center">
               <Button variant="ghost" className="aspect-1! rounded-full p-0!">
-                <Heart className="text-primary size-6!" />
+                <Heart className="text-primary size-4! md:size-6!" />
               </Button>
 
               <Button variant="ghost" className="aspect-1! rounded-full p-0!">
-                <MessageCircle className="text-primary size-6!" />
+                <MessageCircle className="text-primary size-4! md:size-6!" />
               </Button>
             </div>
           </div>
@@ -214,7 +224,10 @@ export default async function ProductPage({
         </section>
       </div>
 
-      <script type="application/ld+json">{JSON.stringify(ldJson)}</script>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ldJson) }}
+      />
     </>
   );
 }

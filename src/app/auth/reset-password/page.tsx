@@ -2,7 +2,7 @@ import { siteName } from "@/app/metadata-base";
 import { ResetPasswordClient } from "./reset-password.client";
 
 export const metadata = {
-  title: `Reset password — ${siteName}`,
+  title: `Reset password`,
   description:
     "Reset your Monicx password. Enter your email and we'll send a secure link to get you back into your account.",
   metadataBase: new URL("https://monicxed.vercel.app"),

@@ -89,7 +89,6 @@ export function SignInClient() {
 
     try {
       const result = await authClient.signIn.email(payload);
-      console.log("signIn result:", result);
 
       if (result.error) {
         switch (result.error.code) {

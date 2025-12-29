@@ -91,7 +91,6 @@ export function SignUpClient() {
 
     try {
       const result = await authClient.signUp.email(payload);
-      console.log("signUp result:", result);
 
       if (result.error) {
         switch (result.error.code) {

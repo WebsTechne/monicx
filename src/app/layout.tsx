@@ -15,11 +15,6 @@ export const viewport: Viewport = {
   ],
 };
 
-// temporary, server-only
-console.log(
-  process.env.DATABASE_URL?.replace(/:\/\/([^:]+):([^@]+)@/, "://$1:***@"),
-);
-
 export const metadata: Metadata = {
   metadataBase,
   title: {

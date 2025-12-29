@@ -171,7 +171,6 @@ export default function Header({
                 href={`/auth/sign-in?returnTo=${encodeURIComponent(returnTo)}`}
                 className={buttonVariants({
                   variant: "secondary",
-                  className: "",
                 })}
               >
                 Sign in
@@ -179,10 +178,12 @@ export default function Header({
 
               <Link
                 href={`/auth/sign-up?returnTo=${encodeURIComponent(returnTo)}`}
-                className={buttonVariants({
-                  variant: "default",
-                  className: "hidden md:inline-block",
-                })}
+                className={cn(
+                  buttonVariants({
+                    variant: "default",
+                  }),
+                  "hidden md:inline-block",
+                )}
               >
                 Sign up
               </Link>

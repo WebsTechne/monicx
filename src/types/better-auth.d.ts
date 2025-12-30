@@ -6,6 +6,6 @@ declare module "better-auth" {
     firstName?: string | null;
     lastName?: string | null;
     phone?: string | null;
-    role?: "customer" | "admin" | "vendor";
+    role: "customer" | "admin" | "vendor";
   }
 }

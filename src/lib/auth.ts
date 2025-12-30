@@ -21,9 +21,6 @@ export const auth = betterAuth({
         defaultValue: null,
         input: true,
       },
-
-      // role: match your Prisma default "customer"
-      // adjust allowed values if your Role enum has other values (vendor, admin, etc.)
       role: {
         type: ["customer", "admin", "vendor"],
         required: false,

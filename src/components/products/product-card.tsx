@@ -77,6 +77,7 @@ function ProductCard({
             src={product.images[productTypes.color] as string}
             alt={product.name}
             fill
+            sizes="(min-width:1536px) 20vw, (min-width:1280px) 25vw, (min-width:1024px) 25vw, (min-width:768px) 33.333vw, (min-width:640px) 50vw, 100vw"
             className="object-cover duration-300 hover:scale-105"
           />
         </div>

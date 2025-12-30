@@ -16,10 +16,7 @@ export default function ShopSubmenu({
 
   return (
     <div
-      className={cn(
-        "nav:gap-7 grid max-w-dvw! grid-cols-3 gap-2 px-10!",
-        className,
-      )}
+      className={cn("nav:gap-7 grid max-w-dvw! grid-cols-3 gap-2", className)}
     >
       {Array.from({ length: 3 }).map((_, i) => (
         <ul key={i} className="flex flex-col gap-2">

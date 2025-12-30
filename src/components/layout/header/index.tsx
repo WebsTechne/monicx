@@ -29,7 +29,7 @@ import { useSidebar } from "../../providers/sidebar-provider";
 
 import SearchForm from "../../elements/search-form";
 import CartIcon from "../../elements/cart-icon";
-import ProfileButton from "../../elements/profile-button";
+import ProfileButton from "../../elements/account-button";
 import Navbar from "../navbar";
 import { Button, buttonVariants } from "../../ui/button";
 import { Category, Collection } from "@prisma/client";

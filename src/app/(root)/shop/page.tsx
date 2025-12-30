@@ -38,8 +38,9 @@ export default async function ShopPage() {
         <Image
           src="/featured.png"
           alt="Featured"
-          fill
           className="object-cover"
+          fill
+          loading="eager"
         />
       </div>
 

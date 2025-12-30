@@ -53,7 +53,14 @@ export const metadata: Metadata = {
       "Shop tailored clothing and ready-to-wear from Monicx — local craftsmanship and modern style.",
     url: metadataBase.toString(),
     siteName,
-    images: [defaultOGImage], // replace with your default OG image
+    images: [
+      {
+        url: "/og/monicx-og-default.jpeg",
+        width: 1200,
+        height: 630,
+        alt: "Monicx — Tailored clothing made in Nigeria",
+      },
+    ],
     locale: "en_US",
     type: "website",
   },
@@ -62,7 +69,15 @@ export const metadata: Metadata = {
     title: siteName,
     description:
       "Monicx — tailored clothing and curated collections made in Nigeria.",
-    images: [defaultOGImage],
+    images: [
+      {
+        url: "/og/monicx-og-default.jpeg",
+        width: 1200,
+        height: 630,
+        alt: "Monicx — Tailored clothing made in Nigeria",
+      },
+    ],
+
     creator: "@monicx", // change or remove
   },
   icons: {

@@ -6,6 +6,7 @@ import { getCategories } from "@/lib/fetch/get-categories";
 import { getCollections } from "@/lib/fetch/get-collections";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { CompleteProfileDialog } from "@/components/screens/profile-prompt-dialog";
 
 export default async function Layout({
   searchParams,
@@ -39,6 +40,7 @@ export default async function Layout({
 
       {/* Extra Page Components */}
       <SearchCommandMenu />
+      <CompleteProfileDialog />
     </>
   );
 }

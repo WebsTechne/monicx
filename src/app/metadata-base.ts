@@ -2,6 +2,7 @@ export const metadataBase = new URL("https://monicxed.vercel.app");
 
 export const siteName = "Monicx";
 
+/*
 const ogImages = [
   "/og/monicx-og-default-1.jpeg",
   "/og/monicx-og-default-2.png",
@@ -11,3 +12,7 @@ const ogImages = [
 
 export const defaultOGImage =
   ogImages[Math.floor(Math.random() * ogImages.length)];
+  */
+const ogImage = "/og/monicx-og-default-2.png";
+
+export const defaultOGImage = ogImage;

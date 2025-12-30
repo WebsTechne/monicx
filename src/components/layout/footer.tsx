@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Copyright } from "lucide-react";
-import { FooterClient, FooterImage } from "./footer-client";
+import { Copyright, MonitorIcon } from "lucide-react";
+import { FooterYear, FooterImage, FooterThemeToggle } from "./footer-client";
 
 const LINKS = [
   {
@@ -74,47 +74,56 @@ const LINKS = [
 
 export default function Footer() {
   return (
-    <footer className="bg-sidebar flex flex-col items-center gap-8 p-8 md:flex-row md:items-start md:justify-between md:gap-0 md:px-20">
-      <section className="flex flex-col items-center gap-2 md:items-start md:gap-4">
-        <Link href="/" className="flex w-max items-center gap-1">
-          <span className="relative aspect-3/2 h-6 rounded-md md:h-9">
-            <FooterImage />
-          </span>
-          <p className="text-md m-0! hidden font-medium tracking-wider md:block">
-            Monicx
-          </p>
-        </Link>
-        <p className="text-muted-foreground m-0! flex items-center text-sm">
-          <Copyright className="size-(--text-sm)" aria-hidden="true" />
-          <FooterClient />
-        </p>
-        <p className="text-muted-foreground m-0! text-sm">
-          All rights preserved.
-        </p>
+    <footer className="bg-sidebar p-6 md:px-20">
+      <section className="flex flex-col items-center gap-8 pb-2.5 md:flex-row md:items-start md:justify-between md:gap-0">
+        <div className="flex flex-col items-center gap-2 md:items-start md:gap-4">
+          <Link href="/" className="flex w-max items-center gap-1">
+            <span className="aspect-1 relative h-8 rounded-md md:h-10">
+              <FooterImage />
+            </span>
+            <p className="text-md m-0! hidden font-medium tracking-wider md:block">
+              Monicx
+            </p>
+          </Link>
+        </div>
+
+        <nav aria-label="Footer links" className="contents">
+          {LINKS.map((linkGroup) => (
+            <ul
+              key={linkGroup.name}
+              className="text-muted-foreground flex flex-col items-center gap-2 md:items-start md:gap-2.75"
+            >
+              <p className="text-sidebar-foreground m-0! text-sm font-semibold">
+                {linkGroup.name}
+              </p>
+              {linkGroup.links.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="hover:text-sidebar-foreground/80"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ))}
+        </nav>
       </section>
 
-      <nav aria-label="Footer links" className="contents">
-        {LINKS.map((linkGroup) => (
-          <ul
-            key={linkGroup.name}
-            className="text-muted-foreground flex flex-col items-center gap-2 md:items-start md:gap-2.75"
-          >
-            <p className="text-sidebar-foreground m-0! text-sm font-semibold">
-              {linkGroup.name}
-            </p>
-            {linkGroup.links.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className="hover:text-sidebar-foreground/80"
-                >
-                  {link.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        ))}
-      </nav>
+      <section className="flex items-center justify-between border-t pt-2.5">
+        <div className="flex items-center gap-1">
+          <p className="text-muted-foreground m-0! flex items-center text-sm">
+            <Copyright className="size-(--text-sm)" aria-hidden="true" />
+            <FooterYear />
+          </p>
+          <p className="text-muted-foreground m-0! text-sm">
+            All rights preserved.
+          </p>
+        </div>
+
+        <FooterThemeToggle />
+      </section>
     </footer>
   );
 }

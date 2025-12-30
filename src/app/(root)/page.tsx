@@ -3,6 +3,7 @@ import Image from "next/image";
 import ProductListServer from "@/components/products/products-list.server";
 import CategoriesServer from "@/components/products/categories.server";
 import { ShopButton } from "@/components/elements/shop-button";
+import { CompleteProfileDialog } from "@/components/screens/profile-prompt-dialog";
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
           alt="Featured Product"
           className="object-cover"
           fill
+          loading="eager"
         />
       </div>
       <CategoriesServer />

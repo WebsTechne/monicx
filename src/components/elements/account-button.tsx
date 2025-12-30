@@ -16,7 +16,7 @@ import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-export default function ProfileButton({
+export default function AccountButton({
   returnTo,
   session,
 }: {
@@ -29,7 +29,8 @@ export default function ProfileButton({
 
   if (!user) return null;
 
-  const { firstName, lastName, initials } = getInitials(user?.name || "x x");
+  const { firstName, lastName } = user;
+  const { initials } = getInitials(`${firstName ?? "x"} ${lastName ?? "x"}`);
 
   const handleSignOut = async () => {
     await authClient.signOut({
@@ -58,8 +59,8 @@ export default function ProfileButton({
       <DropdownMenuContent className="z-100! mr-5 min-w-40">
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href="/profile">
-              <UserRound /> Profile
+            <Link href="/account">
+              <UserRound /> Account
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>

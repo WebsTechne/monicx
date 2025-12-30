@@ -207,7 +207,7 @@ export default function Navbar({
                 <div
                   className={cn(
                     subOpen[i] ? "h-max pt-2.5" : "h-0 p-0",
-                    "nav:cubic-transition not-nav:duration-300 overflow-clip",
+                    "nav:cubic-transition not-nav:duration-300 nav:overflow-visible overflow-clip",
                     "nav:min-h-11 nav:h-auto! nav:left-1/2 nav:-translate-x-1/2 nav:-translate-y-6 nav:group-hover:opacity-100 nav:group-hover:pointer-events-auto nav:absolute nav:top-full",
                     "nav:opacity-0 nav:pointer-events-none nav:w-max nav:group-hover:translate-y-0",
                   )}

@@ -7,6 +7,7 @@ import { getCollections } from "@/lib/fetch/get-collections";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { CompleteProfileDialog } from "@/components/screens/profile-prompt-dialog";
+import { AuthSession } from "../layout";
 
 export default async function Layout({
   searchParams,
@@ -21,7 +22,19 @@ export default async function Layout({
   const categories = (await getCategories()) ?? [];
   const collections = (await getCollections()) ?? [];
 
-  const session = await auth.api.getSession({ headers: await headers() });
+  const rawSession = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  const session: AuthSession = rawSession
+    ? {
+        ...rawSession,
+        user: {
+          ...rawSession.user,
+          role: rawSession.user.role ?? "customer",
+        },
+      }
+    : null;
 
   return (
     <>

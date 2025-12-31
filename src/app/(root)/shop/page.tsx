@@ -22,10 +22,21 @@ export const metadata = {
       "Shop tailored clothing and ready-to-wear from Monicx — locally made in Nigeria.",
     url: "/shop",
     siteName,
-    // images: ["/og/shop.png"],
+    images: [`${metadataBase}/og/monicx-og-default.jpeg`],
     type: "website",
   },
-  twitter: { card: "summary_large_image", title: `Shop — ${siteName}` },
+  twitter: {
+    card: "summary_large_image",
+    title: `Shop — ${siteName}`,
+    images: [
+      {
+        url: `${metadataBase}/og/monicx-og-default.jpeg`,
+        width: 1200,
+        height: 630,
+        alt: "Monicx — Tailored clothing made in Nigeria",
+      },
+    ],
+  },
   alternates: { canonical: "/shop" },
 };
 

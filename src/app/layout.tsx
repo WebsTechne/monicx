@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     siteName,
     images: [
       {
-        url: "/og/monicx-og-default.jpeg",
+        url: `${metadataBase}/og/monicx-og-default.jpeg`,
         width: 1200,
         height: 630,
         alt: "Monicx — Tailored clothing made in Nigeria",
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
       "Monicx — tailored clothing and curated collections made in Nigeria.",
     images: [
       {
-        url: "/og/monicx-og-default.jpeg",
+        url: `${metadataBase}/og/monicx-og-default.jpeg`,
         width: 1200,
         height: 630,
         alt: "Monicx — Tailored clothing made in Nigeria",

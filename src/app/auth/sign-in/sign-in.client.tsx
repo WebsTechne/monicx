@@ -236,7 +236,7 @@ export function SignInClient() {
               )}
             />
 
-            <label htmlFor="rememberMe">Remember me</label>
+            <label htmlFor="rememberMe">Keep me signed in</label>
           </span>
 
           <Button variant="link" type="button" asChild>

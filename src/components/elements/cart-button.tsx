@@ -7,7 +7,7 @@ import { useSidebar } from "../providers/sidebar-provider";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-export default function CartIcon() {
+export function CartButton() {
   const { cart, hasHydrated } = useCartStore();
   const { setOpenMobile } = useSidebar();
 

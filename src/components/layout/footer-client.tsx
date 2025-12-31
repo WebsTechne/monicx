@@ -61,7 +61,7 @@ const FooterThemeToggle = () => {
             "flex-center size-6 rounded-full",
             theme === btn.name
               ? "bg-sidebar-primary text-sidebar-primary-foreground"
-              : "text-muted-foreground bg-transparent",
+              : "bg-transparent text-gray-800",
           )}
           onClick={btn.onClick}
         >

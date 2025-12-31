@@ -1,7 +1,6 @@
 import Image from "next/image";
 import ProductListServer from "@/components/products/products-list.server";
 import CategoriesServer from "@/components/products/categories.server";
-import { ShopButton } from "@/components/elements/shop-button";
 import { metadataBase, siteName } from "@/app/metadata-base";
 
 export const metadata = {
@@ -46,9 +45,7 @@ export default async function ShopPage() {
 
       <CategoriesServer />
       <ProductListServer />
-      <div className="mt-3 flex w-full items-center justify-end">
-        <ShopButton />
-      </div>
+      {/*<div className="mt-3 flex w-full items-center justify-end"></div>*/}
     </div>
   );
 }

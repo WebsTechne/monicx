@@ -7,21 +7,29 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, Monitor, Moon, Sun, UserRound } from "lucide-react";
+import {
+  CircleUserRoundIcon,
+  HeartIcon,
+  LogOutIcon,
+  MonitorIcon,
+  MoonIcon,
+  SunIcon,
+  UserRoundIcon,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import getInitials from "@/lib/helpers/initials";
 import Link from "next/link";
-import { AuthSession } from "@/app/layout";
+import type { ServerSession } from "@/app/layout";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-export default function AccountButton({
+export function AccountButton({
   returnTo,
   session,
 }: {
   returnTo: string;
-  session: AuthSession;
+  session: ServerSession;
 }) {
   const { push } = useRouter();
   const { theme = "system", setTheme } = useTheme();
@@ -59,12 +67,20 @@ export default function AccountButton({
       <DropdownMenuContent className="z-100! mr-5 min-w-40">
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
+            {/* Account */}
             <Link href="/account">
-              <UserRound /> Account
+              <CircleUserRoundIcon /> Account
+            </Link>
+          </DropdownMenuItem>
+          {/* Wishlist */}
+          <DropdownMenuItem asChild>
+            <Link href="/account">
+              <HeartIcon /> Wishlist
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
 
+        {/* Theme */}
         <DropdownMenuGroup className="text-muted-foreground flex flex-row! items-center justify-between gap-2 p-1 text-sm">
           Change Theme
           <span className="flex items-center rounded-full bg-black/7 p-0.5 dark:bg-black/25">
@@ -75,7 +91,7 @@ export default function AccountButton({
               )}
               onClick={() => setTheme("light")}
             >
-              <Sun className="size-4" />
+              <SunIcon className="size-4" />
             </DropdownMenuItem>
             <DropdownMenuItem
               className={cn(
@@ -84,7 +100,7 @@ export default function AccountButton({
               )}
               onClick={() => setTheme("dark")}
             >
-              <Moon className="size-4" />
+              <MoonIcon className="size-4" />
             </DropdownMenuItem>
             <DropdownMenuItem
               className={cn(
@@ -93,14 +109,14 @@ export default function AccountButton({
               )}
               onClick={() => setTheme("system")}
             >
-              <Monitor className="size-4" />
+              <MonitorIcon className="size-4" />
             </DropdownMenuItem>
           </span>
         </DropdownMenuGroup>
 
         <DropdownMenuGroup>
           <DropdownMenuItem variant="destructive" onClick={handleSignOut}>
-            <LogOut />
+            <LogOutIcon />
             Sign out
           </DropdownMenuItem>
         </DropdownMenuGroup>

@@ -131,6 +131,7 @@
   --tracking-normal: 0em;
   --spacing: 0.25rem;
 
+  --header-h: 64px;
   --gold: var(--color-amber-400);
   interpolate-size: allow-keywords;
 }

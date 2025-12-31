@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "../ui/button";
 
-const ShopButton = () => {
+const ShopViewAll = () => {
   return (
     <Button
       variant="link"
@@ -13,4 +13,4 @@ const ShopButton = () => {
   );
 };
 
-export { ShopButton };
+export { ShopViewAll };

@@ -1,5 +1,6 @@
 "use client";
 
+import { ReactNode, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -15,7 +16,6 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
 
 function AccountAlertDialog() {
   const { back, push } = useRouter();
@@ -57,15 +57,17 @@ function AccountAlertDialog() {
 
 function AccountAlert({
   variant,
-  message: { title, body },
+  title,
+  children,
 }: {
   variant: "default" | "destructive" | "success" | "error" | "info" | "warning";
-  message: { title: string; body: string };
+  title: string;
+  children?: ReactNode;
 }) {
   return (
     <Alert variant={variant}>
       <AlertTitle>{title}</AlertTitle>
-      <AlertDescription>{body}</AlertDescription>
+      <AlertDescription className="gap-0!">{children}</AlertDescription>
     </Alert>
   );
 }

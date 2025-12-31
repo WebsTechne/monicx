@@ -28,13 +28,12 @@ import { cn } from "@/lib/utils";
 import { useSidebar } from "../../providers/sidebar-provider";
 
 import SearchForm from "../../elements/search-form";
-import CartIcon from "../../elements/cart-icon";
-import ProfileButton from "../../elements/account-button";
+import { CartButton } from "../../elements/cart-button";
+import { AccountButton } from "../../elements/account-button";
 import Navbar from "../navbar";
 import { Button, buttonVariants } from "../../ui/button";
 import { Category, Collection } from "@prisma/client";
-import { ThemeToggle } from "@/components/elements/theme-toggle";
-import { AuthSession } from "@/app/layout";
+import type { ServerSession } from "@/app/layout";
 import { usePathname, useSearchParams } from "next/navigation";
 
 export type AppData = {
@@ -43,13 +42,11 @@ export type AppData = {
 };
 
 export default function Header({
-  query,
   appData,
   session,
 }: {
-  query: string;
   appData: AppData;
-  session: AuthSession;
+  session: ServerSession;
 }) {
   const mounted = useMounted();
   const { resolvedTheme, theme, setTheme } = useTheme();
@@ -63,6 +60,8 @@ export default function Header({
   const searchParams = useSearchParams();
   const returnTo =
     pathname + (searchParams.toString() ? `?${searchParams.toString()}` : "");
+
+  const query = searchParams.get("query") || searchParams.get("q") || "";
 
   return (
     <header className="header-bg flex-center sticky top-0 z-98 flex">
@@ -138,9 +137,6 @@ export default function Header({
             {smSearchShow ? <SearchX /> : <Search />}
           </Button>
 
-          {/* THEME TOGGLE */}
-          <ThemeToggle className="header-icon" />
-
           {session ? (
             <>
               <Button
@@ -162,8 +158,8 @@ export default function Header({
               >
                 <Heart />
               </Link>
-              <CartIcon />
-              <ProfileButton session={session} returnTo={returnTo || ""} />
+              <CartButton />
+              <AccountButton session={session} returnTo={returnTo || ""} />
             </>
           ) : (
             <>

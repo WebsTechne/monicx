@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { AccountAlert, AccountAlertDialog } from "./account.client";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 
 export default async function AccountPage() {
   const session = await auth.api.getSession({
@@ -24,13 +25,12 @@ export default async function AccountPage() {
 
   if (firstEmpty || lastEmpty) {
     return (
-      <AccountAlert
-        variant="success"
-        message={{
-          title: "Incomplete Profile",
-          body: "Please complete your profile to access all features.",
-        }}
-      />
+      <AccountAlert variant="info" title="Incomplete Profile">
+        <p>Please complete your profile to access all features.</p>
+        <Link href="/account/profile?b" className="underline">
+          Profile
+        </Link>
+      </AccountAlert>
     );
   }
 

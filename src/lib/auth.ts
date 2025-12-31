@@ -8,7 +8,6 @@ export const auth = betterAuth({
   ///// Register custom user fields so better-auth knows about them
   user: {
     additionalFields: {
-      // keep firstName/lastName so you can remove the 'name' field in Prisma if you want
       firstName: {
         type: "string",
         required: false,

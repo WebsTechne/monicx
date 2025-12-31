@@ -2,7 +2,7 @@ import AuthPromptDialog from "@/components/screens/auth-prompt-dialog";
 import Image from "next/image";
 import ProductListServer from "@/components/products/products-list.server";
 import CategoriesServer from "@/components/products/categories.server";
-import { ShopButton } from "@/components/elements/shop-button";
+import { ShopViewAll } from "@/components/elements/shop-view-all";
 import { CompleteProfileDialog } from "@/components/screens/profile-prompt-dialog";
 
 export default function Home() {
@@ -22,7 +22,7 @@ export default function Home() {
       <CategoriesServer />
       <ProductListServer />
       <div className="mt-3 flex w-full items-center justify-end">
-        <ShopButton />
+        <ShopViewAll />
       </div>
     </>
   );

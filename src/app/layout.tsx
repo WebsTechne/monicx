@@ -5,8 +5,9 @@ import "./globals.css";
 import localFont from "next/font/local";
 import LayoutContent from "@/components/layout-content";
 import type { Session, User } from "better-auth";
-
 import { defaultOGImage, metadataBase, siteName } from "./metadata-base";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export const viewport: Viewport = {
   themeColor: [
@@ -102,10 +103,7 @@ const nunitoSans = localFont({
   variable: "--font-nunito-sans",
 });
 
-export type AuthSession = {
-  session: Session;
-  user: User;
-} | null;
+export type ServerSession = typeof auth.$Infer.Session | null;
 
 export default async function RootLayout({
   children,

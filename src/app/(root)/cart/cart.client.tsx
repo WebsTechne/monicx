@@ -82,12 +82,14 @@ function CartPageContent() {
                   >
                     {/* IMAGE & DETAILS */}
                     <div className="flex gap-2">
-                      <span className="relative size-30 overflow-clip rounded-lg bg-gray-50">
+                      <span className="relative overflow-clip rounded-lg bg-gray-50">
                         <Image
                           className="object-contain"
                           src={item.images[item.selectedColor]}
                           alt={item.name}
-                          fill
+                          width={120}
+                          height={120}
+                          sizes="120px"
                         />
                       </span>
                       {/* ITEM DETAILS */}

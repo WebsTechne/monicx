@@ -36,10 +36,11 @@ export default async function ShopPage() {
       <div className="relative mb-12 aspect-3/1 w-full">
         <Image
           src="/featured.png"
-          alt="Featured"
+          alt="Featured Product"
           className="object-cover"
           fill
-          loading="eager"
+          priority
+          sizes="(max-width: 640px) 100vw, (max-width: 768px) 590px, (max-width: 1024px) 896px, (max-width: 1280px) 1024px, 1280px"
         />
       </div>
 

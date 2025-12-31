@@ -124,6 +124,8 @@ export default async function ProductPage({
             src={product.images[selectedColor]}
             alt={product.slug || product.name}
             fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 37.5vw"
+            priority
             className="rounded-xl object-cover"
           />
         </div>

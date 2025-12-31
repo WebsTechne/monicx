@@ -1,9 +1,7 @@
-import AuthPromptDialog from "@/components/screens/auth-prompt-dialog";
 import Image from "next/image";
 import ProductListServer from "@/components/products/products-list.server";
 import CategoriesServer from "@/components/products/categories.server";
 import { ShopViewAll } from "@/components/elements/shop-view-all";
-import { CompleteProfileDialog } from "@/components/screens/profile-prompt-dialog";
 
 export default function Home() {
   return (
@@ -16,7 +14,8 @@ export default function Home() {
           alt="Featured Product"
           className="object-cover"
           fill
-          loading="eager"
+          priority
+          sizes="(max-width: 640px) 100vw, (max-width: 768px) 590px, (max-width: 1024px) 896px, (max-width: 1280px) 1024px, 1280px"
         />
       </div>
       <CategoriesServer />

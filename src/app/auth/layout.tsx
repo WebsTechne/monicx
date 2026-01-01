@@ -9,5 +9,5 @@ export default async function Layout({ children }: { children: ReactNode }) {
   if (session) {
     redirect("/");
   }
-  return <div className="p-4.5 pt-7 pb-4">{children}</div>;
+  return <div className="p-6 pt-7 pb-4">{children}</div>;
 }

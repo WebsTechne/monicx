@@ -15,7 +15,6 @@ import {
   FieldGroup,
   FieldLabel,
   FieldSeparator,
-  FieldTitle,
 } from "@/components/ui/field";
 
 import { Input } from "@/components/ui/input";
@@ -26,12 +25,12 @@ import { Eye, EyeClosed } from "lucide-react";
 import { GoogleIcon, AppleIcon } from "@/components/icons/social-icons";
 
 import { signInSocial } from "@/lib/actions/auth-actions";
-import capitalize from "@/lib/helpers/capitalize";
 import { authClient } from "@/lib/auth-client";
 import { Spinner } from "@/components/ui/spinner";
 import { AuthHeader } from "../_components/auth-header";
 import { getPublicErrorMessage, reportErrorToServer } from "@/lib/error-utils";
 import { toast } from "sonner";
+import { AuthMessage } from "../_components/auth-message";
 
 // validation: identifier must be email, password 6+ chars
 const formSchema = z.object({
@@ -124,24 +123,18 @@ export function SignInClient() {
   return (
     <form
       onSubmit={form.handleSubmit(onSubmit)}
-      className="mx-auto flex w-9/10 max-w-115 flex-col items-center gap-5"
+      className="mx-auto flex max-w-115 flex-col items-center gap-5"
       role="form"
       aria-labelledby="sign-in-heading"
     >
       <AuthHeader />
       <FieldGroup className="gap-4.5!">
         {/* Title */}
-        <Field className="gap-0!">
-          <FieldTitle
-            className="mx-auto w-fit! text-center text-4xl leading-tight font-extrabold"
-            id="sign-in-heading"
-          >
-            Welcome back
-          </FieldTitle>
-          <FieldDescription className="text-center text-base">
-            Sign in with your email and password
-          </FieldDescription>
-        </Field>
+        <AuthMessage
+          id="sign-in-heading"
+          title="Welcome back"
+          description="Sig in with your email and password"
+        />
 
         {/* Email */}
         <Field data-invalid={!!emailError} className="input-group gap-1.5!">

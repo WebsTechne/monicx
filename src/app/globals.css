@@ -216,9 +216,9 @@
   a:not(.no-scale) {
     @apply cursor-pointer!;
   }
-  form {
-    /* @apply bg-card max-w-[550px] rounded-2xl border-1 px-3 py-5; */
-  }
+  /* form {
+    @apply bg-card max-w-[550px] rounded-2xl border-1 px-3 py-5;
+  } */
 }
 
 @utility flex-center {
@@ -311,7 +311,7 @@
   }
 
   .input {
-    @apply text-foreground /*h-12*/ !h-11.25 !shadow-none dark:border-0!;
+    @apply text-foreground h-11! !shadow-none dark:border-0!; /* h-12 !h-11.25 */
   }
 
   .input-error {
@@ -319,7 +319,7 @@
   }
 
   .button {
-    @apply !h-12 max-w-120;
+    @apply h-11!;
   }
 }
 

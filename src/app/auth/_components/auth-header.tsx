@@ -10,7 +10,7 @@ const AuthHeader = () => {
       className="bg-card/80 sticky top-0 justify-between backdrop-blur-md"
     >
       <Link href="/">
-        <Logo className="w-15" />
+        <Logo className="w-10" />
       </Link>
 
       <ThemeToggle />

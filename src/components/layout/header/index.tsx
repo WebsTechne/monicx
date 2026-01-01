@@ -35,6 +35,7 @@ import { Button, buttonVariants } from "../../ui/button";
 import { Category, Collection } from "@prisma/client";
 import type { ServerSession } from "@/app/layout";
 import { usePathname, useSearchParams } from "next/navigation";
+import { Logo } from "@/components/logo";
 
 export type AppData = {
   categories: Category[];
@@ -98,18 +99,8 @@ export default function Header({
             )}
           </Button>
           <Link href="/" className="flex h-full items-center gap-1.25">
-            {mounted ? (
-              <div className="relative aspect-3/2 h-5/10 sm:h-6/10">
-                <Image
-                  src={isDark ? IMAGES.logo.dark : IMAGES.logo.light}
-                  alt="logo"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            ) : (
-              <div className="bg-muted/40 aspect-3/2 h-5/10 rounded-sm sm:h-6/10" />
-            )}
+            <Logo className="h-5/10 text-black dark:text-white" />{" "}
+            {/* sm:h-6/10 */}
             <span className="text-lg leading-7 font-light sm:text-2xl">
               monicx
             </span>

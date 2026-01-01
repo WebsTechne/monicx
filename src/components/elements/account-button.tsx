@@ -74,7 +74,7 @@ export function AccountButton({
           </DropdownMenuItem>
           {/* Wishlist */}
           <DropdownMenuItem asChild>
-            <Link href="/account">
+            <Link href="/wishlist">
               <HeartIcon /> Wishlist
             </Link>
           </DropdownMenuItem>

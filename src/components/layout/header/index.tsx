@@ -4,24 +4,14 @@
 import { useState } from "react";
 
 // Next.js
-import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 
 // External libraries
-import {
-  Bell,
-  Menu,
-  Search,
-  SearchX,
-  X,
-  Heart,
-  SunIcon,
-  MoonIcon,
-} from "lucide-react";
+import { Bell, Menu, Search, SearchX, X } from "lucide-react";
 
 // Internal assets, hooks, components, utils
-import IMAGES from "@/assets/images";
+import { Logo } from "@/components/logo";
 import { useIsMobile } from "@/hooks/use-mobile-custom";
 import useMounted from "@/hooks/use-mounted";
 import { cn } from "@/lib/utils";
@@ -35,7 +25,6 @@ import { Button, buttonVariants } from "../../ui/button";
 import { Category, Collection } from "@prisma/client";
 import type { ServerSession } from "@/app/layout";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Logo } from "@/components/logo";
 
 export type AppData = {
   categories: Category[];
@@ -136,19 +125,6 @@ export default function Header({
               >
                 <Bell />
               </Button>
-              <Link
-                href="/wishlist"
-                prefetch
-                className={cn(
-                  buttonVariants({ variant: "ghost" }),
-                  "header-icon",
-                )}
-                onClick={() => {
-                  setOpenMobile(false);
-                }}
-              >
-                <Heart />
-              </Link>
               <CartButton />
               <AccountButton session={session} returnTo={returnTo || ""} />
             </>

@@ -43,6 +43,7 @@ const navItems: NavItem[] = [
     label: "Shop",
     href: "/shop",
     hasSub: true,
+    exclude: "/shop/collections",
     Submenu: ShopSubmenu,
     getData: (appData) => appData.categories,
   },

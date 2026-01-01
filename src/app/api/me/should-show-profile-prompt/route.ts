@@ -18,9 +18,9 @@ export async function GET(req: Request) {
 
     const firstEmpty = !user.firstName || user.firstName.trim() === "";
     const lastEmpty = !user.lastName || user.lastName.trim() === "";
+    const phoneEmpty = !user.phone || user.phone.trim() === "";
 
-    // show only when either is missing (matches your rule)
-    const show = firstEmpty || lastEmpty;
+    const show = firstEmpty || lastEmpty || phoneEmpty;
     return NextResponse.json({ show });
   } catch (err) {
     // on error, don't show

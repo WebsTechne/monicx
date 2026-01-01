@@ -22,8 +22,9 @@ export default async function AccountPage() {
 
   const firstEmpty = !user.firstName || user.firstName.trim() === "";
   const lastEmpty = !user.lastName || user.lastName.trim() === "";
+  const phoneEmpty = !user.phone || user.phone.trim() === "";
 
-  if (firstEmpty || lastEmpty) {
+  if (firstEmpty || lastEmpty || phoneEmpty) {
     return (
       <AccountAlert variant="info" title="Incomplete Profile">
         <p>Please complete your profile to access all features.</p>

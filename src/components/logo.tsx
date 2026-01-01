@@ -16,6 +16,7 @@ export function Logo({
       height={height}
       role="img"
       aria-label="Logo"
+      fill="currentColor"
     >
       <defs id="defs1" />
       <g id="g1" transform="translate(-45.771137,-382.81523)">

@@ -112,7 +112,12 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head />
+      <head>
+        <meta
+          name="google-site-verification"
+          content="ze3TIUtX0yRpxLheDZ98occjvqsabFeaOXi86Tg2aOc"
+        />
+      </head>
       <body
         className={`${nunitoSans.variable} antialiased`}
         suppressHydrationWarning

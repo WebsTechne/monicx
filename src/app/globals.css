@@ -60,7 +60,7 @@
     }
   }
 
-  --breakpoint-xs: 23.5rem;
+  /* --breakpoint-xs: 23.5rem; */
   --breakpoint-xs: 375px;
   --breakpoint-nav: 1100px;
   --breakpoint-search: 780px;

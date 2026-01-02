@@ -100,7 +100,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="hover:text-sidebar-foreground/80"
+                    className="hover:text-sidebar-foreground/80 underline-offset-2 hover:underline"
                   >
                     {link.name}
                   </Link>

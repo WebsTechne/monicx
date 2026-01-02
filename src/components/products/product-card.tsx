@@ -69,10 +69,10 @@ function ProductCard({
   };
 
   return (
-    <div className="overflow-clip rounded-[1.5rem] border p-1 shadow-none!">
+    <div className="overflow-clip rounded-[1rem] border p-1 shadow-none! sm:rounded-[1.5rem]">
       {/* IMAGE */}
       <Link href={productUrl}>
-        <div className="relative aspect-4/5 overflow-clip rounded-[calc(1.5rem-4px)]">
+        <div className="relative aspect-4/5 overflow-clip rounded-[calc(1rem-4px)] sm:rounded-[calc(1.5rem-4px)]">
           <Image
             src={product.images[productTypes.color] as string}
             alt={product.name}
@@ -85,11 +85,13 @@ function ProductCard({
 
       {/* PRODUCT DETAIL */}
       <div className="flex flex-col p-1.5">
-        <p className="line-clamp-1 text-left font-medium">{product.name}</p>
+        <p className="line-clamp-1 text-left text-sm font-medium sm:text-base">
+          {product.name}
+        </p>
 
         <div className="flex items-center gap-1">
           <span
-            className="rating inline-block aspect-5/1 h-4"
+            className="rating inline-block aspect-5/1 h-3 sm:h-4"
             style={
               {
                 "--rating": product.rating.value.toFixed(1),
@@ -103,7 +105,7 @@ function ProductCard({
         </div>
 
         <div className="flex items-center">
-          <span className="text-foreground inline-block flex-1 text-lg font-extrabold">
+          <span className="text-foreground inline-block flex-1 text-base font-extrabold sm:text-lg">
             ${product.price}
           </span>
 
@@ -238,14 +240,14 @@ function ProductCard({
 
 function ProductCardSkeleton() {
   return (
-    <div className="overflow-clip rounded-[1.5rem] border p-1 shadow-none!">
+    <div className="overflow-clip rounded-[1rem] border p-1 shadow-none! sm:rounded-[1.5rem]">
       {/* IMAGE SKELETON */}
-      <Skeleton className="aspect-4/5 rounded-[calc(1.5rem-4px)]" />
+      <Skeleton className="relative aspect-4/5 overflow-clip rounded-[calc(1rem-4px)] sm:rounded-[calc(1.5rem-4px)]" />
 
       {/* DETAILS SKELETON */}
       <div className="flex flex-col p-1.5">
         {/* NAME SKELETON */}
-        <div className="pointer-events-none relative text-left font-medium text-transparent">
+        <div className="pointer-events-none relative text-left text-sm font-medium text-transparent sm:text-base">
           <Skeleton className="absolute size-full" />
           Random name
         </div>
@@ -253,7 +255,7 @@ function ProductCardSkeleton() {
         {/* RATING SKELETON */}
         <div className="flex items-center gap-1">
           <span
-            className="rating inline-block aspect-5/1 h-4"
+            className="rating inline-block aspect-5/1 h-3 sm:h-4"
             style={
               {
                 "--rating": 0,
@@ -268,7 +270,7 @@ function ProductCardSkeleton() {
         </div>
 
         {/* PRICE SKELETON */}
-        <div className="text-muted-foreground flex items-center justify-between text-lg font-extrabold">
+        <div className="text-muted-foreground flex items-center justify-between text-base font-extrabold sm:text-lg">
           <span>
             $
             <span className="relative inline-block flex-1 font-extrabold text-transparent">

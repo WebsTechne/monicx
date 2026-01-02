@@ -1,6 +1,8 @@
 // components/products/product-grid.client.tsx
 "use client";
 
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { ProductsType } from "@/types";
 import { ProductCard } from "./product-card";
 import {
@@ -12,9 +14,7 @@ import {
   EmptyTitle,
 } from "../ui/empty";
 import { Button, buttonVariants } from "../ui/button";
-import { ArrowUpRightIcon, RefreshCwIcon, StoreIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { RefreshCwIcon, StoreIcon } from "lucide-react";
 
 type Props = {
   items: ProductsType;
@@ -56,7 +56,7 @@ export default function ProductGridClient({ items }: Props) {
   }
 
   return (
-    <div className="xs:grid-cols-2 grid grid-cols-1 gap-3.5 sm:gap-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5">
+    <div className="xs:grid-cols-2 grid grid-cols-1 gap-2.5 sm:gap-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5">
       {items.map((product) => (
         <ProductCard key={product.slug ?? product.id} product={product} />
       ))}

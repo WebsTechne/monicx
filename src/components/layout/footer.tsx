@@ -117,7 +117,7 @@ export default function Footer() {
             <Copyright className="size-(--text-sm)" aria-hidden="true" />
             <FooterYear />
           </p>
-          <p className="text-muted-foreground xs:inline-block m-0! hidden text-sm">
+          <p className="text-muted-foreground m-0! hidden text-sm sm:inline-block">
             All rights preserved.
           </p>
         </div>

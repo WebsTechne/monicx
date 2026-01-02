@@ -5,7 +5,6 @@ import { useState } from "react";
 
 // Next.js
 import Link from "next/link";
-import { useTheme } from "next-themes";
 
 // External libraries
 import { Bell, Menu, Search, SearchX, X } from "lucide-react";
@@ -39,8 +38,6 @@ export default function Header({
   session: ServerSession;
 }) {
   const mounted = useMounted();
-  const { resolvedTheme, theme, setTheme } = useTheme();
-  const isDark = mounted && resolvedTheme === "dark";
   const [smSearchShow, setSmSearchShow] = useState(false);
 
   const isMobile = useIsMobile(1100);
@@ -88,8 +85,7 @@ export default function Header({
             )}
           </Button>
           <Link href="/" className="flex h-full items-center gap-1.25">
-            <Logo className="h-5/10 text-black dark:text-white" />{" "}
-            {/* sm:h-6/10 */}
+            <Logo className="h-5/10" /> {/* sm:h-6/10 */}
             <span className="text-lg leading-7 font-light sm:text-2xl">
               monicx
             </span>

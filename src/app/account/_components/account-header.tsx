@@ -17,6 +17,7 @@ import {
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
+import { Logo } from "@/components/logo";
 
 function useTrackInternalRoute() {
   const pathname = usePathname();
@@ -57,20 +58,6 @@ const AccountHeader = () => {
   useTrackInternalRoute();
   const goBack = useBack("/");
 
-  const Logo = () => (
-    <Link href="/">
-      {mounted ? (
-        <Image
-          src={isDark ? IMAGES.logo.dark : IMAGES.logo.light}
-          alt="logo"
-          className="m-0! aspect-3/2 w-8 object-cover"
-        />
-      ) : (
-        <span className="bg-muted aspect-3/2 w-15 rounded-sm"></span>
-      )}
-    </Link>
-  );
-
   return (
     <header className="bg-card/80 sticky top-0 flex h-(--header-h) items-center justify-between px-1 backdrop-blur-md">
       <section className="flex h-full items-center justify-start gap-2.5">
@@ -107,7 +94,9 @@ const AccountHeader = () => {
               )}
             </Button>
 
-            <Logo />
+            <Link href="/" className="flex h-full items-center">
+              <Logo className="h-5/10" /> {/* sm:h-6/10 */}
+            </Link>
           </>
         )}
       </section>

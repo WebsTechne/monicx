@@ -57,7 +57,7 @@ export function AccountButton({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <span className="flex-center inline-flex size-9 rounded-full">
-          <Avatar className="ring-accent dark:ring-accent/50 size-6 duration-300 hover:ring-[6px]">
+          <Avatar className="ring-accent dark:ring-accent/50 size-6.5 duration-300 hover:ring-[6px]">
             {/* ring-ring/50 */}
             <AvatarImage
               src={user?.image || ""}

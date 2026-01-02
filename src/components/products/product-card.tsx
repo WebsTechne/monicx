@@ -112,7 +112,7 @@ function ProductCard({
           <Button
             variant="ghost"
             size="icon"
-            className="size-7! rounded-full transition-all!"
+            className="size-6! rounded-full transition-all! sm:size-7!"
             onClick={() => {
               if (wishlistPage) {
                 toast.warning(
@@ -145,7 +145,7 @@ function ProductCard({
               <Button
                 variant="ghost"
                 size="icon"
-                className="btn size-7! rounded-full transition-all!"
+                className="btn size-6! rounded-full transition-all! sm:size-7!"
               >
                 <MoreVertical size={20} />
               </Button>
@@ -282,7 +282,7 @@ function ProductCardSkeleton() {
             <Button
               variant="ghost"
               size="icon"
-              className="pointer-events-none size-7! rounded-full"
+              className="pointer-events-none size-6! rounded-full sm:size-7!"
             >
               <Heart
                 size={20}
@@ -292,7 +292,7 @@ function ProductCardSkeleton() {
             <Button
               variant="ghost"
               size="icon"
-              className="btn pointer-events-none size-7! rounded-full"
+              className="btn pointer-events-none size-6! rounded-full sm:size-7!"
             >
               <MoreVertical size={20} className="text-muted-foreground" />
             </Button>

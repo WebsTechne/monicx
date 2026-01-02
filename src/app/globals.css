@@ -226,7 +226,7 @@
 }
 
 @utility btn {
-  @apply transition-all duration-300 ease-in-out hover:scale-105 active:scale-95;
+  @apply transition-all duration-250 ease-in-out active:scale-95; /* hover:scale-105 */
 }
 
 @utility scrollbar-width-none {
@@ -282,10 +282,11 @@
   }
 
   .header-icon {
-    @apply btn aspect-1 nav:h-full! m-0! flex h-8 cursor-pointer items-center justify-center rounded-full! p-0! transition-[scale]! sm:h-9!;
+    @apply btn nav:h-full! m-0! flex size-9! cursor-pointer items-center justify-center rounded-full! p-0! px-0! py-0! transition-[scale]!;
 
     & > svg {
-      @apply text-foreground nav:size-6! size-5!;
+      /* @apply text-foreground nav:size-6! size-5!; */
+      @apply text-foreground size-6!;
     }
   }
 

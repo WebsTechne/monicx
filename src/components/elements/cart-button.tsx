@@ -1,6 +1,6 @@
 "use client";
 
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCartIcon } from "lucide-react";
 import { buttonVariants } from "../ui/button";
 import useCartStore from "@/stores/cart-store";
 import { useSidebar } from "../providers/sidebar-provider";
@@ -27,9 +27,9 @@ export function CartButton() {
         setOpenMobile(false);
       }}
     >
-      <ShoppingCart />
+      <ShoppingCartIcon className="size-6!" />
       {cartCount > 0 && (
-        <span className="text-background bg-primary absolute -top-0.5 -right-0.5 grid size-4 place-items-center rounded-full text-xs tracking-tighter">
+        <span className="text-background bg-primary absolute -top-0.5 -right-0.5 grid size-5 place-items-center rounded-full text-xs tracking-tighter">
           {cartCount}
         </span>
       )}

@@ -54,7 +54,7 @@ export default function Header({
     <header className="header-bg flex-center sticky top-0 z-98 flex">
       <div
         className={cn(
-          "nav:px-7 flex h-16 w-full items-center justify-between gap-3.5 py-2.5 md:gap-4.5",
+          "nav:px-7 flex h-(--header-h) w-full items-center justify-between gap-3.5 py-2.5 md:gap-4.5",
           "px-3 sm:max-w-[590px] md:max-w-4xl lg:max-w-5xl xl:max-w-6xl",
         )}
       >

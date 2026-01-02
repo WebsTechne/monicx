@@ -56,13 +56,16 @@ export function AccountButton({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className="ring-ring/50 size-8 duration-300 hover:ring-[5px]">
-          <AvatarImage
-            src={user?.image || ""}
-            alt={`${firstName} ${lastName}`}
-          ></AvatarImage>
-          <AvatarFallback>{initials}</AvatarFallback>
-        </Avatar>
+        <span className="flex-center inline-flex size-9 rounded-full">
+          <Avatar className="ring-accent dark:ring-accent/50 size-6 duration-300 hover:ring-[6px]">
+            {/* ring-ring/50 */}
+            <AvatarImage
+              src={user?.image || ""}
+              alt={`${firstName} ${lastName}`}
+            ></AvatarImage>
+            <AvatarFallback>{initials}</AvatarFallback>
+          </Avatar>
+        </span>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="z-100! mr-5 min-w-40">
         <DropdownMenuGroup>

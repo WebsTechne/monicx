@@ -59,7 +59,7 @@ const AccountHeader = () => {
   const goBack = useBack("/");
 
   return (
-    <header className="bg-card/80 sticky top-0 flex h-(--header-h) items-center justify-between px-1 backdrop-blur-md">
+    <header className="bg-card/80 sticky top-0 flex h-(--header-h) items-center justify-between px-1 py-2.5 backdrop-blur-md">
       <section className="flex h-full items-center justify-start gap-2.5">
         {back ? (
           <>

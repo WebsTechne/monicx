@@ -84,7 +84,7 @@ function ProductCard({
       </Link>
 
       {/* PRODUCT DETAIL */}
-      <div className="flex flex-col p-1.5">
+      <div className="flex flex-col p-0.5 sm:p-1.5">
         <p className="line-clamp-1 text-left text-sm font-medium sm:text-base">
           {product.name}
         </p>
@@ -245,7 +245,7 @@ function ProductCardSkeleton() {
       <Skeleton className="relative aspect-4/5 overflow-clip rounded-[calc(1rem-4px)] sm:rounded-[calc(1.5rem-4px)]" />
 
       {/* DETAILS SKELETON */}
-      <div className="flex flex-col p-1.5">
+      <div className="flex flex-col p-0.5 sm:p-1.5">
         {/* NAME SKELETON */}
         <div className="pointer-events-none relative text-left text-sm font-medium text-transparent sm:text-base">
           <Skeleton className="absolute size-full" />

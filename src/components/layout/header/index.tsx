@@ -128,9 +128,12 @@ export default function Header({
             <>
               <Link
                 href={`/auth/sign-in?returnTo=${encodeURIComponent(returnTo)}`}
-                className={buttonVariants({
-                  variant: "secondary",
-                })}
+                className={cn(
+                  buttonVariants({
+                    variant: "ghost",
+                  }),
+                  "hover:bg-primary/40!",
+                )}
               >
                 Sign in
               </Link>

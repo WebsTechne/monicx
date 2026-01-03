@@ -399,7 +399,7 @@ export function AppSidebar({
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   variant="destructive"
-                  onClick={() => signOutAndRedirect({return, push})}
+                  onClick={() => signOutAndRedirect({ returnTo, push })}
                 >
                   <LogOut />
                   Log out

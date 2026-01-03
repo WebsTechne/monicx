@@ -7,6 +7,9 @@ const _getSizes = async () => {
     select: {
       id: true,
       alpha: true,
+      gender: true,
+      chestCm: true,
+      waistCm: true,
       productSizeStock: true,
     },
     orderBy: { id: "asc" },

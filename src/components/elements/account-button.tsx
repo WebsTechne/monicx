@@ -23,8 +23,9 @@ import type { ServerSession } from "@/app/layout";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { constants } from "node:buffer";
 
-export function AccountButton({
+function AccountButton({
   returnTo,
   session,
 }: {
@@ -40,11 +41,11 @@ export function AccountButton({
   const { firstName, lastName } = user;
   const { initials } = getInitials(`${firstName ?? "x"} ${lastName ?? "x"}`);
 
-  const handleSignOut = async () => {
+  const handleSignOut = async (returnTo: string) => {
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
-          push(`/auth/sign-in?returnTo=${returnTo}`);
+          push(`/auth/sign-in?returnTo=${encodeURIComponent(returnTo)}`);
         },
         onError: () => {
           toast.error("Couldn't sign-out. Please try again.", {});
@@ -118,7 +119,10 @@ export function AccountButton({
         </DropdownMenuGroup>
 
         <DropdownMenuGroup>
-          <DropdownMenuItem variant="destructive" onClick={handleSignOut}>
+          <DropdownMenuItem
+            variant="destructive"
+            onClick={() => handleSignOut(returnTo)}
+          >
             <LogOutIcon />
             Sign out
           </DropdownMenuItem>
@@ -127,3 +131,5 @@ export function AccountButton({
     </DropdownMenu>
   );
 }
+
+export { AccountButton, handleSignOut };

@@ -55,6 +55,9 @@ import IMAGES from "@/assets/images";
 import { useTheme } from "next-themes";
 import useMounted from "@/hooks/use-mounted";
 import { Category, Collection, Color, Size } from "@prisma/client";
+import { ServerSession } from "@/app/layout";
+import { usePathname, useSearchParams } from "next/navigation";
+import { handleSignOut } from "@/components/elements/account-button";
 
 const items = [
   {
@@ -91,22 +94,29 @@ export type Data = {
   sizes: Size[];
 };
 
-export default function AppSidebar({
-  // session,
+export function AppSidebar({
+  session,
   data,
 }: {
-  // session: Session | null;
+  session: ServerSession;
   data: Data;
 }) {
   const { setOpenMobile, isMobile } = useSidebar();
+  const user = session?.user;
 
-  // const { firstName, lastName, initials } = getInitials(
-  //   session?.user.name || "x x",
-  // );
+  if (!user) return null;
+
+  const { firstName, lastName, email, image, role } = user;
+  const { initials } = getInitials(`${firstName ?? "x"} ${lastName ?? "x"}`);
 
   const mounted = useMounted();
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
+
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const returnTo =
+    pathname + (searchParams.toString() ? `?${searchParams.toString()}` : "");
 
   return (
     <Sidebar collapsible="icon">
@@ -327,9 +337,9 @@ export default function AppSidebar({
                   size="lg"
                   className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                 >
-                  {/* <Avatar className="h-8 w-8 rounded-lg">
+                  <Avatar className="h-8 w-8 rounded-lg">
                     <AvatarImage
-                      src={session?.user.image || ""}
+                      src={image || ""}
                       alt={`${firstName} ${lastName}`}
                     />
                     <AvatarFallback className="rounded-lg">
@@ -338,10 +348,8 @@ export default function AppSidebar({
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-medium">{`${firstName} ${lastName}`}</span>
-                    <span className="truncate text-xs">
-                      {session?.user.email || ""}
-                    </span>
-                  </div> */}
+                    <span className="truncate text-xs">{email || ""}</span>
+                  </div>
                   <ChevronsUpDown className="ml-auto size-4" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
@@ -351,11 +359,11 @@ export default function AppSidebar({
                 align="end"
                 sideOffset={4}
               >
-                {/* <DropdownMenuLabel className="p-0 font-normal">
+                <DropdownMenuLabel className="p-0 font-normal">
                   <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                     <Avatar className="h-8 w-8 rounded-lg">
                       <AvatarImage
-                        src={session?.user.image || ""}
+                        src={image || ""}
                         alt={`${firstName} ${lastName}`}
                       />
                       <AvatarFallback className="rounded-lg">
@@ -364,17 +372,17 @@ export default function AppSidebar({
                     </Avatar>
                     <div className="grid flex-1 text-left text-sm leading-tight">
                       <span className="truncate font-medium">{`${firstName} ${lastName}`}</span>
-                      <span className="truncate text-xs">
-                        {session?.user.email}
-                      </span>
+                      <span className="truncate text-xs">{email}</span>
                     </div>
                   </div>
-                </DropdownMenuLabel> */}
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <BadgeCheck />
-                    Account
+                  <DropdownMenuItem asChild>
+                    <Link href="/account">
+                      <BadgeCheck />
+                      Account
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <CreditCard />
@@ -386,7 +394,10 @@ export default function AppSidebar({
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem variant="destructive" onClick={() => {}}>
+                <DropdownMenuItem
+                  variant="destructive"
+                  onClick={() => handleSignOut(returnTo)}
+                >
                   <LogOut />
                   Log out
                 </DropdownMenuItem>

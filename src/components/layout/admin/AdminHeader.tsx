@@ -15,11 +15,23 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import getInitials from "@/lib/helpers/initials";
+import { ServerSession } from "@/app/layout";
+import { usePathname, useSearchParams } from "next/navigation";
+import { handleSignOut } from "@/components/elements/account-button";
 
-export default function AdminHeader() {
+export function AdminHeader({ session }: { session: ServerSession }) {
   const { setTheme } = useTheme();
+  const user = session?.user;
 
-  // const { firstName, lastName, initials } = getInitials(session.user.name!);
+  if (!user) return null;
+
+  const { firstName, lastName, image, role } = user;
+  const { initials } = getInitials(`${firstName ?? "x"} ${lastName ?? "x"}`);
+
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const returnTo =
+    pathname + (searchParams.toString() ? `?${searchParams.toString()}` : "");
 
   return (
     <nav className="bg-background sticky top-0 z-10 flex items-center justify-between p-4">
@@ -55,11 +67,11 @@ export default function AdminHeader() {
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Avatar className="ring-ring/50 duration-300 hover:ring-[5px]">
-              {/* <AvatarImage
-                src={session?.user.image || ""}
+              <AvatarImage
+                src={image || ""}
                 alt={`${firstName} ${lastName}`}
               ></AvatarImage>
-              <AvatarFallback>{initials}</AvatarFallback> */}
+              <AvatarFallback>{initials}</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -80,7 +92,7 @@ export default function AdminHeader() {
             <DropdownMenuItem variant="destructive">
               <LogOut
                 className="mr-2 h-[1.2rem] w-[1.2rem]"
-                onClick={() => {}}
+                onClick={() => handleSignOut(returnTo)}
               />
               Logout
             </DropdownMenuItem>

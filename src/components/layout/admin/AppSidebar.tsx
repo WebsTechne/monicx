@@ -103,7 +103,7 @@ export function AppSidebar({
 }) {
   const { setOpenMobile, isMobile } = useSidebar();
 
-  const router = useRouter();
+  const { push } = useRouter();
 
   const user = session?.user;
 

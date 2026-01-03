@@ -22,7 +22,7 @@ import { signOutAndRedirect } from "@/components/elements/account-button";
 export function AdminHeader({ session }: { session: ServerSession }) {
   const { setTheme } = useTheme();
 
-  const router = useRouter();
+  const { push } = useRouter();
 
   const user = session?.user;
 

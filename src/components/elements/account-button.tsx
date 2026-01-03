@@ -23,7 +23,25 @@ import type { ServerSession } from "@/app/layout";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { constants } from "node:buffer";
+
+const signOutAndRedirect = async ({
+  returnTo,
+  push,
+}: {
+  returnTo: string;
+  push: (href: string) => void;
+}) => {
+  await authClient.signOut({
+    fetchOptions: {
+      onSuccess: () => {
+        push(`/auth/sign-in?returnTo=${encodeURIComponent(returnTo)}`);
+      },
+      onError: () => {
+        toast.error("Couldn't sign-out. Please try again.");
+      },
+    },
+  });
+};
 
 function AccountButton({
   returnTo,
@@ -40,19 +58,6 @@ function AccountButton({
 
   const { firstName, lastName } = user;
   const { initials } = getInitials(`${firstName ?? "x"} ${lastName ?? "x"}`);
-
-  const handleSignOut = async (returnTo: string) => {
-    await authClient.signOut({
-      fetchOptions: {
-        onSuccess: () => {
-          push(`/auth/sign-in?returnTo=${encodeURIComponent(returnTo)}`);
-        },
-        onError: () => {
-          toast.error("Couldn't sign-out. Please try again.", {});
-        },
-      },
-    });
-  };
 
   return (
     <DropdownMenu>
@@ -121,7 +126,7 @@ function AccountButton({
         <DropdownMenuGroup>
           <DropdownMenuItem
             variant="destructive"
-            onClick={() => handleSignOut(returnTo)}
+            onClick={() => signOutAndRedirect({ returnTo, push })}
           >
             <LogOutIcon />
             Sign out
@@ -132,4 +137,4 @@ function AccountButton({
   );
 }
 
-export { AccountButton, handleSignOut };
+export { AccountButton, signOutAndRedirect };

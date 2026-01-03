@@ -16,11 +16,14 @@ import { useTheme } from "next-themes";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import getInitials from "@/lib/helpers/initials";
 import { ServerSession } from "@/app/layout";
-import { usePathname, useSearchParams } from "next/navigation";
-import { handleSignOut } from "@/components/elements/account-button";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { signOutAndRedirect } from "@/components/elements/account-button";
 
 export function AdminHeader({ session }: { session: ServerSession }) {
   const { setTheme } = useTheme();
+
+  const router = useRouter();
+
   const user = session?.user;
 
   if (!user) return null;
@@ -92,7 +95,7 @@ export function AdminHeader({ session }: { session: ServerSession }) {
             <DropdownMenuItem variant="destructive">
               <LogOut
                 className="mr-2 h-[1.2rem] w-[1.2rem]"
-                onClick={() => handleSignOut(returnTo)}
+                onClick={() => signOutAndRedirect({ returnTo, push })}
               />
               Logout
             </DropdownMenuItem>

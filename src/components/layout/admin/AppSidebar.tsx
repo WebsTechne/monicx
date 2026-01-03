@@ -56,8 +56,8 @@ import { useTheme } from "next-themes";
 import useMounted from "@/hooks/use-mounted";
 import { Category, Collection, Color, Size } from "@prisma/client";
 import { ServerSession } from "@/app/layout";
-import { usePathname, useSearchParams } from "next/navigation";
-import { handleSignOut } from "@/components/elements/account-button";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { signOutAndRedirect } from "@/components/elements/account-button";
 
 const items = [
   {
@@ -102,6 +102,9 @@ export function AppSidebar({
   data: Data;
 }) {
   const { setOpenMobile, isMobile } = useSidebar();
+
+  const router = useRouter();
+
   const user = session?.user;
 
   if (!user) return null;
@@ -396,7 +399,7 @@ export function AppSidebar({
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   variant="destructive"
-                  onClick={() => handleSignOut(returnTo)}
+                  onClick={() => signOutAndRedirect({return, push})}
                 >
                   <LogOut />
                   Log out

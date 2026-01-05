@@ -43,7 +43,7 @@ export const metadata: Metadata = {
 
 export default async function ShopPage() {
   return (
-    <div className="w-full">
+    <div className="relative w-full">
       {/* hero or banner (optional) */}
       <div className="relative mb-12 aspect-3/1 w-full">
         <Image

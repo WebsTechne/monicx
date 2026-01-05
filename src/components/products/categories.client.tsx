@@ -29,7 +29,7 @@ export default function CategoriesClient({
     return (
       <div
         id="categoriesSelector"
-        className="mb-4 flex h-[97px] w-full items-center gap-4 border border-dashed"
+        className="header-bg sticky top-(--header-h) z-999 mb-4 flex h-[97px] w-full items-center gap-4 border border-dashed py-1.5"
       >
         Refresh
         <Button
@@ -120,7 +120,7 @@ export default function CategoriesClient({
     scrollerRef.current?.scrollBy({ left: amount, behavior: "smooth" });
 
   return (
-    <section className="relative mb-4 w-full">
+    <section className="header-bg sticky top-(--header-h) z-999 mb-4 w-full py-1.5">
       {/* Left indicator */}
       <div
         className={cn(

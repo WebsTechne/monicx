@@ -2,8 +2,9 @@ export const dynamic = "force-dynamic";
 
 import { siteName } from "@/app/metadata-base";
 import { CartClient } from "./cart.client";
+import type { Metadata } from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: `Cart`,
   description:
     "Your shopping cart on Monicx. Review items, update quantities, and proceed to checkout.",

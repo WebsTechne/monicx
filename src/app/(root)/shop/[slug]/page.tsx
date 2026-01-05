@@ -3,7 +3,7 @@ import MonicxBreadcrumbs from "@/components/products/monicx-breadcrumbs";
 import ProductInteraction from "@/components/products/product-interaction";
 import { findProduct, products } from "@/lib/products";
 import type { ProductType } from "@/types";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";

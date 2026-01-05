@@ -1,5 +1,5 @@
 import { metadataBase, siteName } from "@/app/metadata-base";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 export async function generateMetadata({
   params,

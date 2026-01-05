@@ -1,7 +1,8 @@
 import { siteName } from "@/app/metadata-base";
 import { SignUpClient } from "./sign-up.client";
+import type { Metadata } from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: `Create account`,
   description:
     "Join Monicx today and start exploring the latest fashion, tailored just for you. Signing up is fast and easy!",

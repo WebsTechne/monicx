@@ -2,8 +2,9 @@ import Image from "next/image";
 import ProductListServer from "@/components/products/products-list.server";
 import CategoriesServer from "@/components/products/categories.server";
 import { metadataBase, siteName } from "@/app/metadata-base";
+import type { Metadata } from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: `Shop`,
   description:
     "Shop tailored clothing and ready-to-wear from Monicx — locally made in Nigeria. Browse suits, casual wear, and custom orders.",

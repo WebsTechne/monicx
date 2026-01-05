@@ -1,7 +1,8 @@
 import { siteName } from "@/app/metadata-base";
 import { ResetPasswordClient } from "./reset-password.client";
+import type { Metadata } from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: `Reset password`,
   description:
     "Reset your Monicx password. Enter your email and we'll send a secure link to get you back into your account.",

@@ -73,7 +73,7 @@ function AccountButton({
           </Avatar>
         </span>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="z-100! mr-5 min-w-40">
+      <DropdownMenuContent className="mr-5 min-w-40">
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
             {/* Account */}

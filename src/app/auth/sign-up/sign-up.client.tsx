@@ -113,7 +113,7 @@ export function SignUpClient() {
 
       // No error means sign-up was accepted
       toast.success("Account created. You can sign in now.");
-      replace(`/auth/sign-in?returnTo${returnTo}`);
+      replace(`/auth/sign-in?returnTo=${returnTo}`);
     } catch (err) {
       // This is for network / unexpected errors only
       setError(

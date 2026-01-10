@@ -174,7 +174,7 @@ export function SignUpClient() {
               {...form.register("password")}
               id="form-rhf-password"
               type={showPassword ? "text" : "password"}
-              autoComplete="current-password"
+              autoComplete="new-password"
               aria-invalid={!!passwordError}
               aria-describedby={
                 passwordError ? "form-rhf-password-error" : undefined

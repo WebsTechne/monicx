@@ -91,7 +91,7 @@ export default function Navbar({
       className={cn(
         "transition-[opacity] duration-450",
         "nav:inline-block nav:overflow-visible! nav:relative nav:opacity-100 nav:pointer-events-auto! nav:top-0 nav:h-auto nav:bg-transparent! nav:w-max",
-        "absolute top-full left-0 z-100 flex h-[calc(100dvh_-_100%)] w-full flex-col-reverse overflow-clip",
+        "absolute top-full left-0 z-1000 flex h-[calc(100dvh_-_100%)] w-full flex-col-reverse overflow-clip",
         openMobile
           ? "pointer-events-auto opacity-100"
           : "pointer-events-none opacity-0",
